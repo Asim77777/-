@@ -36,7 +36,7 @@ REELS = [
     {
         "slug": "baal-shem-tov-horses",
         "title": "הסוסים של הבעל שם טוב",
-        "start": "יודעים את הסיפור של הסוסים של הבעל שם טוב",
+        "start": "טוב אז הסוסים ככה עושים דרך",  # הסיפור המלא (36:31) ארוך מ-3 דקות
         "end": "אנחנו סוסים אנחנו לא מלאכים",
     },
     {
@@ -94,6 +94,8 @@ def download():
                "--merge-output-format", "mp4",
                "--ffmpeg-location", ffmpeg(),
                "-o", str(video))
+    if not subs.exists() and (HERE / subs.name).exists():
+        shutil.copy(HERE / subs.name, subs)  # עותק שמור בריפו – בלי יוטיוב
     if not subs.exists():
         yt_dlp("--skip-download",
                "--write-subs", "--write-auto-subs", "--sub-langs", "he,iw",
