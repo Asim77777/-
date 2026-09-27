@@ -77,26 +77,27 @@ def ffmpeg():
     return imageio_ffmpeg.get_ffmpeg_exe()
 
 
+def yt_dlp(*args):
+    cmd = [sys.executable, "-m", "yt_dlp", VIDEO_URL, *args]
+    cookies = WORK / "cookies.txt"  # יוטיוב חוסם שרתים ("not a bot") בלי עוגיות
+    if cookies.exists():
+        cmd += ["--cookies", str(cookies)]
+    subprocess.run(cmd, check=True)
+
+
 def download():
     WORK.mkdir(parents=True, exist_ok=True)
     video = WORK / "source.mp4"
     subs = WORK / "source.he.json3"
     if not video.exists():
-        subprocess.run(
-            [sys.executable, "-m", "yt_dlp", VIDEO_URL,
-             "-f", "bv*[height<=1080][ext=mp4]+ba[ext=m4a]/b[ext=mp4]/b",
-             "--merge-output-format", "mp4",
-             "--ffmpeg-location", ffmpeg(),
-             "-o", str(video)],
-            check=True,
-        )
+        yt_dlp("-f", "bv*[height<=1080][ext=mp4]+ba[ext=m4a]/b[ext=mp4]/b",
+               "--merge-output-format", "mp4",
+               "--ffmpeg-location", ffmpeg(),
+               "-o", str(video))
     if not subs.exists():
-        subprocess.run(
-            [sys.executable, "-m", "yt_dlp", VIDEO_URL, "--skip-download",
-             "--write-subs", "--write-auto-subs", "--sub-langs", "he,iw",
-             "--sub-format", "json3", "-o", str(WORK / "source")],
-            check=True,
-        )
+        yt_dlp("--skip-download",
+               "--write-subs", "--write-auto-subs", "--sub-langs", "he,iw",
+               "--sub-format", "json3", "-o", str(WORK / "source"))
         found = sorted(WORK.glob("source.*.json3"))
         if not found:
             sys.exit("לא נמצאו כתוביות בעברית לסרטון")

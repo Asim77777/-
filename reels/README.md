@@ -8,6 +8,9 @@ pip install yt-dlp imageio-ffmpeg
 python3 reels/make_reels.py        # כל הרילס → reels/out/
 python3 reels/make_reels.py 2      # רק רילס 2
 ```
+אם יוטיוב עונה "Sign in to confirm you're not a bot" – ייצא עוגיות של יוטיוב מהדפדפן
+(תוסף "Get cookies.txt LOCALLY") ושמור ב-`reels/work/cookies.txt` (לא נכנס ל-git).
+
 הפורמט: 1080x1920, רקע מטושטש, כותרת למעלה, כתוביות צהובות צרובות, קרדיט למטה.
 הקטעים מאותרים לפי משפט פתיחה/סיום בכתוביות האוטומטיות. אפשר לקבע זמנים ידנית
 עם `start_sec`/`end_sec` ב-`REELS`.
