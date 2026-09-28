@@ -11,122 +11,132 @@
   @font-face { font-family: Frank; font-weight: 700; src: url(fonts/frank-ruhl-libre-hebrew-700-normal.woff2); }
   @font-face { font-family: Frank; font-weight: 900; src: url(fonts/frank-ruhl-libre-hebrew-900-normal.woff2); }
 
-  :root { --navy: #10151F; --navy2: #1B2438; --gold: #D4AF5A; --gold2: #F3DC9A; --cream: #F5F1E8; }
+  :root { --ink: #0C111D; --gold: #C9A24A; --gold2: #EBD28E; --cream: #F2EBDC; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { width: var(--W); height: var(--H); overflow: hidden; background: var(--navy); }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: #000; }
   body { font-family: Heebo, sans-serif; color: var(--cream); position: relative; }
 
-  .layer { position: absolute; inset: 0; }
-  #bg { background: radial-gradient(ellipse at 50% 30%, #22304d 0%, var(--navy) 70%); }
-  #bgBrand { background: url(assets/brand.png) center/cover; filter: blur(40px) brightness(.35) saturate(1.2); transform: scale(1.2); }
-  #rays { background: conic-gradient(from 0deg at 50% -10%, transparent 0 40%, rgba(243,220,154,.10) 45%, transparent 50% 100%); mix-blend-mode: screen; }
-  .dust { position: absolute; border-radius: 50%; background: var(--gold2); }
-
-  /* intro / outro */
-  #brandWrap { overflow: hidden; }
-  #brandImg { position: absolute; background: url(assets/brand.png) center/cover; box-shadow: 0 30px 80px rgba(0,0,0,.6); }
-  .bigText { position: absolute; left: 0; right: 0; text-align: center; font-family: Frank; font-weight: 900; color: var(--gold2);
-             text-shadow: 0 4px 30px rgba(0,0,0,.8), 0 0 40px rgba(212,175,90,.35); }
-  .subText { position: absolute; left: 0; right: 0; text-align: center; font-weight: 400; color: var(--cream); text-shadow: 0 2px 16px rgba(0,0,0,.9); }
-  .pill { display: inline-block; padding: .35em 1.1em; border: 2px solid var(--gold); border-radius: 999px; color: var(--gold2);
-          background: rgba(16,21,31,.6); font-weight: 700; direction: ltr; }
+  .frame { position: absolute; inset: 0; overflow: hidden; background-color: var(--ink); backface-visibility: hidden; }
+  .ground { position: absolute; inset: 0;
+    background:
+      repeating-linear-gradient(to bottom, transparent 0 53px, rgba(201,162,74,.055) 53px 54px),
+      var(--grain),
+      radial-gradient(ellipse 70% 80% at var(--lx, 30%) var(--ly, 40%), #1d2740 0%, transparent 70%),
+      var(--ink); }
+  .margins { position: absolute; inset: 0; pointer-events: none; }
+  .margins::before, .margins::after { content: ''; position: absolute; top: 38px; bottom: 38px; width: 5px;
+    border-left: 1px solid rgba(201,162,74,.28); border-right: 1px solid rgba(201,162,74,.28); }
+  .margins::before { left: 52px; } .margins::after { right: 52px; }
+  .vignette { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(0,0,0,.55) 100%); }
+  .shade { position: absolute; inset: 0; opacity: 0; pointer-events: none; z-index: 20; }
 
   /* phone */
-  #phone { position: absolute; border-radius: calc(var(--pw) * .11); background: linear-gradient(145deg, #2a2f3a, #0b0d12);
-           padding: calc(var(--pw) * .035); box-shadow: 0 40px 100px rgba(0,0,0,.7), 0 0 0 2px #3a4152, 0 0 60px rgba(212,175,90,.15); }
-  #screen { position: relative; width: 100%; height: 100%; border-radius: calc(var(--pw) * .08); overflow: hidden; background: var(--cream); }
-  .shot { position: absolute; inset: 0; }
-  .shot .inner { position: absolute; left: 0; width: 100%; }
+  .phone { position: absolute; border-radius: 46px; background: #07090e; padding: 14px;
+           box-shadow: 0 0 0 1px rgba(201,162,74,.6), 0 0 0 7px #07090e, 0 0 0 8px rgba(201,162,74,.22), 0 50px 90px rgba(0,0,0,.65); }
+  .screen { position: relative; width: 100%; height: 100%; border-radius: 33px; overflow: hidden; background: var(--cream); }
+  .shot { position: absolute; left: 0; width: 100%; }
   .shot img { display: block; width: 100%; }
   .cover { position: absolute; display: flex; align-items: center; justify-content: center; font-family: Heebo; font-weight: 700; color: #1d2433; }
-  .hl { position: absolute; border: 4px solid var(--gold); border-radius: 22px;
-        box-shadow: 0 0 0 9999px rgba(8,11,18,.55), 0 0 30px 6px rgba(243,220,154,.75), inset 0 0 20px rgba(243,220,154,.35); }
+  .hl { position: absolute; opacity: 0; box-shadow: 0 0 0 9999px rgba(8,11,18,.42);
+        --c: #D9B864; --l: 16px; --w: 2.5px;
+        background:
+          linear-gradient(var(--c),var(--c)) top left / var(--l) var(--w) no-repeat, linear-gradient(var(--c),var(--c)) top left / var(--w) var(--l) no-repeat,
+          linear-gradient(var(--c),var(--c)) top right / var(--l) var(--w) no-repeat, linear-gradient(var(--c),var(--c)) top right / var(--w) var(--l) no-repeat,
+          linear-gradient(var(--c),var(--c)) bottom left / var(--l) var(--w) no-repeat, linear-gradient(var(--c),var(--c)) bottom left / var(--w) var(--l) no-repeat,
+          linear-gradient(var(--c),var(--c)) bottom right / var(--l) var(--w) no-repeat, linear-gradient(var(--c),var(--c)) bottom right / var(--w) var(--l) no-repeat; }
 
-  /* captions */
-  .cap { position: absolute; }
-  .capTitle { font-family: Frank; font-weight: 900; color: var(--gold2); text-shadow: 0 3px 20px rgba(0,0,0,.8); line-height: 1.1; }
-  .capText { font-weight: 700; color: var(--cream); line-height: 1.3; text-shadow: 0 2px 12px rgba(0,0,0,.9); }
-  .bullets { list-style: none; }
-  .bullets li { font-weight: 700; line-height: 1.35; padding: .35em .8em; margin-bottom: .45em; border-radius: 14px; border-right: 6px solid transparent; }
-  .num { display: inline-block; width: 1.6em; height: 1.6em; line-height: 1.6em; text-align: center; border-radius: 50%; background: var(--gold); color: var(--navy); font-weight: 800; margin-left: .5em; font-size: .8em; vertical-align: middle; }
-  #fade { background: #000; pointer-events: none; }
-  #brandBar { position: absolute; display: flex; align-items: center; gap: 14px; font-family: Frank; font-weight: 900; color: var(--gold2); }
-  #brandBar i { display: block; background: url(assets/brand.png) center 58%/cover; border-radius: 12px; border: 2px solid var(--gold); }
+  /* projected detail plate */
+  .plate { position: absolute; opacity: 0; background-repeat: no-repeat; border-radius: 4px; background-color: var(--cream);
+           box-shadow: 0 0 0 1px var(--gold), 0 0 0 7px rgba(12,17,29,.92), 0 0 0 8px rgba(201,162,74,.35), 0 40px 80px rgba(0,0,0,.6); }
+  .plateTag { position: absolute; font: 400 15px Heebo; letter-spacing: .32em; color: var(--gold); direction: ltr; white-space: nowrap; opacity: 0; }
+  svg.proj { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; pointer-events: none; overflow: visible; }
+
+  /* text column */
+  .col { position: absolute; right: 118px; width: 600px; top: 0; bottom: 0; }
+  .numeral { position: absolute; right: -30px; top: 30px; font: 900 440px/1 Frank; color: transparent;
+             -webkit-text-stroke: 1.4px rgba(201,162,74,.30); }
+  .eyebrow { position: absolute; right: 0; top: 262px; font: 400 18px Heebo; letter-spacing: .42em; color: var(--gold); direction: ltr; text-align: right; width: 100%; }
+  .title { position: absolute; right: 0; top: 300px; font: 900 96px/1.05 Frank; color: var(--gold2); white-space: nowrap; }
+  .ticks { position: absolute; right: 0; top: 440px; width: 600px; height: 16px; }
+  .ticks i { position: absolute; inset: 0; display: block;
+    background:
+      repeating-linear-gradient(to left, currentColor 0 1px, transparent 1px 8.571px) bottom / 100% 8px no-repeat,
+      repeating-linear-gradient(to left, currentColor 0 1px, transparent 1px 85.71px) bottom / 100% 16px no-repeat; }
+  .ticks .base { color: rgba(201,162,74,.28); }
+  .ticks .fill { color: var(--gold2); }
+  .step { position: absolute; right: 0; top: 500px; width: 600px; font: 500 52px/1.28 Frank; color: var(--cream); }
+  .idx { position: absolute; right: 0; top: 720px; font: 400 20px Heebo; letter-spacing: .38em; color: var(--gold); direction: ltr; text-align: right; width: 100%; }
+  .brandMark { position: absolute; left: 110px; bottom: 58px; display: flex; align-items: baseline; gap: 18px;
+               font: 400 17px Heebo; letter-spacing: .3em; color: rgba(235,210,142,.7); }
+  .brandMark b { font: 900 30px Frank; letter-spacing: 0; color: var(--gold2); }
+
+  /* intro / outro */
+  .arch { position: absolute; background: url(assets/brand.png) center 42%/cover; border-radius: 999px 999px 10px 10px / 330px 330px 10px 10px;
+          box-shadow: 0 0 0 1px var(--gold), 0 0 0 10px rgba(12,17,29,.95), 0 0 0 11px rgba(201,162,74,.4), 0 50px 100px rgba(0,0,0,.7); }
+  .seal { position: absolute; width: 190px; height: 190px; }
+  .seal svg { width: 100%; height: 100%; overflow: visible; }
+  .bigT { position: absolute; font: 900 124px/1.05 Frank; color: var(--gold2); white-space: nowrap; }
+  .subT { position: absolute; font: 400 40px/1.4 Heebo; color: var(--cream); white-space: nowrap; }
+  .url { position: absolute; font: 400 30px Heebo; letter-spacing: .12em; color: var(--gold2); direction: ltr; white-space: nowrap;
+         padding: 14px 34px; box-shadow: inset 0 0 0 1px var(--gold), 0 0 0 5px rgba(12,17,29,1), 0 0 0 6px rgba(201,162,74,.3); border-radius: 2px; }
+  #fx { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; pointer-events: none; z-index: 50; }
+  #roller { position: absolute; top: -20px; bottom: -20px; width: 86px; z-index: 60; display: none;
+    background: linear-gradient(to right, #1a1206 0%, #5a4118 14%, #c9a24a 34%, #f6e3a8 46%, #c9a24a 58%, #6b4d1c 80%, #1a1206 100%);
+    box-shadow: -30px 0 60px rgba(0,0,0,.6), 30px 0 60px rgba(0,0,0,.35); }
+  #black { position: absolute; inset: 0; background: #000; z-index: 90; pointer-events: none; }
 </style>
 </head>
 <body>
-<div id="bg" class="layer"></div>
-<div id="bgBrand" class="layer"></div>
-<div id="rays" class="layer"></div>
-<div id="dustLayer" class="layer"></div>
-
-<div id="stage" class="layer">
-  <div id="phone"><div id="screen"></div></div>
-  <div id="capWrap" class="cap"></div>
-  <div id="brandBar"><i></i><span>70 פנים לתורה</span></div>
-</div>
-
-<div id="brandWrap" class="layer">
-  <div id="brandImg"></div>
-  <div id="introShade" class="layer" style="background:linear-gradient(to top, rgba(8,11,18,.92) 0%, rgba(8,11,18,.6) 20%, transparent 38%)"></div>
-  <div id="introT1" class="bigText"></div>
-  <div id="introT2" class="subText"></div>
-</div>
-
-<div id="outro" class="layer">
-  <div id="outroImg" style="position:absolute;background:url(assets/brand.png) center/cover;box-shadow:0 30px 80px rgba(0,0,0,.6);border:3px solid var(--gold)"></div>
-  <div id="outroT1" class="bigText">70 פנים לתורה</div>
-  <div id="outroT2" class="subText">פרשה · מפרשים · סידור · זמני היום · לימוד יומי</div>
-  <div id="outroT3" class="subText"><span class="pill">70panimlatorah.expo.app</span></div>
-  <div id="outroT4" class="subText" style="font-weight:800;color:var(--gold2)">האפליקציה חינמית – הצטרפו עכשיו!</div>
-</div>
-<div id="fade" class="layer"></div>
+<div id="frames"></div>
+<svg id="fx"></svg>
+<div id="roller"></div>
+<div id="black"></div>
 
 <script>
-const P = new URLSearchParams(location.search);
-const FORMAT = P.get('format') || 'vertical';
-const V = FORMAT === 'vertical';
-const W = V ? 1080 : 1920, H = V ? 1920 : 1080;
-document.documentElement.style.setProperty('--W', W + 'px');
-document.documentElement.style.setProperty('--H', H + 'px');
+const W = 1920, H = 1080, NS = 'http://www.w3.org/2000/svg';
+const $ = (s, r = document) => r.querySelector(s);
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const ease = x => { x = clamp(x); return x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; };
+const eOut = x => 1 - Math.pow(1 - clamp(x), 3);
+const eIO = x => { x = clamp(x); return -(Math.cos(Math.PI * x) - 1) / 2; };
+const lerp = (a, b, k) => a + (b - a) * k;
+const el = (tag, cls, parent, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; if (parent) parent.appendChild(e); return e; };
 
-// ---- screenshot geometry (fractions of the 1080x2340 image) ----
-const IMG_AR = 2340 / 1080;
-const CROP_TOP = 0.041, CROP_BOT = 0.933;          // hide Android status bar + nav bar
-const VIS = CROP_BOT - CROP_TOP;
-// box = [x0, y0, x1, y1] as fractions of the full image (measured on 923x2000 preview)
+// paper grain as a cached SVG image
+const grainSvg = `<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .8  0 0 0 0 .7  0 0 0 0 .45  0 0 0 .08 0'/></filter><rect width='100%' height='100%' filter='url(#n)'/></svg>`;
+document.documentElement.style.setProperty('--grain', `url("data:image/svg+xml,${encodeURIComponent(grainSvg)}")`);
+
+// ---------- screenshot geometry ----------
+const IMG_AR = 2340 / 1080, CROP_TOP = 0.041, CROP_BOT = 0.933, VIS = CROP_BOT - CROP_TOP;
 const b = (x0, y0, x1, y1) => [x0 / 923, y0 / 2000, x1 / 923, y1 / 2000];
-
 const SCREENS = {
-  home:   { src: 'assets/home.jpg',   cover: { box: b(0, 88, 923, 165), shade: false } },
-  zmanim: { src: 'assets/zmanim.jpg', cover: { box: b(0, 88, 923, 165), shade: true } },
-  verse:  { src: 'assets/verse.jpg' },
-  siddur: { src: 'assets/siddur.jpg' },
+  home:       { src: 'assets/home.jpg', cover: b(0, 88, 923, 165) },
+  homeMore:   { src: 'assets/home-more.jpg' },
+  zmanim:     { src: 'assets/zmanim.jpg', cover: b(0, 88, 923, 165), shade: true },
+  verse:      { src: 'assets/verse.jpg' },
   siddurMain: { src: 'assets/siddur-main.jpg' },
-  homeMore: { src: 'assets/home-more.jpg' },
 };
 
-// ---- storyboard ----
 const SCENES = [
-  { screen: 'home', title: 'מסך הבית', steps: [
+  { screen: 'home', title: 'מסך הבית', num: 'א', trans: 'roll', light: ['28%', '35%'], steps: [
     { box: b(330, 270, 895, 460), text: 'שעון חי ותאריך עברי מדויק' },
     { box: b(20, 530, 903, 600), text: 'חגים ומועדים – במבט אחד' },
     { box: b(80, 655, 850, 835), text: 'פרשת השבוע וההפטרה' },
     { box: b(18, 848, 905, 1470), text: 'פסוק יומי – ולחיצה אחת ללימוד' },
     { box: b(22, 1488, 905, 1685), text: 'הדלקת נרות וצאת השבת לפי העיר שלך' },
   ]},
-  { screen: 'homeMore', title: 'עוד במסך הבית', steps: [
+  { screen: 'homeMore', title: 'עוד במסך הבית', num: 'ב', trans: 'ink', light: ['22%', '60%'], steps: [
     { box: b(20, 365, 908, 605), text: 'צאת שבת לר״ת ובחירת העיר שלך' },
     { box: b(12, 620, 911, 918), text: 'חוקת יומא ורמב״ם היומי' },
     { box: b(12, 930, 911, 1228), text: 'הדף היומי ותהילים יומי' },
     { box: b(14, 1238, 909, 1674), text: 'מחשבה יומית מספרי המוסר' },
   ]},
-  { screen: 'zmanim', title: 'זמני היום', steps: [
+  { screen: 'zmanim', title: 'זמני היום', num: 'ג', trans: 'page', light: ['35%', '30%'], steps: [
     { box: b(50, 300, 873, 600), text: 'כל זמני היום ההלכתיים – לפי העיר שלך' },
     { box: b(85, 640, 838, 1440), text: 'מעלות השחר ועד סוף זמן תפילה' },
     { box: b(100, 800, 250, 1080), text: 'הפעילו התראה לכל זמן שחשוב לכם' },
   ]},
-  { screen: 'verse', title: 'לימוד הפסוק', steps: [
+  { screen: 'verse', title: 'לימוד הפסוק', num: 'ד', trans: 'strips', light: ['25%', '45%'], steps: [
     { box: b(30, 262, 893, 555), text: 'כל פסוק בתורה – בניקוד מלא' },
     { box: b(30, 580, 893, 690), text: 'מאות מקורות קשורים לכל פסוק' },
     { box: b(30, 722, 300, 858), text: 'בחרו מתוך מפרשים' },
@@ -134,237 +144,325 @@ const SCENES = [
     { box: b(320, 722, 893, 858), text: 'הוסיפו חידוש או שאילתא משלכם' },
     { box: b(30, 1660, 893, 1835), text: 'כתבו או הקליטו את החידוש בקול' },
   ]},
-  { screen: 'siddurMain', title: 'הסידור שלי', steps: [
+  { screen: 'siddurMain', title: 'הסידור שלי', num: 'ה', trans: 'roll', light: ['30%', '55%'], steps: [
     { box: b(36, 326, 887, 972), text: 'תפילת חול – נוסח עדות המזרח ונוסח אשכנז' },
     { box: b(36, 1004, 887, 1324), text: 'תפילות וברכות נוספות' },
-    { box: b(36, 1344, 887, 1664), text: 'וגם קיצור שולחן ערוך' },
+    { box: b(36, 1344, 887, 1664), text: 'קיצור שולחן ערוך – תמיד איתכם' },
   ]},
-  { screen: 'siddur', title: 'קיצור שולחן ערוך', steps: [
-    { box: b(90, 125, 835, 250), text: 'ההלכה היומיומית – תמיד איתכם' },
-    { box: b(35, 262, 888, 372), text: 'חיפוש מהיר בכל הספר' },
-    { box: b(35, 600, 888, 1695), text: 'כל הסימנים מסודרים לפי נושאים' },
-  ]},
-  { screen: 'home', title: 'ניווט פשוט', steps: [
+  { screen: 'home', title: 'ניווט פשוט', num: 'ו', trans: 'ink', light: ['26%', '70%'], steps: [
     { box: b(34, 1698, 890, 1862), text: 'כל האזורים – בלחיצה אחת מסרגל הניווט' },
   ]},
 ];
 
-const STEP = V ? 1.7 : 2.3;          // seconds per highlight
-const SCENE_PAD = V ? 0.9 : 1.3;     // time on scene before first highlight
-const INTRO = V ? 5.5 : 6.5, OUTRO = V ? 6.0 : 7.0, XF = 0.7;
-
+// ---------- timing ----------
+const TD = 1.15, PAD = 1.7, STEP = 2.35, TAIL = 0.35, INTRO = 7.2, OUTRO = 7.6;
+const FRAMES = [{ kind: 'intro', start: 0, dur: INTRO }];
 let t0 = INTRO;
-for (const s of SCENES) { s.start = t0; s.dur = SCENE_PAD + s.steps.length * STEP + 0.4; t0 += s.dur; }
-const TOTAL = t0 + OUTRO;
+for (const s of SCENES) { const f = { kind: 'scene', s, start: t0, dur: PAD + s.steps.length * STEP + TAIL, trans: s.trans }; FRAMES.push(f); t0 += f.dur; }
+FRAMES.push({ kind: 'outro', start: t0, dur: OUTRO, trans: 'strips' }); t0 += OUTRO;
+const TOTAL = t0;
 window.TOTAL = TOTAL;
+window.TRANSITIONS = FRAMES.slice(1).map(f => f.start);
 
-// ---- layout ----
-let PW, PH, PX, PY, SW, SH;
-if (V) { SW = 650; } else { SW = 450; }
-SH = SW * IMG_AR * VIS;
-PW = SW * 1.07; PH = SH + SW * 0.07;
-if (V) { PX = (W - PW) / 2; PY = 375; } else { PX = W - PW - 190; PY = (H - PH) / 2 + 10; }
-const phone = document.getElementById('phone');
-Object.assign(phone.style, { left: PX + 'px', top: PY + 'px', width: PW + 'px', height: PH + 'px' });
-phone.style.setProperty('--pw', PW + 'px');
-const screenEl = document.getElementById('screen');
+// ---------- layout ----------
+const SW = 400, IMGH = SW * IMG_AR, SH = IMGH * VIS, BZ = 14;
+const PW = SW + 2 * BZ, PH = SH + 2 * BZ, PX = 150, PY = (H - PH) / 2;
+const SX = PX + BZ, SY = PY + BZ;
+const PLATE_CX = 900, PLATE_MAXW = 480, PLATE_MAXH = 420;
 
-// captions container
-const capWrap = document.getElementById('capWrap');
-if (V) {
-  Object.assign(capWrap.style, { left: '60px', right: '60px', top: '95px', height: '260px', textAlign: 'center' });
-  capWrap.innerHTML = '<div class="capTitle" id="cTitle" style="font-size:84px"></div><div class="capText" id="cText" style="font-size:50px;margin-top:22px"></div>';
-} else {
-  Object.assign(capWrap.style, { right: (W - PX + 110) + 'px', left: '110px', top: '170px' });
-  capWrap.innerHTML = '<div class="capTitle" id="cTitle" style="font-size:96px;margin-bottom:46px"></div><ul class="bullets" id="cList" style="font-size:40px"></ul>';
+function boxRect(bx) {
+  return { x: SX + bx[0] * SW, y: SY + (bx[1] - CROP_TOP) * IMGH, w: (bx[2] - bx[0]) * SW, h: (bx[3] - bx[1]) * IMGH };
 }
-const bar = document.getElementById('brandBar');
-if (V) Object.assign(bar.style, { left: '50%', transform: 'translateX(-50%)', bottom: '70px', fontSize: '44px' });
-else Object.assign(bar.style, { left: '110px', bottom: '70px', fontSize: '40px' });
-bar.querySelector('i').style.cssText += V ? 'width:64px;height:64px' : 'width:58px;height:58px';
 
-// build screen layers
-const shotEls = {};
-for (const [k, s] of Object.entries(SCREENS)) {
-  const el = document.createElement('div'); el.className = 'shot';
-  const inner = document.createElement('div'); inner.className = 'inner';
-  const imgH = SW * IMG_AR;
-  inner.style.height = imgH + 'px'; inner.style.top = (-CROP_TOP * imgH) + 'px';
-  inner.innerHTML = `<img src="${s.src}">`;
-  if (s.cover) {
-    const [x0, y0, x1, y1] = s.cover.box;
-    const c = document.createElement('div'); c.className = 'cover';
-    Object.assign(c.style, { left: x0 * 100 + '%', top: y0 * 100 + '%', width: (x1 - x0) * 100 + '%', height: (y1 - y0) * 100 + '%',
-                             fontSize: SW * 0.058 + 'px' });
-    c.textContent = 'שלום, משתמש יקר 👋';
-    c.dataset.shade = s.cover.shade ? 1 : 0;
-    inner.appendChild(c);
+// ---------- build ----------
+const root = $('#frames');
+function makeFrame() {
+  const f = el('div', 'frame', root);
+  el('div', 'ground', f); el('div', 'margins', f); el('div', 'vignette', f);
+  return f;
+}
+function svgIn(parent) { const s = document.createElementNS(NS, 'svg'); s.setAttribute('class', 'proj'); parent.appendChild(s); return s; }
+function sAdd(svg, tag, attrs) { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); svg.appendChild(e); return e; }
+
+for (const F of FRAMES) {
+  if (F.kind !== 'scene') continue;
+  const s = F.s, scr = SCREENS[s.screen];
+  const f = F.el = makeFrame();
+  f.style.setProperty('--lx', s.light[0]); f.style.setProperty('--ly', s.light[1]);
+  const phone = el('div', 'phone', f);
+  Object.assign(phone.style, { left: PX + 'px', top: PY + 'px', width: PW + 'px', height: PH + 'px' });
+  const screen = el('div', 'screen', phone);
+  const shot = el('div', 'shot', screen, `<img src="${scr.src}">`);
+  shot.style.height = IMGH + 'px'; shot.style.top = (-CROP_TOP * IMGH) + 'px';
+  if (scr.cover) {
+    const [x0, y0, x1, y1] = scr.cover;
+    const c = el('div', 'cover', shot, 'שלום, משתמש יקר 👋');
+    Object.assign(c.style, { left: x0 * 100 + '%', top: y0 * 100 + '%', width: (x1 - x0) * 100 + '%', height: (y1 - y0) * 100 + '%', fontSize: SW * .058 + 'px' });
+    c.dataset.y = y0; c.dataset.shade = scr.shade ? 1 : 0;
   }
-  const hl = document.createElement('div'); hl.className = 'hl'; inner.appendChild(hl);
-  el.appendChild(inner); screenEl.appendChild(el);
-  shotEls[k] = { el, inner, hl };
+  F.hl = el('div', 'hl', shot);
+  const proj = svgIn(f);
+  F.lines = [0, 1].map(() => sAdd(proj, 'line', { stroke: '#C9A24A', 'stroke-width': 1 }));
+  F.dots = [0, 1, 2, 3].map(() => sAdd(proj, 'circle', { r: 3.2, fill: '#0C111D', stroke: '#EBD28E', 'stroke-width': 1.2 }));
+  F.plate = el('div', 'plate', f); F.plate.style.backgroundImage = `url(${scr.src})`;
+  F.tag = el('div', 'plateTag', f);
+  const col = el('div', 'col', f);
+  el('div', 'numeral', col, s.num);
+  const n = SCENES.indexOf(s) + 1;
+  el('div', 'eyebrow', col, `0${n} &nbsp;/&nbsp; 0${SCENES.length}`);
+  el('div', 'title', col, s.title);
+  const ticks = el('div', 'ticks', col); el('i', 'base', ticks); F.fill = el('i', 'fill', ticks);
+  F.stepPrev = el('div', 'step', col); F.stepCur = el('div', 'step', col);
+  F.idx = el('div', 'idx', col);
+  el('div', 'brandMark', f, '<b>70 פנים לתורה</b><span>לימוד תורה יומי</span>');
+  F.shade = el('div', 'shade', f);
 }
 
-// sample a background colour from the screenshot to paint the name cover
+function sealSVG(word) {
+  let dots = '';
+  for (let i = 0; i < 70; i++) {
+    const a = i / 70 * Math.PI * 2 - Math.PI / 2, r = 84;
+    dots += `<circle cx="${(95 + r * Math.cos(a)).toFixed(2)}" cy="${(95 + r * Math.sin(a)).toFixed(2)}" r="${i % 10 === 0 ? 2.4 : 1.1}" fill="#C9A24A"/>`;
+  }
+  return `<svg viewBox="0 0 190 190"><circle cx="95" cy="95" r="94" fill="#0C111D" stroke="#C9A24A" stroke-width="1"/>
+    <circle cx="95" cy="95" r="74" fill="none" stroke="rgba(201,162,74,.5)" stroke-width="1"/>${dots}
+    <text x="95" y="111" text-anchor="middle" font-family="Frank" font-weight="900" font-size="50" fill="#EBD28E">${word}</text></svg>`;
+}
+
+// intro
+const FI = FRAMES[0];
+{
+  const f = FI.el = makeFrame();
+  f.style.setProperty('--lx', '50%'); f.style.setProperty('--ly', '50%');
+  const svg = svgIn(f);
+  FI.rays = [];
+  let seed = 11; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  for (let i = 0; i < 70; i++) {
+    const l = sAdd(svg, 'line', { stroke: '#C9A24A', 'stroke-width': i % 10 === 0 ? 1.6 : .9 });
+    FI.rays.push({ l, a: i / 70 * Math.PI * 2 - Math.PI / 2, len: 200 + rnd() * 240 + (i % 10 === 0 ? 110 : 0) });
+  }
+  FI.ayin = el('div', null, f, 'ע');
+  Object.assign(FI.ayin.style, { position: 'absolute', left: 0, width: W + 'px', top: (H / 2 - 170) + 'px', height: '340px', lineHeight: '340px', textAlign: 'center',
+    font: '900 250px/340px Frank', color: 'transparent', webkitTextStroke: '1.6px #EBD28E' });
+  FI.arch = el('div', 'arch', f);
+  FI.t1 = el('div', 'bigT', f, 'לימוד תורה יומי');
+  FI.rule = el('div', 'ticks', f); el('i', 'base', FI.rule); FI.ruleFill = el('i', 'fill', FI.rule);
+  FI.t2 = el('div', 'subT', f, 'הכול במקום אחד – ובחינם');
+  FI.seal = el('div', 'seal', f, sealSVG('חינם'));
+  FI.shade = el('div', 'shade', f);
+}
+
+// outro
+const FO = FRAMES[FRAMES.length - 1];
+{
+  const f = FO.el = makeFrame();
+  f.style.setProperty('--lx', '30%'); f.style.setProperty('--ly', '45%');
+  FO.arch = el('div', 'arch', f);
+  FO.t1 = el('div', 'bigT', f, '70 פנים לתורה');
+  FO.rule = el('div', 'ticks', f); el('i', 'base', FO.rule); FO.ruleFill = el('i', 'fill', FO.rule);
+  FO.t2 = el('div', 'subT', f, 'פרשה · מפרשים · סידור · זמני היום · לימוד יומי');
+  FO.url = el('div', 'url', f, '70panimlatorah.expo.app');
+  FO.t3 = el('div', 'subT', f, 'האפליקציה חינמית – הצטרפו עכשיו');
+  FO.seal = el('div', 'seal', f, sealSVG('חינם'));
+  FO.shade = el('div', 'shade', f);
+}
+
+// ---------- renderers ----------
+function renderScene(F, lt) {
+  const s = F.s;
+  const raw = Math.floor((lt - PAD) / STEP);
+  const step = raw < 0 ? -1 : Math.min(raw, s.steps.length - 1);
+  const sl = lt - PAD - Math.max(step, 0) * STEP;
+  const prog = clamp((lt - PAD * .6) / (s.steps.length * STEP + PAD * .4));
+  F.fill.style.clipPath = `inset(0 0 0 ${(1 - prog) * 100}%)`;
+
+  if (step < 0) {
+    F.hl.style.opacity = 0; F.plate.style.opacity = 0; F.tag.style.opacity = 0; F.idx.style.opacity = 0;
+    F.lines.concat(F.dots).forEach(x => x.setAttribute('opacity', 0));
+    F.stepCur.textContent = ''; F.stepPrev.textContent = '';
+    return;
+  }
+  F.idx.textContent = `0${step + 1} — 0${s.steps.length}`;
+  F.idx.style.opacity = step === 0 ? eOut(sl / .6) : 1;
+  const cur = s.steps[step].box, prv = step > 0 ? s.steps[step - 1].box : null;
+  const m = prv ? eIO(sl / .7) : 1;
+  const bx = prv ? cur.map((v, i) => lerp(prv[i], v, m)) : cur;
+  const appear = step === 0 ? eOut(sl / .8) : 1;
+
+  Object.assign(F.hl.style, { left: bx[0] * 100 + '%', top: bx[1] * 100 + '%', width: (bx[2] - bx[0]) * 100 + '%', height: (bx[3] - bx[1]) * 100 + '%', opacity: appear });
+
+  const r = boxRect(bx);
+  const sc = Math.min(PLATE_MAXW / r.w, PLATE_MAXH / r.h, 2.4);
+  const pw = r.w * sc, ph = r.h * sc;
+  const pcy = clamp(r.y + r.h / 2, 150 + ph / 2, H - 150 - ph / 2);
+  const tgt = { x: PLATE_CX - pw / 2, y: pcy - ph / 2, w: pw, h: ph };
+  const k = step === 0 ? ease(sl / .95) : 1;
+  const P = { x: lerp(r.x, tgt.x, k), y: lerp(r.y, tgt.y, k), w: lerp(r.w, tgt.w, k), h: lerp(r.h, tgt.h, k) };
+  const s2 = P.w / r.w;
+  Object.assign(F.plate.style, { left: P.x + 'px', top: P.y + 'px', width: P.w + 'px', height: P.h + 'px', opacity: appear,
+    backgroundSize: `${SW * s2}px ${IMGH * s2}px`, backgroundPosition: `${-bx[0] * SW * s2}px ${-bx[1] * IMGH * s2}px` });
+  F.tag.textContent = `FIG. ${String(SCENES.indexOf(s) + 1)}.${step + 1}`;
+  Object.assign(F.tag.style, { left: P.x + 'px', top: (P.y + P.h + 22) + 'px', opacity: appear * .9 });
+
+  const la = appear * .8;
+  const pts = [[r.x + r.w, r.y, P.x, P.y], [r.x + r.w, r.y + r.h, P.x, P.y + P.h]];
+  pts.forEach((p, i) => {
+    const L = F.lines[i];
+    L.setAttribute('x1', p[0]); L.setAttribute('y1', p[1]); L.setAttribute('x2', p[2]); L.setAttribute('y2', p[3]); L.setAttribute('opacity', la);
+  });
+  [[pts[0][0], pts[0][1]], [pts[1][0], pts[1][1]], [pts[0][2], pts[0][3]], [pts[1][2], pts[1][3]]].forEach((c, i) => {
+    F.dots[i].setAttribute('cx', c[0]); F.dots[i].setAttribute('cy', c[1]); F.dots[i].setAttribute('opacity', la);
+  });
+
+  const w = eOut(sl / .85);
+  F.stepCur.textContent = s.steps[step].text;
+  F.stepCur.style.clipPath = `inset(-24px 0 -24px ${(1 - w) * 100}%)`;
+  F.stepPrev.textContent = prv ? s.steps[step - 1].text : '';
+  const q = eOut(sl / .45);
+  F.stepPrev.style.opacity = 1 - q;
+  F.stepPrev.style.transform = `translateY(${-28 * q}px)`;
+  F.stepPrev.style.filter = `blur(${4 * q}px)`;
+}
+
+function renderIntro(F, lt) {
+  const cx = W / 2, cy = H / 2;
+  const burst = ease((lt - 2.5) / 1.1);
+  for (const [i, r] of F.rays.entries()) {
+    const d = eOut((lt - 0.25 - i * 0.022) / .7);
+    const r0 = 190 + burst * 900, r1 = r0 + r.len * d * (1 - burst * .3);
+    const a = r.a + lt * .02;
+    r.l.setAttribute('x1', cx + r0 * Math.cos(a)); r.l.setAttribute('y1', cy + r0 * Math.sin(a));
+    r.l.setAttribute('x2', cx + r1 * Math.cos(a)); r.l.setAttribute('y2', cy + r1 * Math.sin(a));
+    r.l.setAttribute('opacity', (d > 0 ? 1 : 0) * (1 - burst) * .9);
+  }
+  const ay = eOut((lt - .6) / 1.2);
+  F.ayin.style.opacity = ay * (1 - burst);
+  F.ayin.style.transform = `scale(${0.92 + .08 * ay + burst * 5})`;
+
+  const a1 = eOut((lt - 3.0) / 1.1), a2 = eOut((lt - 3.6) / 1.0), a3 = eOut((lt - 4.2) / 1.0), a4 = eOut((lt - 4.8) / .9);
+  const ah = 800, aw = 500, AX = 220;
+  Object.assign(F.arch.style, { left: AX + 'px', top: (H - ah) / 2 + 'px', width: aw + 'px', height: ah + 'px', opacity: a1 > 0 ? 1 : 0,
+    clipPath: `inset(${(1 - a1) * 100}% -40px -40px -40px)`, transform: `scale(${1.03 - .03 * a1})` });
+  Object.assign(F.t1.style, { right: '170px', top: '330px', opacity: a2 > 0 ? 1 : 0, clipPath: `inset(-40px 0 -40px ${(1 - a2) * 100}%)` });
+  Object.assign(F.rule.style, { right: '170px', top: '492px', width: '860px', opacity: a2 });
+  F.ruleFill.style.clipPath = `inset(0 0 0 ${(1 - eIO((lt - 3.7) / 2.4)) * 100}%)`;
+  Object.assign(F.t2.style, { right: '170px', top: '532px', opacity: a3, transform: `translateY(${(1 - a3) * 20}px)` });
+  Object.assign(F.seal.style, { left: (AX + aw - 105) + 'px', top: (H / 2 + ah / 2 - 150) + 'px', opacity: a4,
+    transform: `rotate(${(1 - a4) * -40 + lt * 2}deg) scale(${.8 + .2 * a4})` });
+}
+
+function renderOutro(F, lt) {
+  const a0 = eOut((lt - .3) / 1.2), a1 = eOut((lt - .9) / 1), a2 = eOut((lt - 1.5) / 1), a3 = eOut((lt - 2.1) / 1), a4 = eOut((lt - 2.7) / 1), a5 = eOut((lt - 3.3) / .9);
+  const ah = 760, aw = 480, AX = 220, R = '170px';
+  Object.assign(F.arch.style, { left: AX + 'px', top: (H - ah) / 2 + 'px', width: aw + 'px', height: ah + 'px', opacity: a0 > 0 ? 1 : 0,
+    clipPath: `inset(${(1 - a0) * 100}% -40px -40px -40px)` });
+  Object.assign(F.t1.style, { right: R, top: '260px', opacity: a1 > 0 ? 1 : 0, clipPath: `inset(-40px 0 -40px ${(1 - a1) * 100}%)` });
+  Object.assign(F.rule.style, { right: R, top: '425px', width: '900px', opacity: a1 });
+  F.ruleFill.style.clipPath = `inset(0 0 0 ${(1 - eIO((lt - 1) / 3)) * 100}%)`;
+  Object.assign(F.t2.style, { right: R, top: '462px', fontSize: '34px', opacity: a2, transform: `translateY(${(1 - a2) * 18}px)` });
+  Object.assign(F.url.style, { right: R, top: '570px', opacity: a3, transform: `translateY(${(1 - a3) * 18}px)` });
+  Object.assign(F.t3.style, { right: R, top: '690px', font: '700 46px/1.4 Heebo', color: 'var(--gold2)', opacity: a4, transform: `translateY(${(1 - a4) * 18}px)` });
+  Object.assign(F.seal.style, { left: (AX + aw - 105) + 'px', top: (H / 2 + ah / 2 - 150) + 'px', opacity: a5,
+    transform: `rotate(${(1 - a5) * -40 + lt * 2}deg) scale(${.8 + .2 * a5})` });
+}
+
+function render(F, lt) {
+  if (F.kind === 'scene') renderScene(F, lt);
+  else if (F.kind === 'intro') renderIntro(F, lt);
+  else renderOutro(F, lt);
+}
+
+// ---------- transitions ----------
+const fx = $('#fx'), roller = $('#roller');
+function clearFx() { fx.innerHTML = ''; roller.style.display = 'none'; }
+function resetFrame(F) {
+  Object.assign(F.el.style, { display: 'none', clipPath: 'none', transform: 'none', zIndex: 0, transformOrigin: '', filter: 'none' });
+  F.shade.style.opacity = 0;
+}
+function lastFocus(F) {
+  if (F.kind !== 'scene') return [W / 2, H / 2];
+  const r = boxRect(F.s.steps[F.s.steps.length - 1].box);
+  return [r.x + r.w / 2, r.y + r.h / 2];
+}
+
+function transition(type, out, inc, p, seed) {
+  const I = inc.el, O = out.el;
+  I.style.zIndex = 2; O.style.zIndex = 1;
+  if (type === 'roll') {
+    // a gilded roller sweeps right-to-left, unrolling the new column
+    const q = eIO(p), X = (1 - q) * (W + 100) - 50;
+    I.style.clipPath = `inset(0 0 0 ${Math.max(0, X)}px)`;
+    roller.style.display = 'block'; roller.style.left = (X - 43) + 'px';
+    O.style.transform = `translateX(${-q * 90}px)`;
+    out.shade.style.background = 'linear-gradient(to left, rgba(0,0,0,.75), rgba(0,0,0,0) 50%)';
+    out.shade.style.opacity = q;
+  } else if (type === 'strips') {
+    // ruled bands are inscribed one after another, each led by a gold hairline
+    const N = 14, hh = H / N; let d = '';
+    for (let i = 0; i < N; i++) {
+      const qi = ease(p * 1.55 - i * .04);
+      const x = W - qi * W;
+      d += `M${x.toFixed(1)} ${(i * hh).toFixed(1)}H${W}V${((i + 1) * hh + .6).toFixed(1)}H${x.toFixed(1)}Z`;
+      if (qi > 0 && qi < 1) sAdd(fx, 'line', { x1: x, x2: x, y1: i * hh + 3, y2: (i + 1) * hh - 3, stroke: '#EBD28E', 'stroke-width': 2, opacity: .9 });
+    }
+    I.style.clipPath = `path('${d}')`;
+    O.style.filter = `brightness(${1 - .5 * p})`;
+  } else if (type === 'ink') {
+    // ink blooms from the last detail with a trembling organic edge
+    const [cx, cy] = lastFocus(out);
+    const R = ease(p) * 2300, pts = [];
+    for (let j = 0; j <= 160; j++) {
+      const a = j / 160 * Math.PI * 2;
+      const n = .07 * Math.sin(5 * a + seed) + .045 * Math.sin(11 * a + seed * 2.3 + p * 3) + .025 * Math.sin(23 * a + seed * .7);
+      const rr = Math.max(0, R * (1 + n));
+      pts.push(`${(cx + rr * Math.cos(a)).toFixed(1)} ${(cy + rr * Math.sin(a)).toFixed(1)}`);
+    }
+    const d = 'M' + pts.join('L') + 'Z';
+    I.style.clipPath = `path('${d}')`;
+    sAdd(fx, 'path', { d, fill: 'none', stroke: '#C9A24A', 'stroke-width': 16, opacity: .14 * (1 - p) });
+    sAdd(fx, 'path', { d, fill: 'none', stroke: '#EBD28E', 'stroke-width': 2, opacity: .9 * (1 - p) });
+    O.style.filter = `brightness(${1 - .45 * p})`;
+  } else if (type === 'page') {
+    // the leaf turns on a spine at the right edge, like a Hebrew book
+    const q = eIO(p);
+    O.style.zIndex = 3; I.style.zIndex = 2;
+    O.style.transformOrigin = '100% 50%';
+    O.style.transform = `perspective(2600px) rotateY(${-q * 100}deg)`;
+    out.shade.style.background = 'linear-gradient(to right, rgba(0,0,0,.85), rgba(0,0,0,.1))';
+    out.shade.style.opacity = q * .9;
+    inc.shade.style.background = '#000';
+    inc.shade.style.opacity = (1 - q) * .6;
+  }
+}
+
+// ---------- main ----------
+window.setTime = function (t) {
+  clearFx();
+  let i = FRAMES.findIndex(F => t >= F.start && t < F.start + F.dur);
+  if (i < 0) i = FRAMES.length - 1;
+  FRAMES.forEach(resetFrame);
+  const F = FRAMES[i], lt = t - F.start;
+  F.el.style.display = 'block';
+  render(F, lt);
+  if (i > 0 && lt < TD) {
+    const O = FRAMES[i - 1];
+    O.el.style.display = 'block';
+    render(O, t - O.start);
+    transition(F.trans, O, F, lt / TD, i * 1.7);
+  }
+  $('#black').style.opacity = Math.max(1 - eOut(t / .5), eIO((t - (TOTAL - 1.0)) / 1.0));
+};
+
 function sampleCovers() {
-  for (const [k, s] of Object.entries(SCREENS)) {
-    if (!s.cover) continue;
-    const img = shotEls[k].inner.querySelector('img');
+  document.querySelectorAll('.cover').forEach(c => {
+    const img = c.parentElement.querySelector('img');
     const cv = document.createElement('canvas'); cv.width = img.naturalWidth; cv.height = img.naturalHeight;
     const cx = cv.getContext('2d'); cx.drawImage(img, 0, 0);
-    const y = Math.round(s.cover.box[1] * cv.height + 6);
-    const d = cx.getImageData(20, y, 1, 1).data;
-    const c = shotEls[k].inner.querySelector('.cover');
+    const d = cx.getImageData(20, Math.round(+c.dataset.y * cv.height + 6), 1, 1).data;
     c.style.background = `rgb(${d[0]},${d[1]},${d[2]})`;
-    if (s.cover.shade) { c.style.color = 'rgba(29,36,51,.55)'; }
-  }
+    if (c.dataset.shade === '1') c.style.color = 'rgba(29,36,51,.55)';
+  });
 }
-
-// dust particles (deterministic)
-const dust = [];
-let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
-const dl = document.getElementById('dustLayer');
-for (let i = 0; i < 40; i++) {
-  const d = document.createElement('div'); d.className = 'dust';
-  const r = 2 + rnd() * 4; d.style.width = d.style.height = r + 'px';
-  dl.appendChild(d);
-  dust.push({ d, x: rnd() * W, y: rnd() * H, v: 8 + rnd() * 20, ph: rnd() * 6.28, a: .15 + rnd() * .4 });
-}
-
-// ---- helpers ----
-const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
-const ease = x => { x = clamp(x); return x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; };
-const eOut = x => 1 - Math.pow(1 - clamp(x), 3);
-const lerp = (a, b, k) => a + (b - a) * k;
-const $ = id => document.getElementById(id);
-
-// intro / outro layout
-const introImgH = V ? H : H * 0.86, introImgW = introImgH * 941 / 1672;
-function setIntro(t) {
-  const wrap = $('brandWrap');
-  const out = clamp((t - (INTRO - XF)) / XF);
-  wrap.style.opacity = 1 - out;
-  const img = $('brandImg');
-  const k = 1 + 0.07 * (t / INTRO);
-  if (V) {
-    Object.assign(img.style, { left: 0, top: 0, width: W + 'px', height: H + 'px', transform: `scale(${k})`, boxShadow: 'none' });
-    $('introT1').style.cssText += `;top:${H * 0.815}px;font-size:66px;opacity:${eOut((t - 1.4) / .8)};transform:translateY(${(1 - eOut((t - 1.4) / .8)) * 30}px)`;
-    $('introT1').textContent = 'לימוד תורה יומי';
-    $('introT2').style.cssText += `;top:${H * 0.815 + 92}px;font-size:44px;font-weight:700;opacity:${eOut((t - 2.2) / .8)}`;
-    $('introT2').textContent = 'הכול במקום אחד – ובחינם';
-  } else {
-    Object.assign(img.style, { left: (W - introImgW - 220) + 'px', top: (H - introImgH) / 2 + 'px', width: introImgW + 'px', height: introImgH + 'px',
-      transform: `scale(${k})`, borderRadius: '24px', border: '3px solid #D4AF5A' });
-    const a1 = eOut((t - .8) / .9), a2 = eOut((t - 1.8) / .9);
-    $('introT1').style.cssText += `;right:${introImgW + 330}px;left:120px;text-align:center;top:390px;font-size:110px;opacity:${a1};transform:translateY(${(1 - a1) * 30}px)`;
-    $('introT1').innerHTML = 'לימוד תורה יומי';
-    $('introT2').style.cssText += `;right:${introImgW + 330}px;left:120px;text-align:center;top:550px;font-size:50px;font-weight:700;opacity:${a2}`;
-    $('introT2').textContent = 'הכול במקום אחד – ובחינם';
-  }
-  wrap.style.display = out >= 1 ? 'none' : 'block';
-}
-
-function setOutro(t) {
-  const o = $('outro'); const ts = t - (TOTAL - OUTRO);
-  o.style.display = ts < -XF ? 'none' : 'block';
-  o.style.opacity = eOut((ts + XF) / XF);
-  const img = $('outroImg');
-  const ih = V ? 820 : 560, iw = ih * 941 / 1672;
-  const pop = eOut((ts) / 1.0);
-  Object.assign(img.style, { width: iw + 'px', height: ih + 'px', borderRadius: '26px',
-    left: V ? (W - iw) / 2 + 'px' : (W - iw - 260) + 'px', top: V ? '170px' : (H - ih) / 2 + 'px',
-    transform: `scale(${0.85 + 0.15 * pop})`, opacity: pop });
-  const tx = V ? '' : `;right:${iw + 380}px;left:120px`;
-  const base = V ? 170 + ih + 90 : 300;
-  const set = (id, top, fs, d) => { const a = eOut((ts - d) / .7); $(id).style.cssText += `${tx};top:${top}px;font-size:${fs}px;opacity:${a};transform:translateY(${(1 - a) * 24}px)`; };
-  set('outroT1', base, V ? 104 : 118, .4);
-  set('outroT2', base + (V ? 150 : 170), V ? 38 : 42, 1.0);
-  set('outroT3', base + (V ? 240 : 270), V ? 46 : 48, 1.5);
-  set('outroT4', base + (V ? 350 : 380), V ? 50 : 52, 2.0);
-}
-
-function sceneAt(t) { for (const s of SCENES) if (t >= s.start && t < s.start + s.dur) return s; return null; }
-
-let lastScene = null, lastStep = -2;
-function setStage(t) {
-  const st = $('stage');
-  const inA = eOut((t - (INTRO - XF)) / XF);
-  st.style.opacity = t < TOTAL - OUTRO ? inA : 1 - eOut((t - (TOTAL - OUTRO)) / XF);
-  const s = sceneAt(clamp(t, SCENES[0].start, SCENES[SCENES.length - 1].start + SCENES[SCENES.length - 1].dur - 1e-3));
-  const si = SCENES.indexOf(s);
-  const lt = t - s.start;
-  // screen cross-fade
-  for (const [k, e] of Object.entries(shotEls)) e.el.style.opacity = 0;
-  const prev = si > 0 ? SCENES[si - 1] : null;
-  const xk = clamp(lt / 0.6);
-  if (prev && prev.screen !== s.screen && xk < 1) { shotEls[prev.screen].el.style.opacity = 1; shotEls[s.screen].el.style.opacity = ease(xk); }
-  else shotEls[s.screen].el.style.opacity = 1;
-  // phone gentle entrance + float
-  const enter = eOut((t - (INTRO - XF)) / 1.2);
-  const fl = Math.sin(t * 0.9) * 6;
-  phone.style.transform = `translateY(${(1 - enter) * 120 + fl}px) rotate(${Math.sin(t * .5) * .4}deg)`;
-
-  // highlight
-  const si2 = Math.floor((lt - SCENE_PAD) / STEP);
-  const step = si2 >= 0 && si2 < s.steps.length ? si2 : (si2 >= s.steps.length ? s.steps.length - 1 : -1);
-  const e = shotEls[s.screen];
-  for (const k in shotEls) if (k !== s.screen) shotEls[k].hl.style.opacity = 0;
-  if (step >= 0) {
-    const sl = lt - SCENE_PAD - step * STEP;
-    const cur = s.steps[step].box, prv = step > 0 ? s.steps[step - 1].box : null;
-    const m = prv ? ease(sl / .45) : 1;
-    const bx = prv ? cur.map((v, i) => lerp(prv[i], v, m)) : cur;
-    Object.assign(e.hl.style, { left: bx[0] * 100 + '%', top: bx[1] * 100 + '%', width: (bx[2] - bx[0]) * 100 + '%', height: (bx[3] - bx[1]) * 100 + '%' });
-    let a = step === 0 ? eOut(sl / .45) : 1;
-    const endFade = clamp((s.dur - lt) / 0.4);
-    const pulse = 0.85 + 0.15 * Math.sin(t * 5);
-    e.hl.style.opacity = a * endFade;
-    e.hl.style.borderColor = `rgba(212,175,90,${pulse})`;
-  } else e.hl.style.opacity = 0;
-
-  // captions
-  const ta = eOut(lt / .5) * clamp((s.dur - lt) / .35);
-  $('cTitle').textContent = s.title;
-  $('cTitle').style.opacity = ta;
-  $('cTitle').style.transform = `translateY(${(1 - eOut(lt / .5)) * -20}px)`;
-  if (V) {
-    const txt = step >= 0 ? s.steps[step].text : '';
-    const sl = step >= 0 ? lt - SCENE_PAD - step * STEP : 0;
-    const a = step >= 0 ? eOut(sl / .35) * clamp((s.dur - lt) / .35) : 0;
-    $('cText').textContent = txt; $('cText').style.opacity = a;
-    $('cText').style.transform = `translateY(${(1 - eOut(sl / .35)) * 18}px)`;
-  } else {
-    const ul = $('cList');
-    if (lastScene !== s) {
-      ul.innerHTML = s.steps.map((x, i) => `<li><span class="num">${i + 1}</span>${x.text}</li>`).join('');
-      lastScene = s;
-    }
-    [...ul.children].forEach((li, i) => {
-      const appear = eOut((lt - SCENE_PAD - i * STEP + .3) / .45);
-      const active = i === step;
-      li.style.opacity = appear * (active ? 1 : .55) * clamp((s.dur - lt) / .35);
-      li.style.transform = `translateX(${(1 - appear) * -40}px)`;
-      li.style.background = active ? 'rgba(212,175,90,.14)' : 'transparent';
-      li.style.borderRightColor = active ? 'var(--gold)' : 'transparent';
-      li.style.color = active ? 'var(--gold2)' : 'var(--cream)';
-    });
-  }
-}
-
-window.setTime = function (t) {
-  $('rays').style.transform = `rotate(${Math.sin(t * .15) * 6}deg)`;
-  $('bgBrand').style.opacity = 0.9;
-  for (const p of dust) {
-    const y = ((p.y - p.v * t) % H + H) % H;
-    p.d.style.transform = `translate(${p.x + Math.sin(t * .6 + p.ph) * 20}px, ${y}px)`;
-    p.d.style.opacity = p.a * (0.6 + 0.4 * Math.sin(t * 1.3 + p.ph));
-  }
-  setIntro(t);
-  setStage(t);
-  setOutro(t);
-  const f = $('fade');
-  f.style.opacity = Math.max(1 - eOut(t / 0.6), eOut((t - (TOTAL - 0.7)) / 0.7));
-};
 
 window.ready = (async () => {
   await Promise.all(['400 20px Heebo', '700 20px Heebo', '800 20px Heebo', '500 20px Frank', '700 20px Frank', '900 20px Frank']
