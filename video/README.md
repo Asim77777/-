@@ -38,3 +38,8 @@ python3 render.py --preview 3,10,20   # תמונות PNG לבדיקה בלבד
   ביוטיוב אפשר גם להוסיף "מסך סיום" (End screen) עם קישור.
 - **`out/70-panim-latorah.html`** – קובץ יחיד שהסרטון מוטמע בתוכו (נבנה עם `python3 make_standalone.py`).
   אפשר לשלוח אותו כקובץ. כשפותחים אותו בדפדפן הסרטון מתנגן, ובסופו הקישור לחיץ, גם בלי אינטרנט לסרטון עצמו.
+
+## קריינות
+- **`out/promo-16x9-voice.mp4`** – הסרטון עם קריינות בעברית בקול גבר (Microsoft Edge, קול `he-IL-AvriNeural`).
+- התסריט והזמנים נמצאים ב-`narration.md` וב-`narrate.py`. כדי לייצר מחדש מריצים `python3 narrate.py`, וצריך גישה לכתובת `speech.platform.bing.com`.
+- `out/promo-16x9.mp4` נשאר בלי קול.

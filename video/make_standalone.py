@@ -10,14 +10,14 @@ import subprocess
 import imageio_ffmpeg
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-SRC = os.path.join(HERE, "out", "promo-16x9.mp4")
+SRC = os.path.join(HERE, "out", "promo-16x9-voice.mp4")  # narrated cut
 OUT = os.path.join(HERE, "out", "70-panim-latorah.html")
 TMP = os.path.join(HERE, "out", ".small.mp4")
 
 # a lighter encode keeps the single file small enough to send
 subprocess.run(
     [imageio_ffmpeg.get_ffmpeg_exe(), "-y", "-loglevel", "error", "-i", SRC, "-c:v", "libx264", "-preset", "slow",
-     "-crf", "25", "-pix_fmt", "yuv420p", "-profile:v", "high", "-level", "4.1", "-movflags", "+faststart", "-an", TMP],
+     "-crf", "25", "-pix_fmt", "yuv420p", "-profile:v", "high", "-level", "4.1", "-movflags", "+faststart", "-c:a", "aac", "-b:a", "96k", TMP],
     check=True,
 )
 with open(TMP, "rb") as f:
