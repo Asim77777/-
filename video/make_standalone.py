@@ -4,6 +4,7 @@ Usage: python3 make_standalone.py
 Output: out/70-panim-latorah.html – can be sent as a file and opened in any browser.
 """
 import base64
+import re
 import os
 import subprocess
 
@@ -25,7 +26,7 @@ with open(TMP, "rb") as f:
 os.remove(TMP)
 
 html = open(os.path.join(HERE, "player.html"), encoding="utf-8").read()
-html = html.replace('src="out/promo-16x9.mp4" ', "")
+html = re.sub(r'src="out/[^"]+\.mp4" ', '', html)
 loader = (
     "<script>\n"
     "  // the video is embedded in this file, so it plays offline and can be sent as a single attachment\n"
