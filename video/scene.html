@@ -260,7 +260,9 @@ const FO = FRAMES[FRAMES.length - 1];
   FO.t1 = el('div', 'bigT', f, '70 פנים לתורה');
   FO.rule = el('div', 'ticks', f); el('i', 'base', FO.rule); FO.ruleFill = el('i', 'fill', FO.rule);
   FO.t2 = el('div', 'subT', f, 'פרשה · מפרשים · סידור · זמני היום · לימוד יומי');
-  FO.url = el('div', 'url', f, '70panimlatorah.expo.app');
+  FO.url = el('div', 'url', f, 'https://70panimlatorah.expo.app');
+  FO.qr = el('div', 'plate', f); FO.qr.style.background = 'url(assets/qr.svg) center/100% no-repeat #F2EBDC';
+  FO.qrTag = el('div', 'subT', f, 'סרקו לכניסה');
   FO.t3 = el('div', 'subT', f, 'האפליקציה חינמית – הצטרפו עכשיו');
   FO.seal = el('div', 'seal', f, sealSVG('חינם'));
   FO.shade = el('div', 'shade', f);
@@ -360,6 +362,9 @@ function renderOutro(F, lt) {
   F.ruleFill.style.clipPath = `inset(0 0 0 ${(1 - eIO((lt - 1) / 3)) * 100}%)`;
   Object.assign(F.t2.style, { right: R, top: '462px', fontSize: '34px', opacity: a2, transform: `translateY(${(1 - a2) * 18}px)` });
   Object.assign(F.url.style, { right: R, top: '570px', opacity: a3, transform: `translateY(${(1 - a3) * 18}px)` });
+  const a6 = eOut((lt - 2.4) / 1);
+  Object.assign(F.qr.style, { left: '790px', top: '548px', width: '210px', height: '210px', opacity: a6, clipPath: `inset(0 0 ${(1 - a6) * 100}% 0)` });
+  Object.assign(F.qrTag.style, { left: '790px', width: '210px', textAlign: 'center', top: '784px', font: '400 22px Heebo', letterSpacing: '.2em', color: 'var(--gold)', opacity: a6 });
   Object.assign(F.t3.style, { right: R, top: '690px', font: '700 46px/1.4 Heebo', color: 'var(--gold2)', opacity: a4, transform: `translateY(${(1 - a4) * 18}px)` });
   Object.assign(F.seal.style, { left: (AX + aw - 105) + 'px', top: (H / 2 + ah / 2 - 150) + 'px', opacity: a5,
     transform: `rotate(${(1 - a5) * -40 + lt * 2}deg) scale(${.8 + .2 * a5})` });

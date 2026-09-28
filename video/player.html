@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>70 פנים לתורה</title>
+<style>
+  :root { --ink: #0C111D; --gold: #C9A24A; --gold2: #EBD28E; --cream: #F2EBDC; }
+  * { box-sizing: border-box; margin: 0; }
+  body { background: var(--ink); color: var(--cream); font-family: Heebo, Arial, sans-serif; min-height: 100vh;
+         display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px; padding: 16px; }
+  .wrap { position: relative; width: min(100%, 1280px); aspect-ratio: 16 / 9; }
+  video { width: 100%; height: 100%; display: block; background: #000; border-radius: 6px; box-shadow: 0 0 0 1px rgba(201,162,74,.5); }
+  /* clickable hot-spots over the link and QR code in the final frames */
+  .hot { position: absolute; display: none; border-radius: 4px; cursor: pointer; }
+  .hot:hover { box-shadow: 0 0 0 2px var(--gold2), 0 0 24px rgba(235,210,142,.5); }
+  .wrap.end .hot { display: block; }
+  #hotUrl { left: calc(1178 / 1920 * 100%); top: calc(566 / 1080 * 100%); width: calc(577 / 1920 * 100%); height: calc(80 / 1080 * 100%); }
+  #hotQr  { left: calc(790 / 1920 * 100%);  top: calc(548 / 1080 * 100%); width: calc(210 / 1920 * 100%); height: calc(210 / 1080 * 100%); }
+  .cta { display: inline-block; padding: 14px 34px; color: var(--gold2); text-decoration: none; font-size: 20px; font-weight: 700;
+         box-shadow: inset 0 0 0 1px var(--gold), 0 0 0 5px var(--ink), 0 0 0 6px rgba(201,162,74,.35); border-radius: 2px; }
+  .cta:hover { background: rgba(201,162,74,.12); }
+</style>
+</head>
+<body>
+  <div class="wrap" id="wrap">
+    <video id="v" src="out/promo-16x9.mp4" controls playsinline preload="metadata"></video>
+    <a class="hot" id="hotUrl" href="https://70panimlatorah.expo.app/" target="_blank" rel="noopener" aria-label="פתיחת האפליקציה"></a>
+    <a class="hot" id="hotQr" href="https://70panimlatorah.expo.app/" target="_blank" rel="noopener" aria-label="פתיחת האפליקציה"></a>
+  </div>
+  <a class="cta" href="https://70panimlatorah.expo.app/" target="_blank" rel="noopener">כניסה לאפליקציה – 70panimlatorah.expo.app</a>
+<script>
+  // the outro (with the link and QR code) starts at 71.2s
+  const v = document.getElementById('v'), wrap = document.getElementById('wrap');
+  const sync = () => wrap.classList.toggle('end', v.currentTime >= 72.5);
+  v.addEventListener('timeupdate', sync); v.addEventListener('seeked', sync); v.addEventListener('ended', sync);
+</script>
+</body>
+</html>
