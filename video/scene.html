@@ -239,11 +239,10 @@ const FI = FRAMES[0];
   let seed = 11; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
   for (let i = 0; i < 70; i++) {
     const l = sAdd(svg, 'line', { stroke: '#C9A24A', 'stroke-width': i % 10 === 0 ? 1.6 : .9 });
-    FI.rays.push({ l, a: i / 70 * Math.PI * 2 - Math.PI / 2, len: 200 + rnd() * 240 + (i % 10 === 0 ? 110 : 0) });
+    FI.rays.push({ l, a: i / 70 * Math.PI * 2 - Math.PI / 2, len: 150 + rnd() * 190 + (i % 10 === 0 ? 90 : 0) });
   }
-  FI.ayin = el('div', null, f, 'ע');
-  Object.assign(FI.ayin.style, { position: 'absolute', left: 0, width: W + 'px', top: (H / 2 - 170) + 'px', height: '340px', lineHeight: '340px', textAlign: 'center',
-    font: '900 250px/340px Frank', color: 'transparent', webkitTextStroke: '1.6px #EBD28E' });
+  FI.ayin = el('div', null, f, '<div style="font:900 170px/1 Frank;color:transparent;-webkit-text-stroke:1.8px #EBD28E">70</div><div style="font:900 78px/1.1 Frank;color:#EBD28E;margin-top:14px">פנים לתורה</div>');
+  Object.assign(FI.ayin.style, { position: 'absolute', left: 0, width: W + 'px', top: (H / 2 - 150) + 'px', height: '300px', textAlign: 'center' });
   FI.arch = el('div', 'arch', f);
   FI.t1 = el('div', 'bigT', f, 'לימוד תורה יומי');
   FI.rule = el('div', 'ticks', f); el('i', 'base', FI.rule); FI.ruleFill = el('i', 'fill', FI.rule);
@@ -329,7 +328,7 @@ function renderIntro(F, lt) {
   const burst = ease((lt - 2.5) / 1.1);
   for (const [i, r] of F.rays.entries()) {
     const d = eOut((lt - 0.25 - i * 0.022) / .7);
-    const r0 = 190 + burst * 900, r1 = r0 + r.len * d * (1 - burst * .3);
+    const r0 = 285 + burst * 900, r1 = r0 + r.len * d * (1 - burst * .3);
     const a = r.a + lt * .02;
     r.l.setAttribute('x1', cx + r0 * Math.cos(a)); r.l.setAttribute('y1', cy + r0 * Math.sin(a));
     r.l.setAttribute('x2', cx + r1 * Math.cos(a)); r.l.setAttribute('y2', cy + r1 * Math.sin(a));
@@ -337,7 +336,7 @@ function renderIntro(F, lt) {
   }
   const ay = eOut((lt - .6) / 1.2);
   F.ayin.style.opacity = ay * (1 - burst);
-  F.ayin.style.transform = `scale(${0.92 + .08 * ay + burst * 5})`;
+  F.ayin.style.transform = `scale(${0.92 + .08 * ay + burst * 3})`;
 
   const a1 = eOut((lt - 3.0) / 1.1), a2 = eOut((lt - 3.6) / 1.0), a3 = eOut((lt - 4.2) / 1.0), a4 = eOut((lt - 4.8) / .9);
   const ah = 800, aw = 500, AX = 220;
