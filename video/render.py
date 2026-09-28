@@ -1,6 +1,6 @@
 """Render the 16:9 promo video from scene.html with headless Chromium and encode with ffmpeg.
 
-Usage: python3 render.py [--preview T1,T2,...]
+Usage: python3 render.py [--vertical] [--preview T1,T2,...]
 """
 import functools
 import http.server
@@ -16,9 +16,10 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, "out")
 FFMPEG = imageio_ffmpeg.get_ffmpeg_exe()
 FPS = 30
-W, H = 1920, 1080
+VERTICAL = "--vertical" in sys.argv
+W, H = (1080, 1920) if VERTICAL else (1920, 1080)
 CHROMIUM = os.environ.get("CHROMIUM_PATH", "/opt/pw-browsers/chromium")
-FINAL = os.path.join(OUT, "promo-16x9.mp4")
+FINAL = os.path.join(OUT, "promo-9x16.mp4" if VERTICAL else "promo-16x9.mp4")
 
 
 def serve():
@@ -34,7 +35,7 @@ def serve():
 
 def render(preview=None):
     httpd = serve()
-    url = f"http://127.0.0.1:{httpd.server_address[1]}/scene.html"
+    url = f"http://127.0.0.1:{httpd.server_address[1]}/scene.html" + ("?format=vertical" if VERTICAL else "")
     os.makedirs(OUT, exist_ok=True)
     with sync_playwright() as p:
         browser = p.chromium.launch(executable_path=CHROMIUM)
@@ -44,7 +45,7 @@ def render(preview=None):
         if preview:
             for t in preview:
                 page.evaluate(f"setTime({t})")
-                page.screenshot(path=os.path.join(OUT, f"preview-{t:05.2f}.png"))
+                page.screenshot(path=os.path.join(OUT, f"preview-{'v' if VERTICAL else 'h'}-{t:05.2f}.png"))
             browser.close()
             return total
         n = int(round(total * FPS))

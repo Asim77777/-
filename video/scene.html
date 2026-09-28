@@ -13,7 +13,7 @@
 
   :root { --ink: #0C111D; --gold: #C9A24A; --gold2: #EBD28E; --cream: #F2EBDC; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { width: 1920px; height: 1080px; overflow: hidden; background: #000; }
+  html, body { width: var(--W, 1920px); height: var(--H, 1080px); overflow: hidden; background: #000; }
   body { font-family: Heebo, sans-serif; color: var(--cream); position: relative; }
 
   .frame { position: absolute; inset: 0; overflow: hidden; background-color: var(--ink); backface-visibility: hidden; }
@@ -49,7 +49,7 @@
   .plate { position: absolute; opacity: 0; background-repeat: no-repeat; border-radius: 4px; background-color: var(--cream);
            box-shadow: 0 0 0 1px var(--gold), 0 0 0 7px rgba(12,17,29,.92), 0 0 0 8px rgba(201,162,74,.35), 0 40px 80px rgba(0,0,0,.6); }
   .plateTag { position: absolute; font: 400 15px Heebo; letter-spacing: .32em; color: var(--gold); direction: ltr; white-space: nowrap; opacity: 0; }
-  svg.proj { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; pointer-events: none; overflow: visible; }
+  svg.proj { position: absolute; left: 0; top: 0; width: var(--W, 1920px); height: var(--H, 1080px); pointer-events: none; overflow: visible; }
 
   /* text column */
   .col { position: absolute; right: 118px; width: 600px; top: 0; bottom: 0; }
@@ -79,10 +79,21 @@
   .subT { position: absolute; font: 400 40px/1.4 Heebo; color: var(--cream); white-space: nowrap; }
   .url { position: absolute; font: 400 30px Heebo; letter-spacing: .12em; color: var(--gold2); direction: ltr; white-space: nowrap;
          padding: 14px 34px; box-shadow: inset 0 0 0 1px var(--gold), 0 0 0 5px rgba(12,17,29,1), 0 0 0 6px rgba(201,162,74,.3); border-radius: 2px; }
-  #fx { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; pointer-events: none; z-index: 50; }
+  #fx { position: absolute; left: 0; top: 0; width: var(--W, 1920px); height: var(--H, 1080px); pointer-events: none; z-index: 50; }
   #roller { position: absolute; top: -20px; bottom: -20px; width: 86px; z-index: 60; display: none;
     background: linear-gradient(to right, #1a1206 0%, #5a4118 14%, #c9a24a 34%, #f6e3a8 46%, #c9a24a 58%, #6b4d1c 80%, #1a1206 100%);
     box-shadow: -30px 0 60px rgba(0,0,0,.6), 30px 0 60px rgba(0,0,0,.35); }
+  /* 9:16 layout: text on top, magnified plate below it, phone at the bottom */
+  body.v .col { right: 90px; width: 900px; }
+  body.v .numeral { right: -20px; top: 40px; font-size: 360px; }
+  body.v .eyebrow { top: 150px; }
+  body.v .title { top: 186px; font-size: 100px; }
+  body.v .ticks { top: 322px; width: 900px; }
+  body.v .step { top: 372px; width: 900px; font-size: 56px; }
+  body.v .idx { top: 520px; }
+  body.v .brandMark { left: 0; right: 0; bottom: auto; top: 62px; justify-content: center; }
+  body.v .margins::before, body.v .margins::after { top: 30px; bottom: 30px; }
+  body.v .margins::before { left: 34px; } body.v .margins::after { right: 34px; }
   #black { position: absolute; inset: 0; background: #000; z-index: 90; pointer-events: none; }
 </style>
 </head>
@@ -93,7 +104,8 @@
 <div id="black"></div>
 
 <script>
-const W = 1920, H = 1080, NS = 'http://www.w3.org/2000/svg';
+const V = new URLSearchParams(location.search).get('format') === 'vertical';
+const W = V ? 1080 : 1920, H = V ? 1920 : 1080, NS = 'http://www.w3.org/2000/svg';
 const $ = (s, r = document) => r.querySelector(s);
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
 const ease = x => { x = clamp(x); return x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; };
@@ -101,6 +113,10 @@ const eOut = x => 1 - Math.pow(1 - clamp(x), 3);
 const eIO = x => { x = clamp(x); return -(Math.cos(Math.PI * x) - 1) / 2; };
 const lerp = (a, b, k) => a + (b - a) * k;
 const el = (tag, cls, parent, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; if (parent) parent.appendChild(e); return e; };
+
+document.documentElement.style.setProperty('--W', W + 'px');
+document.documentElement.style.setProperty('--H', H + 'px');
+if (V) document.body.classList.add('v');
 
 // paper grain as a cached SVG image
 const grainSvg = `<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .8  0 0 0 0 .7  0 0 0 0 .45  0 0 0 .08 0'/></filter><rect width='100%' height='100%' filter='url(#n)'/></svg>`;
@@ -165,10 +181,11 @@ window.TOTAL = TOTAL;
 window.TRANSITIONS = FRAMES.slice(1).map(f => f.start);
 
 // ---------- layout ----------
-const SW = 400, IMGH = SW * IMG_AR, SH = IMGH * VIS, BZ = 14;
-const PW = SW + 2 * BZ, PH = SH + 2 * BZ, PX = 150, PY = (H - PH) / 2;
+const SW = V ? 456 : 400, IMGH = SW * IMG_AR, SH = IMGH * VIS, BZ = 14;
+const PW = SW + 2 * BZ, PH = SH + 2 * BZ, PX = V ? (W - PW) / 2 : 150, PY = V ? H - PH - 52 : (H - PH) / 2;
 const SX = PX + BZ, SY = PY + BZ;
-const PLATE_CX = 900, PLATE_MAXW = 480, PLATE_MAXH = 420;
+const PLATE_CX = V ? W / 2 : 900, PLATE_MAXW = V ? 880 : 480, PLATE_MAXH = V ? 300 : 420;
+const PLATE_CY = 755;  // vertical only: centre of the plate band between caption and phone
 
 function boxRect(bx) {
   return { x: SX + bx[0] * SW, y: SY + (bx[1] - CROP_TOP) * IMGH, w: (bx[2] - bx[0]) * SW, h: (bx[3] - bx[1]) * IMGH };
@@ -295,7 +312,7 @@ function renderScene(F, lt) {
   const r = boxRect(bx);
   const sc = Math.min(PLATE_MAXW / r.w, PLATE_MAXH / r.h, 2.4);
   const pw = r.w * sc, ph = r.h * sc;
-  const pcy = clamp(r.y + r.h / 2, 150 + ph / 2, H - 150 - ph / 2);
+  const pcy = V ? PLATE_CY : clamp(r.y + r.h / 2, 150 + ph / 2, H - 150 - ph / 2);
   const tgt = { x: PLATE_CX - pw / 2, y: pcy - ph / 2, w: pw, h: ph };
   const k = step === 0 ? ease(sl / .95) : 1;
   const P = { x: lerp(r.x, tgt.x, k), y: lerp(r.y, tgt.y, k), w: lerp(r.w, tgt.w, k), h: lerp(r.h, tgt.h, k) };
@@ -303,10 +320,12 @@ function renderScene(F, lt) {
   Object.assign(F.plate.style, { left: P.x + 'px', top: P.y + 'px', width: P.w + 'px', height: P.h + 'px', opacity: appear,
     backgroundSize: `${SW * s2}px ${IMGH * s2}px`, backgroundPosition: `${-bx[0] * SW * s2}px ${-bx[1] * IMGH * s2}px` });
   F.tag.textContent = `FIG. ${String(SCENES.indexOf(s) + 1)}.${step + 1}`;
-  Object.assign(F.tag.style, { left: P.x + 'px', top: (P.y + P.h + 22) + 'px', opacity: appear * .9 });
+  Object.assign(F.tag.style, V ? { left: (P.x + P.w + 14) + 'px', top: (P.y - 4) + 'px', opacity: appear * .9, writingMode: 'vertical-rl' }
+                               : { left: P.x + 'px', top: (P.y + P.h + 22) + 'px', opacity: appear * .9 });
 
   const la = appear * .8;
-  const pts = [[r.x + r.w, r.y, P.x, P.y], [r.x + r.w, r.y + r.h, P.x, P.y + P.h]];
+  const pts = V ? [[r.x, r.y, P.x, P.y + P.h], [r.x + r.w, r.y, P.x + P.w, P.y + P.h]]
+                : [[r.x + r.w, r.y, P.x, P.y], [r.x + r.w, r.y + r.h, P.x, P.y + P.h]];
   pts.forEach((p, i) => {
     const L = F.lines[i];
     L.setAttribute('x1', p[0]); L.setAttribute('y1', p[1]); L.setAttribute('x2', p[2]); L.setAttribute('y2', p[3]); L.setAttribute('opacity', la);
@@ -350,6 +369,15 @@ function renderIntro(F, lt) {
   Object.assign(F.t2.style, { right: '170px', top: '532px', opacity: a3, transform: `translateY(${(1 - a3) * 20}px)` });
   Object.assign(F.seal.style, { left: (AX + aw - 105) + 'px', top: (H / 2 + ah / 2 - 150) + 'px', opacity: a4,
     transform: `rotate(${(1 - a4) * -40 + lt * 2}deg) scale(${.8 + .2 * a4})` });
+
+  if (V) {
+    const ahv = 880, awv = 540, AXv = (W - awv) / 2, Tv = 230;
+    Object.assign(F.arch.style, { left: AXv + 'px', top: Tv + 'px', width: awv + 'px', height: ahv + 'px' });
+    Object.assign(F.t1.style, { left: '0', right: '0', textAlign: 'center', top: '1210px', fontSize: '112px' });
+    Object.assign(F.rule.style, { left: (W - 760) / 2 + 'px', right: 'auto', top: '1372px', width: '760px' });
+    Object.assign(F.t2.style, { left: '0', right: '0', textAlign: 'center', top: '1412px', fontSize: '42px' });
+    Object.assign(F.seal.style, { left: (AXv + awv - 120) + 'px', top: (Tv + ahv - 150) + 'px' });
+  }
 }
 
 function renderOutro(F, lt) {
@@ -368,6 +396,20 @@ function renderOutro(F, lt) {
   Object.assign(F.t3.style, { right: R, top: '690px', font: '700 46px/1.4 Heebo', color: 'var(--gold2)', opacity: a4, transform: `translateY(${(1 - a4) * 18}px)` });
   Object.assign(F.seal.style, { left: (AX + aw - 105) + 'px', top: (H / 2 + ah / 2 - 150) + 'px', opacity: a5,
     transform: `rotate(${(1 - a5) * -40 + lt * 2}deg) scale(${.8 + .2 * a5})` });
+
+  if (V) {
+    const ahv = 640, awv = 400, AXv = (W - awv) / 2, Tv = 150;
+    Object.assign(F.arch.style, { left: AXv + 'px', top: Tv + 'px', width: awv + 'px', height: ahv + 'px' });
+    Object.assign(F.seal.style, { left: (AXv + awv - 120) + 'px', top: (Tv + ahv - 150) + 'px' });
+    const C = { left: '0', right: '0', textAlign: 'center' };
+    Object.assign(F.t1.style, C, { top: '850px', fontSize: '112px' });
+    Object.assign(F.rule.style, { left: (W - 820) / 2 + 'px', right: 'auto', top: '1008px', width: '820px' });
+    Object.assign(F.t2.style, C, { top: '1044px', fontSize: '32px' });
+    Object.assign(F.url.style, { left: '50%', right: 'auto', top: '1136px', transform: `translate(-50%, ${(1 - a3) * 18}px)` });
+    Object.assign(F.qr.style, { left: (W - 250) / 2 + 'px', top: '1268px', width: '250px', height: '250px' });
+    Object.assign(F.qrTag.style, { left: (W - 250) / 2 + 'px', width: '250px', top: '1536px' });
+    Object.assign(F.t3.style, C, { top: '1610px' });
+  }
 }
 
 function render(F, lt) {
@@ -414,7 +456,7 @@ function transition(type, out, inc, p, seed) {
   } else if (type === 'ink') {
     // ink blooms from the last detail with a trembling organic edge
     const [cx, cy] = lastFocus(out);
-    const R = ease(p) * 2300, pts = [];
+    const R = ease(p) * Math.hypot(W, H) * 1.18, pts = [];
     for (let j = 0; j <= 160; j++) {
       const a = j / 160 * Math.PI * 2;
       const n = .07 * Math.sin(5 * a + seed) + .045 * Math.sin(11 * a + seed * 2.3 + p * 3) + .025 * Math.sin(23 * a + seed * .7);
