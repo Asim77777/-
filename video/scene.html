@@ -76,9 +76,9 @@
 <div id="outro" class="layer">
   <div id="outroImg" style="position:absolute;background:url(assets/brand.png) center/cover;box-shadow:0 30px 80px rgba(0,0,0,.6);border:3px solid var(--gold)"></div>
   <div id="outroT1" class="bigText">70 פנים לתורה</div>
-  <div id="outroT2" class="subText">פרשה · פסוקים · מפרשים · זמני היום · הלכה</div>
+  <div id="outroT2" class="subText">פרשה · מפרשים · סידור · זמני היום · לימוד יומי</div>
   <div id="outroT3" class="subText"><span class="pill">70panimlatorah.expo.app</span></div>
-  <div id="outroT4" class="subText" style="font-weight:800;color:var(--gold2)">הצטרפו עכשיו ולמדו כל יום</div>
+  <div id="outroT4" class="subText" style="font-weight:800;color:var(--gold2)">האפליקציה חינמית – הצטרפו עכשיו!</div>
 </div>
 <div id="fade" class="layer"></div>
 
@@ -102,6 +102,8 @@ const SCREENS = {
   zmanim: { src: 'assets/zmanim.jpg', cover: { box: b(0, 88, 923, 165), shade: true } },
   verse:  { src: 'assets/verse.jpg' },
   siddur: { src: 'assets/siddur.jpg' },
+  siddurMain: { src: 'assets/siddur-main.jpg' },
+  homeMore: { src: 'assets/home-more.jpg' },
 };
 
 // ---- storyboard ----
@@ -113,6 +115,12 @@ const SCENES = [
     { box: b(18, 848, 905, 1470), text: 'פסוק יומי – ולחיצה אחת ללימוד' },
     { box: b(22, 1488, 905, 1685), text: 'הדלקת נרות וצאת השבת לפי העיר שלך' },
   ]},
+  { screen: 'homeMore', title: 'עוד במסך הבית', steps: [
+    { box: b(20, 365, 908, 605), text: 'צאת שבת לר״ת ובחירת העיר שלך' },
+    { box: b(12, 620, 911, 918), text: 'חוקת יומא ורמב״ם היומי' },
+    { box: b(12, 930, 911, 1228), text: 'הדף היומי ותהילים יומי' },
+    { box: b(14, 1238, 909, 1674), text: 'מחשבה יומית מספרי המוסר' },
+  ]},
   { screen: 'zmanim', title: 'זמני היום', steps: [
     { box: b(50, 300, 873, 600), text: 'כל זמני היום ההלכתיים – לפי העיר שלך' },
     { box: b(85, 640, 838, 1440), text: 'מעלות השחר ועד סוף זמן תפילה' },
@@ -121,13 +129,18 @@ const SCENES = [
   { screen: 'verse', title: 'לימוד הפסוק', steps: [
     { box: b(30, 262, 893, 555), text: 'כל פסוק בתורה – בניקוד מלא' },
     { box: b(30, 580, 893, 690), text: 'מאות מקורות קשורים לכל פסוק' },
-    { box: b(30, 722, 300, 858), text: 'בחרו מתוך 70 מפרשים' },
+    { box: b(30, 722, 300, 858), text: 'בחרו מתוך מפרשים' },
     { box: b(30, 885, 893, 1660), text: 'פירושים מלאים לקריאה נוחה' },
     { box: b(320, 722, 893, 858), text: 'הוסיפו חידוש או שאילתא משלכם' },
     { box: b(30, 1660, 893, 1835), text: 'כתבו או הקליטו את החידוש בקול' },
   ]},
-  { screen: 'siddur', title: 'הסידור שלי', steps: [
-    { box: b(90, 125, 835, 250), text: 'קיצור שולחן ערוך – תמיד איתכם' },
+  { screen: 'siddurMain', title: 'הסידור שלי', steps: [
+    { box: b(36, 326, 887, 972), text: 'תפילת חול – נוסח עדות המזרח ונוסח אשכנז' },
+    { box: b(36, 1004, 887, 1324), text: 'תפילות וברכות נוספות' },
+    { box: b(36, 1344, 887, 1664), text: 'וגם קיצור שולחן ערוך' },
+  ]},
+  { screen: 'siddur', title: 'קיצור שולחן ערוך', steps: [
+    { box: b(90, 125, 835, 250), text: 'ההלכה היומיומית – תמיד איתכם' },
     { box: b(35, 262, 888, 372), text: 'חיפוש מהיר בכל הספר' },
     { box: b(35, 600, 888, 1695), text: 'כל הסימנים מסודרים לפי נושאים' },
   ]},
@@ -136,7 +149,7 @@ const SCENES = [
   ]},
 ];
 
-const STEP = V ? 1.85 : 2.4;          // seconds per highlight
+const STEP = V ? 1.7 : 2.3;          // seconds per highlight
 const SCENE_PAD = V ? 0.9 : 1.3;     // time on scene before first highlight
 const INTRO = V ? 5.5 : 6.5, OUTRO = V ? 6.0 : 7.0, XF = 0.7;
 
@@ -238,7 +251,7 @@ function setIntro(t) {
     $('introT1').style.cssText += `;top:${H * 0.815}px;font-size:66px;opacity:${eOut((t - 1.4) / .8)};transform:translateY(${(1 - eOut((t - 1.4) / .8)) * 30}px)`;
     $('introT1').textContent = 'לימוד תורה יומי';
     $('introT2').style.cssText += `;top:${H * 0.815 + 92}px;font-size:44px;font-weight:700;opacity:${eOut((t - 2.2) / .8)}`;
-    $('introT2').textContent = 'הכול במקום אחד – בטלפון שלך';
+    $('introT2').textContent = 'הכול במקום אחד – ובחינם';
   } else {
     Object.assign(img.style, { left: (W - introImgW - 220) + 'px', top: (H - introImgH) / 2 + 'px', width: introImgW + 'px', height: introImgH + 'px',
       transform: `scale(${k})`, borderRadius: '24px', border: '3px solid #D4AF5A' });
@@ -246,7 +259,7 @@ function setIntro(t) {
     $('introT1').style.cssText += `;right:${introImgW + 330}px;left:120px;text-align:center;top:390px;font-size:110px;opacity:${a1};transform:translateY(${(1 - a1) * 30}px)`;
     $('introT1').innerHTML = 'לימוד תורה יומי';
     $('introT2').style.cssText += `;right:${introImgW + 330}px;left:120px;text-align:center;top:550px;font-size:50px;font-weight:700;opacity:${a2}`;
-    $('introT2').textContent = 'הכול במקום אחד – בטלפון שלך';
+    $('introT2').textContent = 'הכול במקום אחד – ובחינם';
   }
   wrap.style.display = out >= 1 ? 'none' : 'block';
 }
