@@ -4,36 +4,82 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>70 פנים לתורה</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;900&family=Heebo:wght@400;700&display=swap">
 <style>
-  :root { --ink: #0C111D; --gold: #C9A24A; --gold2: #EBD28E; --cream: #F2EBDC; }
-  * { box-sizing: border-box; margin: 0; }
-  body { background: var(--ink); color: var(--cream); font-family: Heebo, Arial, sans-serif; min-height: 100vh;
-         display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px; padding: 16px; }
-  .wrap { position: relative; width: min(100%, 1280px); aspect-ratio: 16 / 9; }
-  video { width: 100%; height: 100%; display: block; background: #000; border-radius: 6px; box-shadow: 0 0 0 1px rgba(201,162,74,.5); }
-  /* clickable hot-spots over the link and QR code in the final frames */
-  .hot { position: absolute; display: none; border-radius: 4px; cursor: pointer; }
-  .hot:hover { box-shadow: 0 0 0 2px var(--gold2), 0 0 24px rgba(235,210,142,.5); }
-  .wrap.end .hot { display: block; }
-  #hotUrl { left: calc(1178 / 1920 * 100%); top: calc(566 / 1080 * 100%); width: calc(577 / 1920 * 100%); height: calc(80 / 1080 * 100%); }
-  #hotQr  { left: calc(790 / 1920 * 100%);  top: calc(548 / 1080 * 100%); width: calc(210 / 1920 * 100%); height: calc(210 / 1080 * 100%); }
-  .cta { display: inline-block; padding: 14px 34px; color: var(--gold2); text-decoration: none; font-size: 20px; font-weight: 700;
-         box-shadow: inset 0 0 0 1px var(--gold), 0 0 0 5px var(--ink), 0 0 0 6px rgba(201,162,74,.35); border-radius: 2px; }
-  .cta:hover { background: rgba(201,162,74,.12); }
+  /* single deliberate look: ink night with gold hairlines, matching the video */
+  :root { color-scheme: dark; --ink: #0C111D; --ink2: #141B2B; --gold: #C9A24A; --gold2: #EBD28E; --cream: #F2EBDC; --muted: #9C9784; }
+  html, body { margin: 0; background: var(--ink); color: var(--cream); }
+  body { font-family: Heebo, "Arial Hebrew", Arial, sans-serif; direction: rtl; min-height: 100%;
+         padding: 28px 16px 40px;
+         background:
+           repeating-linear-gradient(to bottom, transparent 0 53px, rgba(201,162,74,.05) 53px 54px),
+           radial-gradient(ellipse 80% 60% at 50% 0%, #1b2440 0%, transparent 70%), var(--ink); }
+  main { max-width: 1180px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 26px; }
+  header { text-align: center; display: flex; flex-direction: column; gap: 8px; }
+  h1 { margin: 0; font: 900 clamp(34px, 6vw, 60px)/1.05 "Frank Ruhl Libre", "Times New Roman", serif; color: var(--gold2); text-wrap: balance; }
+  .sub { color: var(--muted); font-size: clamp(14px, 2.4vw, 17px); letter-spacing: .06em; }
+
+  .stage { position: relative; width: 100%; max-width: 100%; aspect-ratio: 16 / 9; border-radius: 4px; overflow: hidden;
+           box-shadow: 0 0 0 1px var(--gold), 0 0 0 7px var(--ink), 0 0 0 8px rgba(201,162,74,.3), 0 40px 80px rgba(0,0,0,.55); }
+  video { width: 100%; height: 100%; display: block; background: #000; }
+
+  /* hot-spots over the address and the QR code in the closing frames (video coords 1920x1080) */
+  .hot { position: absolute; display: none; border-radius: 3px; z-index: 2; }
+  .hot:hover, .hot:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--gold2), 0 0 26px rgba(235,210,142,.55); }
+  .stage.end .hot { display: block; }
+  #hotUrl { left: 61.35%; top: 52.4%; width: 30.05%; height: 7.4%; }
+  #hotQr  { left: 41.15%; top: 50.74%; width: 10.94%; height: 19.44%; }
+
+  /* once playback ends: a clear call to action over the last frame */
+  .endcard { position: absolute; inset: auto 0 13% 0; display: none; justify-content: center; z-index: 3; pointer-events: none; }
+  .stage.done .endcard { display: flex; }
+  .endcard a { pointer-events: auto; }
+
+  .cta { display: inline-flex; align-items: center; gap: 12px; padding: 14px 30px; border-radius: 2px; text-decoration: none;
+         font: 700 clamp(16px, 2.6vw, 20px) Heebo, Arial, sans-serif; color: var(--ink); background: var(--gold2);
+         box-shadow: 0 0 0 5px var(--ink), 0 0 0 6px var(--gold); transition: background .2s; }
+  .cta:hover { background: #F6E3A8; }
+  .cta:focus-visible { outline: 2px solid var(--cream); outline-offset: 8px; }
+  .cta .arrow { font-size: 1.1em; }
+
+  .link { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 14px 22px; }
+  .addr { direction: ltr; font: 400 15px Heebo, Arial, sans-serif; letter-spacing: .08em; color: var(--gold2); text-decoration: none;
+          border-bottom: 1px solid rgba(201,162,74,.45); padding-bottom: 2px; }
+  .addr:hover { border-color: var(--gold2); }
+  .note { color: var(--muted); font-size: 13px; letter-spacing: .04em; text-align: center; }
+  @media (prefers-reduced-motion: reduce) { .cta { transition: none; } }
 </style>
 </head>
 <body>
-  <div class="wrap" id="wrap">
+<main>
+  <header>
+    <h1>70 פנים לתורה</h1>
+    <div class="sub">פרשה · מפרשים · סידור · זמני היום · לימוד יומי</div>
+  </header>
+
+  <div class="stage" id="stage">
     <video id="v" src="out/promo-16x9.mp4" controls playsinline preload="metadata"></video>
     <a class="hot" id="hotUrl" href="https://70panimlatorah.expo.app/" target="_blank" rel="noopener" aria-label="פתיחת האפליקציה"></a>
     <a class="hot" id="hotQr" href="https://70panimlatorah.expo.app/" target="_blank" rel="noopener" aria-label="פתיחת האפליקציה"></a>
+    <div class="endcard"><a class="cta" href="https://70panimlatorah.expo.app/" target="_blank" rel="noopener">כניסה לאפליקציה <span class="arrow">←</span></a></div>
   </div>
-  <a class="cta" href="https://70panimlatorah.expo.app/" target="_blank" rel="noopener">כניסה לאפליקציה – 70panimlatorah.expo.app</a>
+
+  <div class="link">
+    <a class="cta" href="https://70panimlatorah.expo.app/" target="_blank" rel="noopener">כניסה לאפליקציה – בחינם <span class="arrow">←</span></a>
+    <a class="addr" href="https://70panimlatorah.expo.app/" target="_blank" rel="noopener">70panimlatorah.expo.app</a>
+  </div>
+  <p class="note">בסוף הסרטון אפשר ללחוץ על הכתובת או על קוד ה-QR כדי לפתוח את האפליקציה.</p>
+</main>
+
 <script>
-  // the outro (with the link and QR code) starts at 71.2s
-  const v = document.getElementById('v'), wrap = document.getElementById('wrap');
-  const sync = () => wrap.classList.toggle('end', v.currentTime >= 72.5);
-  v.addEventListener('timeupdate', sync); v.addEventListener('seeked', sync); v.addEventListener('ended', sync);
+  // the closing scene with the address and QR code starts at 71.2s
+  const v = document.getElementById('v'), stage = document.getElementById('stage');
+  const sync = () => {
+    stage.classList.toggle('end', v.currentTime >= 72.5);
+    stage.classList.toggle('done', v.ended);
+  };
+  ['timeupdate', 'seeked', 'ended', 'play'].forEach(e => v.addEventListener(e, sync));
 </script>
 </body>
 </html>
