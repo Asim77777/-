@@ -30,9 +30,11 @@ VERSE = ["יִתְבָּרְרוּ וְיִתְלַבְּנוּ וְיִצָּר
 WISE = ["וְהַמַּשְׂכִּלִים יָבִינוּ"]
 SEALED = ["כִּי סְתֻמִים וַחֲתֻמִים", "הַדְּבָרִים עַד עֵת קֵץ"]
 SOURCE = ["דָּנִיֵּאל י״ב"]
+TITLE = ["וְהַמַּשְׂכִּלִים יָבִינוּ"]
 
 LYRICS = [
-    (10.0, 25.0, SOURCE, "caption"),
+    (6.0, 27.0, TITLE, "title"),
+    (8.5, 27.0, SOURCE, "subtitle"),
     (33.4, 48.6, VERSE, "verse"),
     (49.07, 63.0, WISE, "wise"),
     (81.38, 96.7, VERSE, "verse"),
@@ -274,14 +276,16 @@ class Renderer:
     def build_block(self, t0, t1, lines, kind):
         W, H = self.W, self.H
         portrait = H > W
-        base = {"verse": 74, "wise": 104, "sealed": 88, "caption": 46}[kind]
+        base = {"verse": 74, "wise": 104, "sealed": 88, "caption": 46,
+                "title": 120, "subtitle": 46}[kind]
         size = int(base * (W / 1920 if not portrait else 1.0 if kind != "verse" else 0.92))
         max_w = W * (0.86 if portrait else 0.8)
-        font = self.font(size, light=(kind == "caption"))
+        light = kind in ("caption", "subtitle")
+        font = self.font(size, light=light)
         wrapped = self.wrap(lines, font, max_w)
         while max(font.getlength(l, direction="rtl") for l in wrapped) > max_w:
             size = int(size * 0.94)
-            font = self.font(size, light=(kind == "caption"))
+            font = self.font(size, light=light)
             wrapped = self.wrap(lines, font, max_w)
         line_h = int(size * 1.55)
         pad = int(size * 0.9)
@@ -299,7 +303,11 @@ class Renderer:
         halo = [np.asarray(m.filter(ImageFilter.GaussianBlur(size * 0.9)), np.float32) / 255
                 for m in masks]
         if kind == "caption":
-            cy = H * (0.5 if portrait else 0.5)
+            cy = H * 0.5
+        elif kind == "title":
+            cy = H * (0.44 if portrait else 0.42)
+        elif kind == "subtitle":
+            cy = H * (0.44 if portrait else 0.42) + size * 3.2
         elif kind == "sealed":
             cy = H * (0.47 if portrait else 0.46)
         else:
@@ -325,8 +333,12 @@ class Renderer:
                 if b["kind"] == "verse":   # refined in the fire: ember -> white gold
                     col = EMBER * (1 - prog) + WHITE_GOLD * prog
                     gcol = np.array([255, 90, 10], np.float32) * (1 - prog) + GOLD * prog
-                elif b["kind"] == "caption":
+                elif b["kind"] in ("caption", "subtitle"):
                     col, gcol = GOLD * 0.95, np.array([200, 110, 30], np.float32)
+                elif b["kind"] == "title":   # glows up from ember to gold
+                    u = float(smoothstep((t - b["t0"]) / 6.0))
+                    col = EMBER * (1 - u) + GOLD * u
+                    gcol = np.array([255, 90, 10], np.float32) * (1 - u) + GOLD * u
                 else:
                     col, gcol = WHITE_GOLD, GOLD
                 rise = int((1 - a_in) * b["size"] * 0.35)
