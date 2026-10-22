@@ -46,6 +46,9 @@ CHORUS_A = [(37.84, 39.50, 45.35), (45.56, 47.06, 52.70)]     # (word1, word2, e
 SEALED = [["כִּי", "סְתֻמִים", "וַחֲתֻמִים"], ["הַדְּבָרִים", "עַד", "עֵת", "קֵץ"]]
 SEALED_T = [131.25, 138.99]
 TITLE = "וְהַמַּשְׂכִּלִים יָבִינוּ"
+# source reference in Hebrew letters (the font subset has no comma/dash, so spacing and a maqaf)
+REF_FULL = "דָּנִיֵּאל  י״ב  ט׳־י׳"
+REF_END = "דָּנִיֵּאל  י״ב  ט׳"
 
 T_DROP = 52.90
 T_BUILD = 104.0
@@ -276,8 +279,7 @@ class Clip:
             self.light_band(fr, cy, 1.2 + 0.6 * self.beat_env[f], W / 2 - half_w, W / 2 + half_w, pulse,
                             feather_x=max(20, half_w * 0.6))
         lab = ease_io((t - 8) / 2.5)
-        fr.blit(sprite("דָּנִיֵּאל", SANS_THIN, 30), W / 2 + 18, cy - 200, PAPER, 0.82 * lab, anchor="l")
-        fr.blit(sprite("12 : 9—10", MONO, 19, rtl=False), W / 2 - 14, cy - 200, PAPER, 0.6 * lab, anchor="r")
+        fr.blit(sprite(REF_FULL, SANS_THIN, 30), W / 2, cy - 200, PAPER, 0.82 * lab, anchor="c")
         self.ruler(fr, t, cy + 214, PAPER, a_in)
         self.timecode(fr, t, W * .10, cy + 244, PAPER, 0.5 * a_in)
         fr.blit(sprite("01 / 06", MONO, 16, rtl=False), W * .90, cy + 250, PAPER, 0.5 * a_in, anchor="r")
@@ -295,8 +297,7 @@ class Clip:
         sub.blit(title, W / 2, cy + 64, CARBON, title_alpha, anchor="c")
         y0, y1 = int(cy - half), int(cy + half)
         fr.c[max(0, y0):min(H, y1)] = sub.c[max(0, y0):min(H, y1)]
-        fr.blit(sprite("דָּנִיֵּאל", SANS_THIN, 30), W / 2 + 18, cy - 200, PAPER, 0.82, anchor="l")
-        fr.blit(sprite("12 : 9—10", MONO, 19, rtl=False), W / 2 - 14, cy - 200, PAPER, 0.6, anchor="r")
+        fr.blit(sprite(REF_FULL, SANS_THIN, 30), W / 2, cy - 200, PAPER, 0.82, anchor="c")
         self.ruler(fr, t, cy + 214, PAPER, 1.0, head=(t / T_END))
         self.timecode(fr, t, W * .10, cy + 244, PAPER, 0.5)
         fr.blit(sprite(idx, MONO, 16, rtl=False), W * .90, cy + 250, PAPER, 0.5, anchor="r")
@@ -456,8 +457,7 @@ class Clip:
         reg += core[..., None] * PAPER + halo[..., None] * OCHRE
         if t >= self.t_seal:
             lab = ease_io((t - (self.t_seal + 1.5)) / 2)
-            fr.blit(sprite("דָּנִיֵּאל", SANS_THIN, 26), W / 2 + 14, H - 96, PAPER, 0.7 * lab, anchor="l")
-            fr.blit(sprite("12 : 9", MONO, 16, rtl=False), W / 2 - 14, H - 98, PAPER, 0.5 * lab, anchor="r")
+            fr.blit(sprite(REF_END, SANS_THIN, 26), W / 2, H - 96, PAPER, 0.7 * lab, anchor="c")
 
     def scene_quiet(self, fr, t, f):
         a = ease_io((t - T_QUIET) / 2) * (1 - ease_io((t - (T_HIT - 1.2)) / 1.0))
@@ -467,8 +467,7 @@ class Clip:
         ys = np.arange(int(cy - 20), int(cy + 20), dtype=np.float32)
         core = np.exp(-((ys - cy) / 2.0) ** 2)[:, None] * prof[None, :] * (0.5 + 0.3 * self.beat_env[f]) * a
         fr.c[int(cy - 20):int(cy + 20)] += core[..., None] * PAPER
-        fr.blit(sprite("דָּנִיֵּאל", SANS_THIN, 26), W / 2 + 14, H - 96, PAPER, 0.7 * a, anchor="l")
-        fr.blit(sprite("12 : 9", MONO, 16, rtl=False), W / 2 - 14, H - 98, PAPER, 0.5 * a, anchor="r")
+        fr.blit(sprite(REF_END, SANS_THIN, 26), W / 2, H - 96, PAPER, 0.7 * a, anchor="c")
 
     # ------------------------------------------------------------ frame assembly
     def frame(self, f):
