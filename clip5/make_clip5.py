@@ -48,9 +48,12 @@ WISE = ["וְהַמַּשְׂכִּלִים", "יָבִינוּ"]
 CHORUS_A = [(37.84, 39.24, 45.25), (45.44, 46.86, 52.70)]     # (word1, word2, end)
 CHORUS_B = [(84.00, 85.29, 91.25), (91.40, 92.53, 103.80)]
 SEALED = [["כִּי", "סְתֻמִים", "וַחֲתֻמִים"], ["הַדְּבָרִים", "עַד", "עֵת", "קֵץ"]]
-# the closing line is sung twice, 8 bars each, in two-bar phrases (vocal rises measured)
-SEALED_TIMES = [[132.42, 133.87, 136.24, 140.00, 144.08, 144.35, 144.82],
-                [147.60, 149.05, 151.74, 155.07, 159.35, 159.62, 160.09]]
+# closing line timing as in the earlier cut (approved by ear): renditions from the track's
+# embedded timings, line 2 starts 3.85s after line 1, words spread over 3.4s per line
+SEALED_T = [131.25, 138.99]
+SEALED_TIMES = [[r + li * 3.85 + i * 3.4 / len(ws) for li, ws in enumerate(SEALED) for i in range(len(ws))]
+                for r in SEALED_T]
+T_QUIET = 163.0
 TITLE = "וְהַמַּשְׂכִּלִים יָבִינוּ"
 # source reference in Hebrew letters (the font subset has no comma/dash, so spacing and a maqaf)
 REF_FULL = "דָּנִיֵּאל  י״ב  ט׳־י׳"
@@ -201,7 +204,7 @@ class Clip:
         self.snap = snap
         self.t_open = snap(18.3)
         self.t_drop = snap(T_DROP)
-        self.t_seal = snap(162.9)   # after the last sung word, on the drop into the quiet
+        self.t_seal = snap(149.0)
         self.t_hit = snap(T_HIT)
         self.verse_b = VERSE_B_TIMES
         self.chorus_b = CHORUS_B
@@ -440,9 +443,7 @@ class Clip:
         """'Sealed and closed': lines arrive, then two plates slam shut on the beat, leaving one slit."""
         cy = H / 2
         seal = ease_out((t - self.t_seal) / 0.16)
-        slit_w = (0.30 + 0.70 * ease_io((t - T_FINAL) / (self.t_seal - T_FINAL)))
-        slit_w *= 1 - 0.6 * ease_io((t - self.t_seal - 0.5) / 2.5)
-        fade_out = 1 - ease_io((t - (T_HIT - 1.2)) / 1.0)
+        slit_w = (0.30 + 0.70 * ease_io((t - T_FINAL) / 17.0)) * (1 - ease_io((t - 159.5) / 3.5))
         glow = 0.65 + 0.35 * self.beat_env[f] + 0.8 * np.exp(-max(0, t - self.t_seal) * 3) * (t >= self.t_seal)
         # text on the dark field (hidden by the plates once sealed)
         first, second = SEALED_TIMES
@@ -454,7 +455,7 @@ class Clip:
             widths = [f92.getlength(w_, direction="rtl") for w_ in words]
             x = W / 2 + (sum(widths) + space * (len(words) - 1)) / 2
             for i, (wd, wdt) in enumerate(zip(words, widths)):
-                tw, tw2 = first[k] - 0.04, second[k] - 0.04  # second rendition: each word glows ochre
+                tw, tw2 = first[k], second[k]  # second rendition: each word glows ochre
                 k += 1
                 a = ease_out((t - tw) / 0.35)
                 col = OCHRE if (t >= tw2 - 0.05 and t < tw2 + 0.6) else PAPER
@@ -472,11 +473,21 @@ class Clip:
         core = np.exp(-((ys - cy) / 2.2) ** 2)[:, None] * prof[None, :] * 1.25 * glow
         halo = np.exp(-((ys - cy) / 14) ** 2)[:, None] * prof[None, :] * 0.55 * glow
         reg = fr.c[int(cy - 40):int(cy + 40)]
-        reg += (core[..., None] * PAPER + halo[..., None] * OCHRE) * fade_out
+        reg += core[..., None] * PAPER + halo[..., None] * OCHRE
         if t >= self.t_seal:
-            lab = ease_io((t - (self.t_seal + 1.5)) / 2) * fade_out
+            lab = ease_io((t - (self.t_seal + 1.5)) / 2)
             fr.blit(sprite(REF_END, SANS_THIN, 26), W / 2, H - 96, PAPER, 0.7 * lab, anchor="c")
 
+
+    def scene_quiet(self, fr, t, f):
+        a = ease_io((t - T_QUIET) / 2) * (1 - ease_io((t - (T_HIT - 1.2)) / 1.0))
+        xs = np.arange(W, dtype=np.float32)
+        prof = np.clip(1 - np.abs(xs - W / 2) / (W * 0.18), 0, 1) ** 0.7
+        cy = H / 2
+        ys = np.arange(int(cy - 20), int(cy + 20), dtype=np.float32)
+        core = np.exp(-((ys - cy) / 2.0) ** 2)[:, None] * prof[None, :] * (0.5 + 0.3 * self.beat_env[f]) * a
+        fr.c[int(cy - 20):int(cy + 20)] += core[..., None] * PAPER
+        fr.blit(sprite(REF_END, SANS_THIN, 26), W / 2, H - 96, PAPER, 0.7 * a, anchor="c")
 
     # ------------------------------------------------------------ frame assembly
     def frame(self, f):
@@ -524,10 +535,14 @@ class Clip:
             fr = Frame(bg)
             variant = self.scene_build(fr, t, f)
             streak, halation = {0: (0.0, 0.0), 1: (0.0, 0.08), 2: (0.5, 0.2)}[variant]
-        elif t < self.t_hit - 0.03:
+        elif t < T_QUIET:
             fr = Frame(bg)
             self.scene_final(fr, t, f)
             streak, halation = 0.9, 0.35
+        elif t < self.t_hit - 0.03:
+            fr = Frame(bg)
+            self.scene_quiet(fr, t, f)
+            streak = 0.6
         else:
             fr = Frame(bg)
             self.scene_aperture(fr, t, f, self.t_hit - 0.6, 179.5, idx="06 / 06")
