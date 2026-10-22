@@ -219,11 +219,12 @@ def stamp_sprite():
         R = S / 2
         d.ellipse([c - R, c - R, c + R, c + R], outline=255, width=10)
         d.ellipse([c - R * 0.9, c - R * 0.9, c + R * 0.9, c + R * 0.9], outline=200, width=4)
-        for rot in (0, np.pi):
-            pts = [(c + R * 0.86 * np.sin(rot + k * 2 * np.pi / 3), c - R * 0.86 * np.cos(rot + k * 2 * np.pi / 3))
-                   for k in range(3)]
-            d.polygon(pts, outline=255, width=9)
-        fnt = font(58)
+        for k in range(36):  # ring of beads
+            a = k * 2 * np.pi / 36
+            bx, by = c + R * 0.8 * np.sin(a), c - R * 0.8 * np.cos(a)
+            d.ellipse([bx - 6, by - 6, bx + 6, by + 6], fill=255)
+        d.ellipse([c - R * 0.7, c - R * 0.7, c + R * 0.7, c + R * 0.7], outline=230, width=5)
+        fnt = font(84)
         d.text((c, c), "עַד עֵת קֵץ", font=fnt, fill=255, anchor="mm", direction="rtl")
         _sprites[key] = Sprite(m, 90)
     return _sprites[key]
@@ -581,11 +582,12 @@ class Renderer:
             a = self.rot[f]
             for rr, wd in ((1.0, 3), (0.93, 1), (0.62, 2), (0.3, 1)):
                 d.ellipse([cx - R * rr, cy - R * rr, cx + R * rr, cy + R * rr], outline=v, width=wd)
-            for sgn, scale in ((1, 0.93), (-1, 0.62)):
-                for base in (0, np.pi):
-                    pts = [(cx + R * scale * np.sin(sgn * a + base + k * 2 * np.pi / 3),
-                            cy - R * scale * np.cos(sgn * a + base + k * 2 * np.pi / 3)) for k in range(3)]
-                    d.polygon(pts, outline=v, width=2)
+            # "seed of life": six circles around a centre, counter-rotating inner set
+            for sgn, rc, dist in ((1, 0.31, 0.31), (-1, 0.155, 0.155)):
+                for k in range(6):
+                    an = sgn * a + k * np.pi / 3
+                    px, py = cx + R * dist * np.sin(an), cy - R * dist * np.cos(an)
+                    d.ellipse([px - R * rc, py - R * rc, px + R * rc, py + R * rc], outline=v, width=2)
             for k in range(12):
                 an = -a * 0.5 + k * np.pi / 6
                 d.line([(cx + R * .3 * np.sin(an), cy - R * .3 * np.cos(an)),
