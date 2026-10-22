@@ -39,12 +39,18 @@ B_SHIFT = 46.34  # singer B = singer A + this offset
 VERSE_WORDS = ["יִתְבָּרְרוּ", "וְיִתְלַבְּנוּ", "וְיִצָּרְפוּ", "רַבִּים", "וְהִרְשִׁיעוּ", "רְשָׁעִים",
                "וְלֹא", "יָבִינוּ", "כָּל", "רְשָׁעִים"]
 VERSE_LINES = [[0, 1, 2, 3], [4, 5], [6, 7, 8, 9]]           # word indices per transcript line
-VERSE_A_TIMES = [22.95, 24.75, 26.73, 28.70, 30.80, 32.33, 34.00, 34.75, 35.39, 35.86]
+# onsets measured on the centre-channel harmonic vocal envelope (rising edges)
+VERSE_A_TIMES = [23.00, 24.78, 26.74, 28.75, 30.57, 32.36, 34.05, 34.70, 35.39, 35.89]
+# singer B: A's word windows cross-correlated against B (+46.34s), checked against B's own rises
+VERSE_B_TIMES = [69.23, 71.10, 73.10, 74.60, 76.78, 78.70, 80.30, 81.00, 81.95, 82.25]
 VERSE_A_END = 37.55
 WISE = ["וְהַמַּשְׂכִּלִים", "יָבִינוּ"]
-CHORUS_A = [(37.84, 39.50, 45.35), (45.56, 47.06, 52.70)]     # (word1, word2, end)
+CHORUS_A = [(37.84, 39.24, 45.25), (45.44, 46.86, 52.70)]     # (word1, word2, end)
+CHORUS_B = [(84.00, 85.29, 91.25), (91.40, 92.53, 103.80)]
 SEALED = [["כִּי", "סְתֻמִים", "וַחֲתֻמִים"], ["הַדְּבָרִים", "עַד", "עֵת", "קֵץ"]]
-SEALED_T = [131.25, 138.99]
+# the closing line is sung twice, 8 bars each, in two-bar phrases (vocal rises measured)
+SEALED_TIMES = [[132.42, 133.87, 136.24, 140.00, 144.08, 144.35, 144.82],
+                [147.60, 149.05, 151.74, 155.07, 159.35, 159.62, 160.09]]
 TITLE = "וְהַמַּשְׂכִּלִים יָבִינוּ"
 # source reference in Hebrew letters (the font subset has no comma/dash, so spacing and a maqaf)
 REF_FULL = "דָּנִיֵּאל  י״ב  ט׳־י׳"
@@ -53,7 +59,6 @@ REF_END = "דָּנִיֵּאל  י״ב  ט׳"
 T_DROP = 52.90
 T_BUILD = 104.0
 T_FINAL = 131.25
-T_QUIET = 163.0
 T_HIT = 176.1
 T_END = 180.8
 
@@ -99,6 +104,17 @@ def sprite(text, font_name, size, rtl=True):
     if key not in _cache:
         _cache[key] = Sprite(text, font_name, int(size), rtl)
     return _cache[key]
+
+
+@functools.lru_cache(maxsize=None)
+def fitted(text, font_name, size, max_w, max_h):
+    """Largest sprite (<= size) whose full ink, niqqud included, fits max_w x max_h."""
+    while size > 20:
+        sp = sprite(text, font_name, size)
+        if sp.m.shape[1] <= max_w and sp.m.shape[0] <= max_h:
+            return sp
+        size = int(size * 0.95)
+    return sprite(text, font_name, size)
 
 
 @functools.lru_cache(maxsize=None)
@@ -185,11 +201,10 @@ class Clip:
         self.snap = snap
         self.t_open = snap(18.3)
         self.t_drop = snap(T_DROP)
-        self.t_seal = snap(149.0)
+        self.t_seal = snap(162.9)   # after the last sung word, on the drop into the quiet
         self.t_hit = snap(T_HIT)
-        self.verse_b = [x + B_SHIFT for x in VERSE_A_TIMES]
-        # chorus B per the embedded timings (84.18 / 91.92), second word at A's offset
-        self.chorus_b = [(84.20, 85.84, 91.70), (91.90, 93.40, 103.80)]
+        self.verse_b = VERSE_B_TIMES
+        self.chorus_b = CHORUS_B
 
         yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
         vx, vy = (xx / W - .5) * 2, (yy / H - .5) * 2
@@ -398,17 +413,17 @@ class Clip:
         variant = cut % 3
         word = self.build_words[cut % len(self.build_words)]
         prog = np.clip((t - T_BUILD) / (T_FINAL - T_BUILD), 0, 1)
-        if variant == 0:     # giant word on paper bleeding off the right edge
+        if variant == 0:     # giant word on paper, fitted inside the margins
             fr.c[:] = PAPER
             fr.c *= self.fibre
-            sp = sprite(word, SERIF_BLACK, 620)
-            fr.blit(sp, W + 140, 760, CARBON, 1.0, anchor="r")
+            sp = fitted(word, SERIF_BLACK, 560, W - 256, 700)
+            fr.blit(sp, W - 128, (H - sp.m.shape[0]) / 2 - 20 + sp.oy, CARBON, 1.0, anchor="r")
             fr.rect(128, 880, 128 + 300 * self.bar_env[f], 882, OCHRE, 1)
             self.timecode(fr, t, 128, 930, CARBON, 0.55)
-        elif variant == 1:   # carbon with settling field and a word bleeding off the left
-            self.hairlines(fr, 128, 140, W - 128, 420, 22, prog, 1.5 * self.beat_env[f], 21 + cut % 5, 0.9)
-            sp = sprite(word, SERIF_BLACK, 560)
-            fr.blit(sp, -120, 900, PAPER, 1.0, anchor="l")
+        elif variant == 1:   # carbon with settling field above a fitted word
+            self.hairlines(fr, 128, 140, W - 128, 380, 22, prog, 1.5 * self.beat_env[f], 21 + cut % 5, 0.9)
+            sp = fitted(word, SERIF_BLACK, 520, W - 256, 560)
+            fr.blit(sp, W / 2, 450 + sp.oy, PAPER, 1.0, anchor="c")
         else:                # the aperture, word as shadow
             self.light_band(fr, H / 2, 150 + 20 * self.beat_env[f], W * .10, W * .90, 1.0)
             sub_sp = sprite(word, SERIF_MED, 190)
@@ -425,19 +440,22 @@ class Clip:
         """'Sealed and closed': lines arrive, then two plates slam shut on the beat, leaving one slit."""
         cy = H / 2
         seal = ease_out((t - self.t_seal) / 0.16)
-        slit_w = (0.30 + 0.70 * ease_io((t - T_FINAL) / 17.0)) * (1 - ease_io((t - 159.5) / 3.5))
+        slit_w = (0.30 + 0.70 * ease_io((t - T_FINAL) / (self.t_seal - T_FINAL)))
+        slit_w *= 1 - 0.6 * ease_io((t - self.t_seal - 0.5) / 2.5)
+        fade_out = 1 - ease_io((t - (T_HIT - 1.2)) / 1.0)
         glow = 0.65 + 0.35 * self.beat_env[f] + 0.8 * np.exp(-max(0, t - self.t_seal) * 3) * (t >= self.t_seal)
         # text on the dark field (hidden by the plates once sealed)
-        for li, (words, t0) in enumerate(zip(SEALED, (SEALED_T[0], SEALED_T[0] + 3.85))):
+        first, second = SEALED_TIMES
+        k = 0
+        for li, words in enumerate(SEALED):
             y = cy - 92 if li == 0 else cy + 140
             f92 = fnt(SERIF_LIGHT, 92)
             space = f92.getlength(" ")
             widths = [f92.getlength(w_, direction="rtl") for w_ in words]
             x = W / 2 + (sum(widths) + space * (len(words) - 1)) / 2
-            per = 3.4 / len(words)
             for i, (wd, wdt) in enumerate(zip(words, widths)):
-                tw = t0 + i * per
-                tw2 = SEALED_T[1] + li * 3.85 + i * per          # second rendition: words brighten again
+                tw, tw2 = first[k] - 0.04, second[k] - 0.04  # second rendition: each word glows ochre
+                k += 1
                 a = ease_out((t - tw) / 0.35)
                 col = OCHRE if (t >= tw2 - 0.05 and t < tw2 + 0.6) else PAPER
                 fr.blit(sprite(wd, SERIF_LIGHT, 92), x, y + (1 - a) * 16, col, a * (1 - seal), anchor="r")
@@ -454,20 +472,11 @@ class Clip:
         core = np.exp(-((ys - cy) / 2.2) ** 2)[:, None] * prof[None, :] * 1.25 * glow
         halo = np.exp(-((ys - cy) / 14) ** 2)[:, None] * prof[None, :] * 0.55 * glow
         reg = fr.c[int(cy - 40):int(cy + 40)]
-        reg += core[..., None] * PAPER + halo[..., None] * OCHRE
+        reg += (core[..., None] * PAPER + halo[..., None] * OCHRE) * fade_out
         if t >= self.t_seal:
-            lab = ease_io((t - (self.t_seal + 1.5)) / 2)
+            lab = ease_io((t - (self.t_seal + 1.5)) / 2) * fade_out
             fr.blit(sprite(REF_END, SANS_THIN, 26), W / 2, H - 96, PAPER, 0.7 * lab, anchor="c")
 
-    def scene_quiet(self, fr, t, f):
-        a = ease_io((t - T_QUIET) / 2) * (1 - ease_io((t - (T_HIT - 1.2)) / 1.0))
-        xs = np.arange(W, dtype=np.float32)
-        prof = np.clip(1 - np.abs(xs - W / 2) / (W * 0.18), 0, 1) ** 0.7
-        cy = H / 2
-        ys = np.arange(int(cy - 20), int(cy + 20), dtype=np.float32)
-        core = np.exp(-((ys - cy) / 2.0) ** 2)[:, None] * prof[None, :] * (0.5 + 0.3 * self.beat_env[f]) * a
-        fr.c[int(cy - 20):int(cy + 20)] += core[..., None] * PAPER
-        fr.blit(sprite(REF_END, SANS_THIN, 26), W / 2, H - 96, PAPER, 0.7 * a, anchor="c")
 
     # ------------------------------------------------------------ frame assembly
     def frame(self, f):
@@ -515,14 +524,10 @@ class Clip:
             fr = Frame(bg)
             variant = self.scene_build(fr, t, f)
             streak, halation = {0: (0.0, 0.0), 1: (0.0, 0.08), 2: (0.5, 0.2)}[variant]
-        elif t < T_QUIET:
+        elif t < self.t_hit - 0.03:
             fr = Frame(bg)
             self.scene_final(fr, t, f)
             streak, halation = 0.9, 0.35
-        elif t < self.t_hit - 0.03:
-            fr = Frame(bg)
-            self.scene_quiet(fr, t, f)
-            streak = 0.6
         else:
             fr = Frame(bg)
             self.scene_aperture(fr, t, f, self.t_hit - 0.6, 179.5, idx="06 / 06")
