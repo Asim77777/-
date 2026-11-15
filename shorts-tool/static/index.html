@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shorts Studio</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============ HOME ============ -->
+<main id="home" class="view">
+  <div class="hero">
+    <h1>Shorts Studio</h1>
+    <p class="lead">הדבק קישור ליוטיוב וקבל שורטס מוכנים עם כתוביות שאפשר לעצב.</p>
+
+    <form id="jobForm" class="card">
+      <label class="lbl" for="url">קישור לסרטון</label>
+      <div class="row">
+        <input id="url" type="url" dir="ltr" placeholder="https://www.youtube.com/watch?v=..." autocomplete="off">
+        <button class="btn primary" type="submit">צור שורטס</button>
+      </div>
+      <div class="row wrap gap">
+        <div>
+          <span class="lbl">כמה שורטס</span>
+          <div class="seg" id="countSeg">
+            <button type="button" data-v="1">1</button><button type="button" data-v="2">2</button>
+            <button type="button" data-v="3" class="on">3</button><button type="button" data-v="4">4</button>
+            <button type="button" data-v="5">5</button>
+          </div>
+        </div>
+        <div class="grow">
+          <span class="lbl">או קובץ מהמחשב</span>
+          <input id="file" type="file" accept="video/*">
+        </div>
+      </div>
+
+      <details>
+        <summary>הגדרות מתקדמות</summary>
+        <div class="grid2">
+          <label>מודל תמלול
+            <select id="model">
+              <option value="hebrew">עברית - איכות גבוהה (מומלץ)</option>
+              <option value="turbo">רב-לשוני - איכות גבוהה</option>
+              <option value="medium">בינוני</option>
+              <option value="small">מהיר</option>
+              <option value="tiny">מהיר מאוד (טיוטה)</option>
+            </select>
+          </label>
+          <label>שפת הדיבור
+            <select id="language">
+              <option value="he">עברית</option>
+              <option value="en">אנגלית</option>
+              <option value="auto">זיהוי אוטומטי</option>
+            </select>
+          </label>
+          <label>אורך מינימלי (שניות)
+            <input id="minLen" type="number" value="20" min="5" max="120">
+          </label>
+          <label>אורך מקסימלי (שניות)
+            <input id="maxLen" type="number" value="58" min="10" max="180">
+          </label>
+          <label class="span2">אם יוטיוב מבקש התחברות - השתמש בעוגיות מהדפדפן
+            <select id="cookies">
+              <option value="">ללא</option>
+              <option value="chrome">Chrome</option><option value="edge">Edge</option>
+              <option value="firefox">Firefox</option><option value="brave">Brave</option>
+              <option value="safari">Safari</option><option value="opera">Opera</option>
+            </select>
+          </label>
+        </div>
+      </details>
+      <p id="formErr" class="err" hidden></p>
+    </form>
+
+    <section id="recent" hidden>
+      <h2>פרויקטים אחרונים</h2>
+      <ul id="recentList" class="recent"></ul>
+    </section>
+  </div>
+</main>
+
+<!-- ============ PROGRESS ============ -->
+<main id="progress" class="view" hidden>
+  <div class="hero">
+    <h1 id="progTitle">מעבד את הסרטון</h1>
+    <ol class="steps" id="steps">
+      <li data-s="downloading">הורדה</li>
+      <li data-s="transcribing">תמלול</li>
+      <li data-s="analyzing">בחירת קטעים</li>
+    </ol>
+    <div class="bar"><div id="progBar"></div></div>
+    <p id="progMsg" class="lead"></p>
+    <p id="progErr" class="err" hidden></p>
+    <button id="progBack" class="btn" hidden>חזרה</button>
+  </div>
+</main>
+
+<!-- ============ EDITOR ============ -->
+<main id="editor" class="view" hidden>
+  <header class="top">
+    <button id="backHome" class="btn ghost">→ פרויקטים</button>
+    <h1 id="edTitle"></h1>
+    <button id="exportAll" class="btn primary">ייצא את כל השורטס</button>
+  </header>
+
+  <div class="work">
+    <aside class="clips" id="clipList"></aside>
+
+    <section class="stageWrap">
+      <div class="phone" id="phone">
+        <div class="canvas" id="canvas">
+          <video id="bgVideo" muted playsinline preload="auto"></video>
+          <video id="video" playsinline preload="auto"></video>
+          <div id="titleEl" class="ovl"></div>
+          <div id="subEl" class="ovl sub"></div>
+        </div>
+      </div>
+      <div class="transport">
+        <button id="playBtn" class="btn round" aria-label="נגן">▶</button>
+        <input id="seek" type="range" min="0" max="1" step="0.01" value="0" dir="ltr">
+        <span id="timeLbl" class="mono" dir="ltr">0:00 / 0:00</span>
+      </div>
+    </section>
+
+    <aside class="panel">
+      <nav class="tabs" id="tabs">
+        <button data-t="style" class="on">עיצוב</button>
+        <button data-t="text">כתוביות</button>
+        <button data-t="clip">קטע</button>
+        <button data-t="export">ייצוא</button>
+      </nav>
+
+      <div class="tab" id="tab-style">
+        <h3>סגנונות מוכנים</h3>
+        <div id="presets" class="presets"></div>
+        <div class="row gap">
+          <button id="savePreset" class="btn small">שמור כסגנון שלי</button>
+          <button id="applyAll" class="btn small">החל על כל השורטס</button>
+        </div>
+        <h3>גופן</h3>
+        <div id="fontList" class="fonts"></div>
+        <div id="styleControls"></div>
+      </div>
+
+      <div class="tab" id="tab-text" hidden>
+        <p class="hint">לחיצה על הזמן קופצת לשורה. אפשר לתקן טקסט, לפצל במקום הסמן, למזג ולמחוק.</p>
+        <div id="lineList" class="lines"></div>
+      </div>
+
+      <div class="tab" id="tab-clip" hidden>
+        <div id="clipControls"></div>
+      </div>
+
+      <div class="tab" id="tab-export" hidden>
+        <button id="exportOne" class="btn primary wide">ייצא את השורט הזה (MP4)</button>
+        <div class="bar" id="expBarWrap" hidden><div id="expBar"></div></div>
+        <p id="expMsg" class="hint"></p>
+        <div id="expResult"></div>
+        <button id="srtBtn" class="btn wide">הורד כתוביות (SRT)</button>
+        <p class="hint">הייצוא הוא 1080×1920, ‏30 פריימים לשנייה, עם הכתוביות צרובות בתוך הווידאו.</p>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>

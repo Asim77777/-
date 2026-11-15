@@ -1,0 +1,226 @@
+[
+ {
+  "name": "Heebo",
+  "file": "Heebo.ttf",
+  "scale": 1.4688,
+  "shift": 0.0,
+  "padTop": 0.0,
+  "padBot": 0.0
+ },
+ {
+  "name": "Heebo Bold",
+  "file": "HeeboBold.ttf",
+  "scale": 1.4688,
+  "shift": 0.0,
+  "padTop": 0.0,
+  "padBot": 0.0
+ },
+ {
+  "name": "Heebo Black",
+  "file": "HeeboBlack.ttf",
+  "scale": 1.4688,
+  "shift": 0.0,
+  "padTop": 0.0,
+  "padBot": 0.0
+ },
+ {
+  "name": "Rubik",
+  "file": "Rubik.ttf",
+  "scale": 1.532,
+  "shift": -0.0425,
+  "padTop": 0.131,
+  "padBot": 0.216
+ },
+ {
+  "name": "Rubik Bold",
+  "file": "RubikBold.ttf",
+  "scale": 1.532,
+  "shift": -0.0425,
+  "padTop": 0.131,
+  "padBot": 0.216
+ },
+ {
+  "name": "Rubik Black",
+  "file": "RubikBlack.ttf",
+  "scale": 1.532,
+  "shift": -0.0425,
+  "padTop": 0.131,
+  "padBot": 0.216
+ },
+ {
+  "name": "Assistant",
+  "file": "Assistant.ttf",
+  "scale": 1.308,
+  "shift": 0.0,
+  "padTop": 0.0,
+  "padBot": 0.0
+ },
+ {
+  "name": "Assistant ExtraBold",
+  "file": "AssistantExtraBold.ttf",
+  "scale": 1.308,
+  "shift": 0.0,
+  "padTop": 0.0,
+  "padBot": 0.0
+ },
+ {
+  "name": "Noto Sans Hebrew",
+  "file": "NotoSansHebrew.ttf",
+  "scale": 1.36,
+  "shift": 0.0,
+  "padTop": 0.0,
+  "padBot": 0.0
+ },
+ {
+  "name": "Noto Sans Hebrew Bold",
+  "file": "NotoSansHebrewBold.ttf",
+  "scale": 1.36,
+  "shift": 0.0,
+  "padTop": 0.0,
+  "padBot": 0.0
+ },
+ {
+  "name": "Noto Sans Hebrew Black",
+  "file": "NotoSansHebrewBlack.ttf",
+  "scale": 1.36,
+  "shift": 0.0,
+  "padTop": 0.0,
+  "padBot": 0.0
+ },
+ {
+  "name": "Frank Ruhl Libre",
+  "file": "FrankRuhlLibre.ttf",
+  "scale": 1.291,
+  "shift": 0.0,
+  "padTop": 0.0,
+  "padBot": 0.0
+ },
+ {
+  "name": "Frank Ruhl Libre Bold",
+  "file": "FrankRuhlLibreBold.ttf",
+  "scale": 1.291,
+  "shift": 0.0,
+  "padTop": 0.0,
+  "padBot": 0.0
+ },
+ {
+  "name": "Frank Ruhl Libre Black",
+  "file": "FrankRuhlLibreBlack.ttf",
+  "scale": 1.291,
+  "shift": 0.0,
+  "padTop": 0.0,
+  "padBot": 0.0
+ },
+ {
+  "name": "Fredoka",
+  "file": "Fredoka.ttf",
+  "scale": 1.251,
+  "shift": 0.0045,
+  "padTop": 0.025,
+  "padBot": 0.016
+ },
+ {
+  "name": "Fredoka Bold",
+  "file": "FredokaBold.ttf",
+  "scale": 1.251,
+  "shift": 0.0045,
+  "padTop": 0.025,
+  "padBot": 0.016
+ },
+ {
+  "name": "Secular One",
+  "file": "SecularOne.ttf",
+  "scale": 1.455,
+  "shift": 0.0,
+  "padTop": 0.0,
+  "padBot": 0.0
+ },
+ {
+  "name": "Suez One",
+  "file": "SuezOne.ttf",
+  "scale": 1.306,
+  "shift": 0.0,
+  "padTop": 0.0,
+  "padBot": 0.0
+ },
+ {
+  "name": "Alef",
+  "file": "Alef.ttf",
+  "scale": 1.3618,
+  "shift": 0.0,
+  "padTop": 0.0,
+  "padBot": 0.0
+ },
+ {
+  "name": "Alef Bold",
+  "file": "AlefBold.ttf",
+  "scale": 1.3618,
+  "shift": 0.0,
+  "padTop": 0.0,
+  "padBot": 0.0
+ },
+ {
+  "name": "Varela Round",
+  "file": "VarelaRound.ttf",
+  "scale": 1.311,
+  "shift": 0.0535,
+  "padTop": 0.107,
+  "padBot": 0.0
+ },
+ {
+  "name": "Amatic SC",
+  "file": "AmaticSC.ttf",
+  "scale": 1.404,
+  "shift": 0.0515,
+  "padTop": 0.123,
+  "padBot": 0.02
+ },
+ {
+  "name": "Amatic SC Bold",
+  "file": "AmaticSCBold.ttf",
+  "scale": 1.404,
+  "shift": 0.0515,
+  "padTop": 0.123,
+  "padBot": 0.02
+ },
+ {
+  "name": "Karantina",
+  "file": "Karantina.ttf",
+  "scale": 1.087,
+  "shift": -0.0375,
+  "padTop": 0.0,
+  "padBot": 0.075
+ },
+ {
+  "name": "Karantina Bold",
+  "file": "KarantinaBold.ttf",
+  "scale": 1.087,
+  "shift": -0.0375,
+  "padTop": 0.0,
+  "padBot": 0.075
+ },
+ {
+  "name": "Bellefair",
+  "file": "Bellefair.ttf",
+  "scale": 1.146,
+  "shift": 0.0,
+  "padTop": 0.0,
+  "padBot": 0.0
+ },
+ {
+  "name": "David Libre",
+  "file": "DavidLibre.ttf",
+  "scale": 1.4355,
+  "shift": 0.0791,
+  "padTop": 0.2969,
+  "padBot": 0.1387
+ },
+ {
+  "name": "David Libre Bold",
+  "file": "DavidLibreBold.ttf",
+  "scale": 1.4355,
+  "shift": 0.0791,
+  "padTop": 0.2969,
+  "padBot": 0.1387
+ }
+]

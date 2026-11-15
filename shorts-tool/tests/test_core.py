@@ -1,0 +1,101 @@
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from app import highlights, render, subtitles  # noqa: E402
+
+
+def make_words(n_sentences=40, words_per=8, word_dur=0.3, pause=0.8):
+    words, t = [], 0.0
+    for s in range(n_sentences):
+        for k in range(words_per):
+            text = "מילה"
+            if k == 0 and s % 7 == 0:
+                text = "למה"
+            if k == words_per - 1:
+                text += "?" if s % 7 == 0 else "."
+            words.append({"t": text, "s": round(t, 3), "e": round(t + word_dur - 0.05, 3)})
+            t += word_dur
+        t += pause
+    return words
+
+
+def test_highlights_lengths_and_no_overlap():
+    words = make_words()
+    clips = highlights.find_highlights(words, count=3, min_len=20, max_len=58)
+    assert 1 <= len(clips) <= 3
+    for c in clips:
+        assert 19 <= c["end"] - c["start"] <= 59
+        assert 55 <= c["score"] <= 98
+        assert c["title"]
+    spans = sorted((c["start"], c["end"]) for c in clips)
+    for (_, e1), (s2, _) in zip(spans, spans[1:]):
+        assert s2 >= e1
+
+
+def test_highlights_prefers_hook_opening():
+    best = highlights.find_highlights(make_words(), count=1)[0]
+    assert best["title"].startswith("למה")
+
+
+def test_short_video_returns_whole():
+    words = make_words(n_sentences=3)
+    clips = highlights.find_highlights(words, count=5, min_len=20, max_len=58)
+    assert len(clips) == 1
+    assert clips[0]["start"] == 0.0
+
+
+def test_empty_transcript():
+    assert highlights.find_highlights([], count=3) == []
+
+
+def test_sentences_split_on_punctuation_and_gaps():
+    words = [{"t": "א", "s": 0, "e": .2}, {"t": "ב.", "s": .2, "e": .4},
+             {"t": "ג", "s": .4, "e": .6}, {"t": "ד", "s": 2.0, "e": 2.2}]
+    assert highlights.build_sentences(words) == [(0, 1), (2, 2), (3, 3)]
+
+
+LINES = [{"s": 0.0, "e": 1.5, "words": [{"t": "שלום", "s": 0.0, "e": 0.5},
+                                         {"t": "עולם", "s": 0.6, "e": 1.2}]}]
+
+
+def test_ass_highlight_events():
+    ass = subtitles.build_ass(LINES, {"highlightEnabled": True, "animation": "pop"}, 10)
+    events = [l for l in ass.splitlines() if l.startswith("Dialogue")]
+    assert len(events) == 2  # one per active word
+    assert "PlayResX: 1080" in ass and "Heebo Black" in ass
+    assert "\\1c&H00E6FF&" in events[0]  # #FFE600 as BGR
+    assert events[0].count("\\t(") == 1 and "\\t(" not in events[1]
+    assert "0:00:00.00,0:00:00.60" in events[0] and "0:00:00.60,0:00:01.50" in events[1]
+
+
+def test_ass_plain_box_and_title():
+    ass = subtitles.build_ass(LINES, {"highlightEnabled": False, "animation": "none",
+                                      "bgEnabled": True, "titleText": "כותרת"}, 10)
+    events = [l for l in ass.splitlines() if l.startswith("Dialogue")]
+    styles = [e.split(",")[3] for e in events]
+    assert styles == ["TitleBox", "Title", "SubBox", "Sub"]
+
+
+def test_ass_sanitises_text_and_bad_style():
+    lines = [{"s": 0, "e": 1, "words": [{"t": "{\\b1}x", "s": 0, "e": 1}]}]
+    ass = subtitles.build_ass(lines, {"font": "Nope", "size": "abc", "color": "zz",
+                                      "highlightEnabled": False, "animation": "none"}, 5)
+    event = [l for l in ass.splitlines() if l.startswith("Dialogue")][0]
+    assert event.endswith("}(b1)x")
+    assert "Style: Sub,Heebo Black," in ass
+
+
+def test_ass_reveal_hides_future_words():
+    ass = subtitles.build_ass(LINES, {"highlightEnabled": False, "animation": "reveal"}, 10)
+    events = [l for l in ass.splitlines() if l.startswith("Dialogue")]
+    assert "\\alpha&HFF&" in events[0] and "\\alpha&HFF&" not in events[1]
+
+
+def test_filter_modes():
+    fill = render.build_filter({"mode": "fill", "x": 0.25}, Path("/tmp/a.ass"))
+    assert "crop=1080:1920:(iw-1080)*0.2500" in fill
+    fit = render.build_filter({"mode": "fit"}, Path("/tmp/a.ass"))
+    assert "boxblur" in fit and "overlay" in fit
+    assert "0.5000" in render.build_filter({"x": "bad"}, Path("/tmp/a.ass"))
