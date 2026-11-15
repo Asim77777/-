@@ -48,6 +48,7 @@ class JobRequest(BaseModel):
     min_len: float = Field(default=20, ge=5, le=120)
     max_len: float = Field(default=58, ge=10, le=180)
     cookies_browser: str = ""
+    quality: int = Field(default=1080, ge=360, le=1080)
 
 
 class Word(BaseModel):
@@ -184,6 +185,19 @@ def new_job(url: str, opts: dict) -> dict:
     return job
 
 
+def eta_message(progress: float, elapsed: float) -> str:
+    """'מתמלל · 34% · נותרו כ-12 דקות' from the fraction done and seconds elapsed."""
+    msg = f"מתמלל · {progress * 100:.0f}%"
+    if progress >= 0.03 and elapsed >= 5:
+        left = elapsed * (1 - progress) / progress
+        if left < 50:
+            msg += " · נותרה פחות מדקה"
+        else:
+            mins = max(round(left / 60), 1)
+            msg += " · נותרה כדקה" if mins == 1 else f" · נותרו כ-{mins} דקות"
+    return msg
+
+
 def run_pipeline(job: dict) -> None:
     d = DATA / job["id"]
     opts = job["opts"]
@@ -196,7 +210,7 @@ def run_pipeline(job: dict) -> None:
         update(job, status="downloading", progress=0.0, message="מתחבר ליוטיוב")
         info = download.download_video(
             job["url"], d, lambda p, text: update(job, progress=p, message=text),
-            opts.get("cookies_browser", ""), cancelled)
+            opts.get("cookies_browser", ""), cancelled, opts.get("quality", 1080))
         job["title"] = info["title"]
 
     meta = download.probe(src)
@@ -205,13 +219,20 @@ def run_pipeline(job: dict) -> None:
     if not meta["has_audio"]:
         raise RuntimeError("בסרטון אין ערוץ שמע - אי אפשר לתמלל")
 
-    update(job, status="transcribing", progress=0.0,
-           message="מתמלל (בהרצה ראשונה מוריד את מודל התמלול)")
+    waiting = "מתמלל (בהרצה ראשונה מוריד את מודל התמלול)"
+    if meta["duration"] > 20 * 60 and opts["model"] in ("hebrew", "turbo"):
+        waiting += (". הסרטון ארוך - בלי כרטיס מסך זה יכול לקחת שעה ויותר; אפשר לבטל "
+                    "ולבחור מודל 'מהיר' בהגדרות המתקדמות")
+    update(job, status="transcribing", progress=0.0, message=waiting)
+    started = time.time()
+
+    def on_transcribe(p: float) -> None:
+        update(job, progress=p, message=eta_message(p, time.time() - started))
     wav = d / "audio.wav"
     download.extract_audio(src, wav)
     lang = None if opts["language"] == "auto" else opts["language"]
     result = transcribe.transcribe_killable(
-        wav, opts["model"], lang, lambda p: update(job, progress=p), cancelled)
+        wav, opts["model"], lang, on_transcribe, cancelled)
     if not result["words"]:
         raise RuntimeError("לא זוהה דיבור בסרטון")
     update(job, words=result["words"], language=result["language"])

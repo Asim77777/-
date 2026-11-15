@@ -1,6 +1,7 @@
 """Download a YouTube video with yt-dlp and extract audio for transcription."""
 from __future__ import annotations
 
+import functools
 import json
 import shutil
 import subprocess
@@ -12,8 +13,27 @@ from pathlib import Path
 
 BROWSERS = ("chrome", "firefox", "edge", "brave", "safari", "opera")
 STALL_SECONDS = 150  # no output from yt-dlp for this long = stuck
-FORMAT = ("bv*[vcodec^=avc1][height<=1080]+ba[ext=m4a]/"
-          "b[ext=mp4][height<=1080]/bv*[height<=1080]+ba/b")
+MIN_NODE = 20  # older Node versions cannot run yt-dlp's YouTube challenge solver
+
+
+def format_selector(quality: int = 1080) -> str:
+    """H.264 + AAC up to `quality` lines, so the browser can preview the source."""
+    h = 720 if int(quality) <= 720 else 1080
+    return (f"bv*[vcodec^=avc1][height<={h}]+ba[ext=m4a]/"
+            f"b[ext=mp4][height<={h}]/bv*[height<={h}]+ba/b")
+
+
+@functools.lru_cache(maxsize=1)
+def node_usable() -> bool:
+    """True when a recent enough `node` is on PATH."""
+    if not shutil.which("node"):
+        return False
+    try:
+        out = subprocess.run(["node", "--version"], capture_output=True, text=True,
+                             timeout=10).stdout
+        return int(out.strip().lstrip("v").split(".")[0]) >= MIN_NODE
+    except (OSError, ValueError, subprocess.SubprocessError):
+        return False
 
 
 class Cancelled(Exception):
@@ -46,7 +66,8 @@ def friendly_error(output: str) -> str:
 
 
 def download_video(url: str, out_dir: Path, on_progress=None,
-                   cookies_browser: str = "", should_cancel=None) -> dict:
+                   cookies_browser: str = "", should_cancel=None,
+                   quality: int = 1080) -> dict:
     """Download `url` into out_dir/source.mp4. Returns {title}.
 
     yt-dlp runs as a child process so a hung download can be killed: on cancel,
@@ -56,7 +77,7 @@ def download_video(url: str, out_dir: Path, on_progress=None,
     cmd = [
         sys.executable, "-m", "yt_dlp", "--no-playlist", "--newline", "--progress",
         "--no-simulate", "--no-warnings", "--socket-timeout", "20", "--retries", "3",
-        "--fragment-retries", "3", "-f", FORMAT, "--merge-output-format", "mp4",
+        "--fragment-retries", "3", "-f", format_selector(quality), "--merge-output-format", "mp4",
         "--print", "before_dl:TITLE %(title)s",
         "--progress-template",
         "download:PROG %(progress.downloaded_bytes)s %(progress.total_bytes)s "
@@ -64,7 +85,7 @@ def download_video(url: str, out_dir: Path, on_progress=None,
         "-o", str(out_dir / "source.%(ext)s"),
     ]
     # Recent YouTube needs a JS runtime; use node when deno is not installed.
-    if not shutil.which("deno") and shutil.which("node"):
+    if not shutil.which("deno") and node_usable():
         cmd += ["--js-runtimes", "node"]
     if cookies_browser in BROWSERS:
         cmd += ["--cookies-from-browser", cookies_browser]

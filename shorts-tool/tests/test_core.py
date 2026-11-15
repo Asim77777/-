@@ -200,3 +200,32 @@ sys.exit(1)
     with pytest.raises(RuntimeError, match="הגדרות מתקדמות"):
         d.download_video("https://x", tmp_path)
     assert "עדכן" in d.friendly_error("ERROR: unable to download video data: HTTP Error 403: Forbidden")
+
+
+# ---------------------------------------------------------------- long videos
+def test_format_selector_quality():
+    from app import download
+    assert "height<=1080" in download.format_selector(1080)
+    assert "height<=720" in download.format_selector(720)
+    assert "height<=1080" not in download.format_selector(720)
+
+
+def test_eta_message():
+    from app import main
+    assert main.eta_message(0.0, 3) == "מתמלל · 0%"
+    assert main.eta_message(0.5, 600) == "מתמלל · 50% · נותרו כ-10 דקות"
+    assert main.eta_message(0.5, 60) == "מתמלל · 50% · נותרה כדקה"
+    assert main.eta_message(0.9, 90) == "מתמלל · 90% · נותרה פחות מדקה"
+
+
+def test_old_node_is_not_used(monkeypatch, tmp_path):
+    import os, stat
+    from app import download
+    for version, expected in (("v12.22.9", False), ("v22.3.0", True)):
+        node = tmp_path / "node"
+        node.write_text(f"#!/bin/sh\necho {version}\n")
+        node.chmod(node.stat().st_mode | stat.S_IEXEC)
+        monkeypatch.setenv("PATH", f"{tmp_path}{os.pathsep}/usr/bin{os.pathsep}/bin")
+        download.node_usable.cache_clear()
+        assert download.node_usable() is expected
+    download.node_usable.cache_clear()

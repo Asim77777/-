@@ -705,7 +705,7 @@ $('#jobForm').onsubmit = async (e) => {
       if (!url) throw new Error('הדבק קישור לסרטון או בחר קובץ');
       job = await api('/api/jobs', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url, cookies_browser: $('#cookies').value, ...opts }),
+        body: JSON.stringify({ url, cookies_browser: $('#cookies').value, quality: +$('#quality').value, ...opts }),
       });
     }
     $('#progTitle').textContent = 'מעבד את הסרטון';
