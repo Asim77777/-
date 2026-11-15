@@ -146,3 +146,57 @@ def test_remote_blocked_when_phone_mode_off(monkeypatch):
     assert c.get("/api/fonts").status_code == 401
     assert c.post("/api/login", json={"pin": ""}).status_code == 403
     assert c.cookies.get("shorts_auth") is None
+
+
+# ---------------------------------------------------------------- download
+def _fake_ytdlp(monkeypatch, tmp_path, script):
+    """Replace `python -m yt_dlp` with a small script."""
+    from app import download
+    fake = tmp_path / "fake.py"
+    fake.write_text(script)
+    real_popen = download.subprocess.Popen
+    monkeypatch.setattr(download.subprocess, "Popen",
+                        lambda cmd, **kw: real_popen([sys.executable, str(fake)], **kw))
+    return download
+
+
+def test_download_reports_progress_and_title(monkeypatch, tmp_path):
+    d = _fake_ytdlp(monkeypatch, tmp_path, f"""
+import pathlib
+print("TITLE שלום", flush=True)
+print("PROG 5000000 10000000 NA 2000000", flush=True)
+pathlib.Path(r"{tmp_path}/source.mp4").write_bytes(b"x")
+""")
+    seen = []
+    info = d.download_video("https://x", tmp_path, lambda p, t: seen.append((p, t)))
+    assert info["title"] == "שלום"
+    assert seen[0][0] == 0.5 and "5MB מתוך 10MB" in seen[0][1]
+
+
+def test_download_stall_is_killed(monkeypatch, tmp_path):
+    d = _fake_ytdlp(monkeypatch, tmp_path, "import time; time.sleep(60)")
+    monkeypatch.setattr(d, "STALL_SECONDS", 1)
+    import pytest, time
+    t = time.time()
+    with pytest.raises(RuntimeError, match="נתקעה"):
+        d.download_video("https://x", tmp_path)
+    assert time.time() - t < 10
+
+
+def test_download_cancel(monkeypatch, tmp_path):
+    d = _fake_ytdlp(monkeypatch, tmp_path, "import time; time.sleep(60)")
+    import pytest
+    with pytest.raises(d.Cancelled):
+        d.download_video("https://x", tmp_path, should_cancel=lambda: True)
+
+
+def test_download_error_is_friendly(monkeypatch, tmp_path):
+    d = _fake_ytdlp(monkeypatch, tmp_path, """
+import sys
+print("ERROR: [youtube] abc: Sign in to confirm you're not a bot", flush=True)
+sys.exit(1)
+""")
+    import pytest
+    with pytest.raises(RuntimeError, match="הגדרות מתקדמות"):
+        d.download_video("https://x", tmp_path)
+    assert "עדכן" in d.friendly_error("ERROR: unable to download video data: HTTP Error 403: Forbidden")

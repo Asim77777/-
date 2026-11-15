@@ -102,7 +102,15 @@
     <div class="bar"><div id="progBar"></div></div>
     <p id="progMsg" class="lead"></p>
     <p id="progErr" class="err" hidden></p>
-    <button id="progBack" class="btn" hidden>חזרה</button>
+    <div id="progBlocked" class="card" hidden>
+      <p>עבודה קודמת עדיין רצה: <strong id="blockTitle" dir="auto"></strong></p>
+      <p class="hint" id="blockMsg"></p>
+      <button id="blockCancel" class="btn" type="button">בטל את העבודה הקודמת</button>
+    </div>
+    <div class="row gap">
+      <button id="progCancel" class="btn" type="button">בטל</button>
+      <button id="progBack" class="btn" type="button" hidden>חזרה</button>
+    </div>
   </div>
 </main>
 

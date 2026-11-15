@@ -619,7 +619,7 @@ function openEditor(job) {
 }
 async function watch(id) {
   show('progress');
-  $('#progErr').hidden = true; $('#progBack').hidden = true;
+  $('#progErr').hidden = true; $('#progBack').hidden = true; $('#progBlocked').hidden = true;
   const order = ['downloading', 'transcribing', 'analyzing'];
   clearInterval(S.pollTimer);
   const poll = async () => {
@@ -632,6 +632,15 @@ async function watch(id) {
     $('#progBar').style.width = `${(job.progress || 0) * 100}%`;
     $('#progMsg').textContent = job.status === 'error' ? '' : job.message || '';
     if (job.title) $('#progTitle').textContent = job.title;
+    const done = job.status === 'ready' || job.status === 'error';
+    $('#progCancel').hidden = done;
+    $('#progCancel').onclick = () => api(`/api/jobs/${id}/cancel`, { method: 'POST' }).catch(() => {});
+    $('#progBlocked').hidden = !job.blocked_by;
+    if (job.blocked_by) {
+      $('#blockTitle').textContent = job.blocked_by.title || 'ללא שם';
+      $('#blockMsg').textContent = job.blocked_by.message;
+      $('#blockCancel').onclick = () => api(`/api/jobs/${job.blocked_by.id}/cancel`, { method: 'POST' }).catch(() => {});
+    }
     if (job.status === 'ready') { clearInterval(S.pollTimer); openEditor(job); }
     if (job.status === 'error') {
       clearInterval(S.pollTimer);

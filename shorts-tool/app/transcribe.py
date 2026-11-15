@@ -1,7 +1,12 @@
 """Local speech-to-text with word-level timestamps (faster-whisper)."""
 from __future__ import annotations
 
+import json
+import os
+import subprocess
+import sys
 import threading
+import time
 import wave
 from pathlib import Path
 
@@ -84,3 +89,56 @@ def transcribe(wav: Path, model_key: str = "hebrew", language: str | None = "he"
         if on_progress:
             on_progress(min(seg.end / total, 1.0))
     return {"language": info.language, "words": words}
+
+
+def transcribe_killable(wav: Path, model_key: str = "hebrew", language: str | None = "he",
+                        on_progress=None, should_cancel=None) -> dict:
+    """Run transcribe() in a child process so it can be cancelled at any moment
+    (a model that is busy decoding cannot be interrupted from a thread)."""
+    out = wav.with_suffix(".words.json")
+    root = Path(__file__).resolve().parent.parent
+    proc = subprocess.Popen(
+        [sys.executable, "-m", "app.transcribe", str(wav), model_key, language or "auto",
+         str(out)],
+        cwd=root, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.DEVNULL,
+        text=True, encoding="utf-8", errors="replace",
+        env={**os.environ, "PYTHONIOENCODING": "utf-8"})
+    err: list[str] = []
+
+    def read_out():
+        for line in proc.stdout:
+            if line.startswith("PROG ") and on_progress:
+                try:
+                    on_progress(float(line.split()[1]))
+                except ValueError:
+                    pass
+
+    threads = [threading.Thread(target=read_out, daemon=True),
+               threading.Thread(target=lambda: err.extend(proc.stderr), daemon=True)]
+    for t in threads:
+        t.start()
+    try:
+        while proc.poll() is None:
+            time.sleep(0.3)
+            if should_cancel and should_cancel():
+                raise InterruptedError("cancelled")
+    finally:
+        if proc.poll() is None:
+            proc.kill()
+        proc.wait()
+        for t in threads:
+            t.join(timeout=2)
+    try:
+        if proc.returncode != 0 or not out.exists():
+            tail = "".join(err).strip().splitlines()[-1:] or ["unknown error"]
+            raise RuntimeError(f"התמלול נכשל: {tail[0][:300]}")
+        return json.loads(out.read_text(encoding="utf-8"))
+    finally:
+        out.unlink(missing_ok=True)
+
+
+if __name__ == "__main__":
+    _wav, _model, _lang, _out = sys.argv[1:5]
+    _res = transcribe(Path(_wav), _model, None if _lang == "auto" else _lang,
+                      lambda p: print(f"PROG {p:.4f}", flush=True))
+    Path(_out).write_text(json.dumps(_res, ensure_ascii=False), encoding="utf-8")

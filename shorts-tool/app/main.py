@@ -189,11 +189,14 @@ def run_pipeline(job: dict) -> None:
     opts = job["opts"]
     src = d / "source.mp4"
 
+    def cancelled() -> bool:
+        return bool(job.get("cancel"))
+
     if not src.exists():
-        update(job, status="downloading", progress=0.0, message="מוריד את הסרטון")
+        update(job, status="downloading", progress=0.0, message="מתחבר ליוטיוב")
         info = download.download_video(
-            job["url"], d, lambda p: update(job, progress=p),
-            opts.get("cookies_browser", ""))
+            job["url"], d, lambda p, text: update(job, progress=p, message=text),
+            opts.get("cookies_browser", ""), cancelled)
         job["title"] = info["title"]
 
     meta = download.probe(src)
@@ -207,8 +210,8 @@ def run_pipeline(job: dict) -> None:
     wav = d / "audio.wav"
     download.extract_audio(src, wav)
     lang = None if opts["language"] == "auto" else opts["language"]
-    result = transcribe.transcribe(
-        wav, opts["model"], lang, lambda p: update(job, progress=p))
+    result = transcribe.transcribe_killable(
+        wav, opts["model"], lang, lambda p: update(job, progress=p), cancelled)
     if not result["words"]:
         raise RuntimeError("לא זוהה דיבור בסרטון")
     update(job, words=result["words"], language=result["language"])
@@ -222,19 +225,32 @@ def run_pipeline(job: dict) -> None:
     update(job, clips=clips, status="ready", progress=1.0, message="מוכן")
 
 
+running = {"id": None}  # the job the worker is busy with
+
+
 def worker() -> None:
     while True:
         job_id = work_q.get()
         job = jobs.get(job_id)
         if not job:
             continue
+        running["id"] = job_id
         try:
+            if job.get("cancel"):
+                raise download.Cancelled()
             run_pipeline(job)
+        except (download.Cancelled, InterruptedError):
+            update(job, status="error", message="העבודה בוטלה")
         except Exception as exc:  # surface the error to the UI
             traceback.print_exc()
-            msg = str(exc).replace("ERROR: ", "").strip() or exc.__class__.__name__
+            msg = str(exc).strip() or exc.__class__.__name__
             update(job, status="error", message=msg[:600])
-        save(job)
+        finally:
+            running["id"] = None
+        try:
+            save(job)
+        except OSError:
+            traceback.print_exc()
 
 
 threading.Thread(target=worker, daemon=True).start()
@@ -302,7 +318,23 @@ def list_jobs():
 @app.get("/api/jobs/{job_id}")
 def job_status(job_id: str):
     job = get_job(job_id)
-    return public(job, with_words=job["status"] == "ready")
+    out = public(job, with_words=job["status"] == "ready")
+    blocker = jobs.get(running["id"] or "")
+    if job["status"] == "queued" and blocker and blocker is not job:
+        out["blocked_by"] = {"id": blocker["id"], "title": blocker.get("title") or "",
+                             "message": blocker.get("message") or ""}
+        out["message"] = "ממתין שעבודה קודמת תסתיים"
+    return out
+
+
+@app.post("/api/jobs/{job_id}/cancel")
+def cancel_job(job_id: str):
+    job = get_job(job_id)
+    if job["status"] not in ("ready", "error"):
+        job["cancel"] = True
+        if job["status"] != "queued":
+            job["message"] = "מבטל..."
+    return {"ok": True}
 
 
 @app.delete("/api/jobs/{job_id}")
