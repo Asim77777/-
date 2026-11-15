@@ -99,3 +99,50 @@ def test_filter_modes():
     fit = render.build_filter({"mode": "fit"}, Path("/tmp/a.ass"))
     assert "boxblur" in fit and "overlay" in fit
     assert "0.5000" in render.build_filter({"x": "bad"}, Path("/tmp/a.ass"))
+
+
+# ---------------------------------------------------------------- phone mode
+def _client(monkeypatch, host, pin="123456"):
+    from fastapi.testclient import TestClient
+
+    from app import main
+    monkeypatch.setattr(main, "PIN", pin)
+    monkeypatch.setattr(main, "TOKEN", "t" * 30)
+    monkeypatch.setattr(main, "LAN_URL", "http://192.168.1.10:8000" if pin else "")
+    main.login_fails.clear()
+    return TestClient(main.app, client=(host, 50000), follow_redirects=False)
+
+
+def test_local_computer_needs_no_code(monkeypatch):
+    c = _client(monkeypatch, "127.0.0.1")
+    assert c.get("/api/fonts").status_code == 200
+    info = c.get("/api/phone").json()
+    assert info["enabled"] and info["pin"] == "123456" and "<svg" in info["qr_svg"]
+
+
+def test_phone_must_log_in(monkeypatch):
+    c = _client(monkeypatch, "192.168.1.50")
+    assert c.get("/api/fonts").status_code == 401
+    assert c.get("/api/jobs").status_code == 401
+    r = c.get("/")
+    assert r.status_code == 303 and r.headers["location"] == "/login"
+    assert c.get("/login").status_code == 200
+    assert c.post("/api/login", json={"pin": "000000"}).status_code == 401
+    assert c.post("/api/login", json={"pin": "123456"}).status_code == 200
+    assert c.get("/api/fonts").status_code == 200
+    assert c.get("/").status_code == 200
+    assert c.get("/api/phone").json() == {"enabled": False}  # code never sent to phones
+
+
+def test_login_lockout(monkeypatch):
+    c = _client(monkeypatch, "192.168.1.51")
+    for _ in range(5):
+        assert c.post("/api/login", json={"pin": "111111"}).status_code == 401
+    assert c.post("/api/login", json={"pin": "123456"}).status_code == 429
+
+
+def test_remote_blocked_when_phone_mode_off(monkeypatch):
+    c = _client(monkeypatch, "192.168.1.52", pin="")
+    assert c.get("/api/fonts").status_code == 401
+    assert c.post("/api/login", json={"pin": ""}).status_code == 403
+    assert c.cookies.get("shorts_auth") is None

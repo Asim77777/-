@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shorts Studio</title>
+<style>
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #0e0f13; color: #eceef3; font: 16px/1.5 system-ui, Arial, sans-serif; }
+  form { width: min(340px, 100% - 32px); display: grid; gap: 14px; text-align: center; }
+  h1 { margin: 0; font-size: 26px; }
+  p { margin: 0; color: #9aa0ae; }
+  input { font: inherit; font-size: 28px; letter-spacing: 8px; text-align: center; padding: 12px; border-radius: 10px; border: 1px solid #2c303b; background: #1f222b; color: inherit; }
+  button { font: inherit; font-weight: 700; padding: 13px; border: 0; border-radius: 10px; background: #ffd60a; color: #1a1500; }
+  .err { color: #ff6b6b; min-height: 1.5em; }
+</style>
+</head>
+<body>
+<form id="f">
+  <h1>Shorts Studio</h1>
+  <p>הזן את קוד הגישה שמוצג במחשב</p>
+  <input id="pin" dir="ltr" inputmode="numeric" autocomplete="one-time-code" maxlength="6" autofocus aria-label="קוד גישה">
+  <button>כניסה</button>
+  <p class="err" id="err" role="alert"></p>
+</form>
+<script>
+document.getElementById('f').onsubmit = async (e) => {
+  e.preventDefault();
+  const r = await fetch('/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ pin: document.getElementById('pin').value }) }).catch(() => null);
+  if (r && r.ok) { location.href = '/'; return; }
+  let msg = 'אין חיבור למחשב';
+  if (r) try { msg = (await r.json()).detail; } catch {}
+  document.getElementById('err').textContent = typeof msg === 'string' ? msg : 'קוד שגוי';
+};
+</script>
+</body>
+</html>

@@ -6,9 +6,12 @@ POST /api/jobs/{id}/export  render one short with burned-in subtitles
 """
 from __future__ import annotations
 
+import ipaddress
 import json
+import os
 import queue
 import re
+import secrets
 import shutil
 import threading
 import time
@@ -16,8 +19,9 @@ import traceback
 import uuid
 from pathlib import Path
 
-from fastapi import FastAPI, File, Form, HTTPException, UploadFile
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
+from fastapi.responses import (FileResponse, HTMLResponse, JSONResponse,
+                               RedirectResponse)
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
@@ -65,6 +69,76 @@ class ExportRequest(BaseModel):
     lines: list[Line] = []
     style: dict = {}
     crop: dict = {}
+
+
+# ---------------------------------------------------------------- phone mode
+# Set by app/serve.py --phone. Requests from this computer are always allowed;
+# anything else on the network must first enter the access code.
+PIN = os.environ.get("SHORTS_PIN", "")
+TOKEN = os.environ.get("SHORTS_TOKEN", "") or secrets.token_urlsafe(24)
+LAN_URL = os.environ.get("SHORTS_LAN_URL", "")
+COOKIE = "shorts_auth"
+MAX_TRIES, LOCK_SECONDS = 5, 60
+login_fails: dict[str, list[float]] = {}  # ip -> [failures, locked_until]
+OPEN_PATHS = ("/login", "/api/login")
+
+
+def is_local(request: Request) -> bool:
+    try:
+        return ipaddress.ip_address(request.client.host).is_loopback
+    except (AttributeError, ValueError):
+        return False
+
+
+@app.middleware("http")
+async def access_guard(request: Request, call_next):
+    if not is_local(request) and request.url.path not in OPEN_PATHS:
+        ok = PIN and secrets.compare_digest(request.cookies.get(COOKIE, ""), TOKEN)
+        if not ok:
+            if request.url.path.startswith("/api/"):
+                return JSONResponse({"detail": "נדרש קוד גישה"}, status_code=401)
+            return RedirectResponse("/login", status_code=303)
+    return await call_next(request)
+
+
+class LoginRequest(BaseModel):
+    pin: str = Field(max_length=12)
+
+
+@app.post("/api/login")
+def login(req: LoginRequest, request: Request):
+    if not PIN:
+        raise HTTPException(403, "מצב טלפון לא פעיל")
+    ip = request.client.host if request.client else "?"
+    fails = login_fails.setdefault(ip, [0, 0.0])
+    if time.time() < fails[1]:
+        raise HTTPException(429, "יותר מדי ניסיונות. נסה שוב בעוד דקה")
+    if not secrets.compare_digest(req.pin.strip().encode(), PIN.encode()):
+        fails[0] += 1
+        if fails[0] >= MAX_TRIES:
+            fails[0], fails[1] = 0, time.time() + LOCK_SECONDS
+        raise HTTPException(401, "קוד שגוי")
+    login_fails.pop(ip, None)
+    resp = JSONResponse({"ok": True})
+    resp.set_cookie(COOKIE, TOKEN, max_age=90 * 86400, httponly=True, samesite="lax")
+    return resp
+
+
+@app.get("/login")
+def login_page():
+    return HTMLResponse((ROOT / "static" / "login.html").read_text(encoding="utf-8"))
+
+
+@app.get("/api/phone")
+def phone_info(request: Request):
+    """QR + access code for the home screen - only shown on this computer."""
+    if not (PIN and LAN_URL and is_local(request)):
+        return {"enabled": False}
+    import segno
+
+    qr = segno.make(LAN_URL, error="m").svg_inline(scale=5, border=2, dark="#000",
+                                                    light="#fff")
+    return {"enabled": True, "url": LAN_URL, "pin": PIN, "qr_svg": qr}
 
 
 def job_dir(job_id: str) -> Path:

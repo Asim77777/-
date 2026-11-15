@@ -4,3 +4,4 @@ python-multipart>=0.0.9
 yt-dlp>=2025.10.0
 faster-whisper>=1.1.0
 numpy>=1.26
+segno>=1.6
