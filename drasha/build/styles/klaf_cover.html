@@ -1,0 +1,45 @@
+<div class="cover">
+  <svg class="scroll" viewBox="0 0 210 297" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <defs>
+      <linearGradient id="wood" x1="0" x2="1" y1="0" y2="0">
+        <stop offset="0" stop-color="#3b220f"/><stop offset="0.35" stop-color="#8a5a2b"/>
+        <stop offset="0.55" stop-color="#a8733a"/><stop offset="1" stop-color="#3b220f"/>
+      </linearGradient>
+      <linearGradient id="roll" x1="0" x2="1" y1="0" y2="0">
+        <stop offset="0" stop-color="#b89a63"/><stop offset="0.5" stop-color="#f1e3c0"/><stop offset="1" stop-color="#b89a63"/>
+      </linearGradient>
+      <linearGradient id="shadeR" x1="0" x2="1"><stop offset="0" stop-color="#5a3b16" stop-opacity="0"/><stop offset="1" stop-color="#5a3b16" stop-opacity="0.28"/></linearGradient>
+      <linearGradient id="shadeL" x1="1" x2="0"><stop offset="0" stop-color="#5a3b16" stop-opacity="0"/><stop offset="1" stop-color="#5a3b16" stop-opacity="0.28"/></linearGradient>
+      <g id="roller">
+        <rect x="7" y="2" width="4" height="16" fill="url(#wood)"/>
+        <ellipse cx="9" cy="2.4" rx="3.2" ry="1.6" fill="#5b3415"/>
+        <rect x="1.5" y="17" width="15" height="4.5" rx="1.2" fill="url(#wood)"/>
+        <rect x="2.5" y="21.5" width="13" height="254" rx="5" fill="url(#roll)" stroke="#9c7f4c" stroke-width="0.3"/>
+        <rect x="1.5" y="275.5" width="15" height="4.5" rx="1.2" fill="url(#wood)"/>
+        <rect x="7" y="280" width="4" height="15" fill="url(#wood)"/>
+        <ellipse cx="9" cy="295" rx="3.2" ry="1.6" fill="#5b3415"/>
+      </g>
+    </defs>
+    <rect x="16" y="22" width="12" height="253" fill="url(#shadeL)"/>
+    <rect x="182" y="22" width="12" height="253" fill="url(#shadeR)"/>
+    <g stroke="#5c4430" stroke-opacity="0.13" stroke-width="0.25">
+      <line x1="33" y1="40" x2="177" y2="40"/><line x1="33" y1="49" x2="177" y2="49"/>
+      <line x1="33" y1="58" x2="177" y2="58"/><line x1="33" y1="67" x2="177" y2="67"/>
+      <line x1="33" y1="76" x2="177" y2="76"/><line x1="33" y1="85" x2="177" y2="85"/>
+      <line x1="33" y1="94" x2="177" y2="94"/><line x1="33" y1="103" x2="177" y2="103"/>
+      <line x1="33" y1="225" x2="177" y2="225"/><line x1="33" y1="234" x2="177" y2="234"/>
+      <line x1="33" y1="243" x2="177" y2="243"/><line x1="33" y1="252" x2="177" y2="252"/>
+      <line x1="33" y1="31" x2="33" y2="262"/><line x1="177" y1="31" x2="177" y2="262"/>
+    </g>
+    <use href="#roller"/>
+    <use href="#roller" transform="translate(192 0)"/>
+  </svg>
+  <div class="t bsd">בס״ד</div>
+  <div class="t kicker">{KICKER}</div>
+  <h1 class="t">{TITLE_PLAIN}</h1>
+  <div class="t sub">{SUB}</div>
+  <div class="t orn-wrap">{ORN}</div>
+  <div class="t basis">{BASIS}</div>
+  <div class="t author"><span class="pre">{AUTHOR_PREFIX}</span><span class="name">{AUTHOR}</span></div>
+  <div class="t verse"><p>{VERSE1}</p><p>{VERSE2}</p></div>
+</div>

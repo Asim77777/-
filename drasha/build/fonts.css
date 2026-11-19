@@ -57,3 +57,17 @@
   font-display: swap;
   src: url(fonts_ttf/notoserifhebrew_v30_k3k0o9MMPvpLmixYH7euCwmkS9DohjX1-kRyiqyBqIxnoLbp93i9IKrXKF_qVOsVAG8.ttf) format('truetype');
 }
+@font-face {
+  font-family: 'Noto Rashi Hebrew';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(fonts_ttf/notorashihebrew_v28_EJR_Qh82XsIK-QFmqXk4zvLwFVya0vFL-HlKM5e6C6HZB-HkRw.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Noto Rashi Hebrew';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(fonts_ttf/notorashihebrew_v28_EJR_Qh82XsIK-QFmqXk4zvLwFVya0vFL-HlKM5e6C6HZ2ebkRw.ttf) format('truetype');
+}

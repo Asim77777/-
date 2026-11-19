@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Build the vocalized drasha: text/*.txt -> drasha.html (two-pass TOC page numbers)."""
+"""Build the vocalized drasha: text/*.txt -> HTML (one design per style in styles/).
+
+usage: build.py OUT.html [STYLE] [PAGES] [markers]
+  STYLE  classic (default) | vilna | klaf | maroc
+  PAGES  comma list of the page on which each section starts (for the TOC)
+"""
 import html
 import re
 import sys
@@ -8,10 +13,15 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 TEXT_DIR = ROOT / "text"
+STYLE_DIR = ROOT / "styles"
 
+KICKER = "דְּרָשָׁה לְפָרָשַׁת רְאֵה"
 TITLE_MAIN = "רְאֵה אָנֹכִי"
 TITLE_SUB = "עַל סוֹד הַבְּחִירָה"
-RUNNING = "רְאֵה אָנֹכִי · עַל סוֹד הַבְּחִירָה"
+BASIS = "עַל פִּי סֵפֶר עֲקֵדַת יִצְחָק"
+AUTHOR_PREFIX = "מִפִּי"
+AUTHOR = 'רַבִּי חַיִּים דַּרְעִי שְׁלִיטָ"א'
+RUNNING = 'רְאֵה אָנֹכִי · מִפִּי רַבִּי חַיִּים דַּרְעִי שְׁלִיטָ"א'
 
 HEB = "א-ת"
 MARKS = "֑-ׇ"
@@ -36,10 +46,8 @@ def typo(s: str) -> str:
     """Hebrew typographic fixes: geresh / gershayim, qamatz qatan, NFC."""
     s = unicodedata.normalize("NFC", s)
     s = s.replace("ׇ", "ָ")  # qamatz qatan -> qamatz (safer rendering)
-    # gershayim inside known abbreviations
-    for a, b in [('זַ"ל', "זַ״ל"), ('מוֹ"ר', "מוֹ״ר")]:
-        s = s.replace(a, b)
-    # geresh after a Hebrew letter (+marks): ה' -> ה׳, וְכוּ' -> וְכוּ׳
+    for a, b in [('זַ"ל', "זַ״ל"), ('מוֹ"ר', "מוֹ״ר"), ('טָ"א', "טָ״א")]:
+        s = s.replace(unicodedata.normalize("NFC", a), unicodedata.normalize("NFC", b))
     s = re.sub(rf"(?<=[{HEB}{MARKS}])'", "׳", s)
     return s
 
@@ -58,7 +66,6 @@ def inline(s: str) -> str:
 
 
 def parse(text: str):
-    """Return list of blocks: (kind, payload)."""
     blocks = []
     for chunk in re.split(r"\n\s*\n", text.strip()):
         lines = [l.rstrip() for l in chunk.strip().split("\n") if l.strip()]
@@ -90,15 +97,16 @@ ORN_SVG = (
 
 
 def render_body(blocks, with_markers: bool):
-    out = []
-    headings = []
-    after_h2 = False
+    out, headings, after_h2 = [], [], False
     for kind, payload in blocks:
         if kind == "h2":
             idx = len(headings)
             headings.append(payload)
             marker = f'<span class="marker">QQH{idx:02d}QQ</span>' if with_markers else ""
-            out.append(f'<section class="sec" id="s{idx}">{marker}{ORN_SVG}<h2>{inline(payload)}</h2>')
+            out.append(
+                f'<section class="sec" id="s{idx}">{marker}{ORN_SVG}'
+                f'<h2><span class="h2-in">{inline(payload)}</span></h2><div class="sec-body">'
+            )
             after_h2 = True
             continue
         if kind == "p":
@@ -118,56 +126,78 @@ def render_body(blocks, with_markers: bool):
             c = f"<cite>({ref_text(cite)})</cite>" if cite else ""
             out.append(f'<div class="akeida"><p>{inline(body)}</p>{c}</div>')
         after_h2 = False
-    # close sections: each h2 opened a <section>; close before next one
     html_out, open_sec = [], False
     for frag in out:
         if frag.startswith('<section class="sec"'):
             if open_sec:
-                html_out.append("</section>")
+                html_out.append("</div></section>")
             open_sec = True
         html_out.append(frag)
     if open_sec:
-        html_out.append("</section>")
+        html_out.append("</div></section>")
     return "\n".join(html_out), headings
 
 
-def build(pages=None, with_markers=False):
+DEFAULT_COVER = """
+<div class="cover">
+  <div class="frame">
+    <div class="bsd">בס״ד</div>
+    <div class="cover-inner">
+      <div class="kicker">{KICKER}</div>
+      <h1>{TITLE}</h1>
+      <div class="sub">{SUB}</div>
+      {ORN}
+      <div class="basis">{BASIS}</div>
+      <div class="author"><span class="pre">{AUTHOR_PREFIX}</span> {AUTHOR}</div>
+    </div>
+    <div class="cover-verse">
+      <p>{VERSE1}</p>
+      <p>{VERSE2}</p>
+    </div>
+    <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+  </div>
+</div>
+"""
+
+
+def build(style="classic", pages=None, with_markers=False):
     text = "\n\n".join(p.read_text(encoding="utf-8") for p in sorted(TEXT_DIR.glob("*.txt")))
-    blocks = parse(text)
-    body, headings = render_body(blocks, with_markers)
+    body, headings = render_body(parse(text), with_markers)
     toc_rows = []
     for i, h in enumerate(headings):
         num = hebrew_numeral(pages[i]) if pages else "—"
         toc_rows.append(
             f'<li><span class="t">{inline(h)}</span><span class="dots"></span><span class="n">{num}</span></li>'
         )
-    css = (ROOT / "style.css").read_text(encoding="utf-8")
+    css = (STYLE_DIR / f"{style}.css").read_text(encoding="utf-8").replace("__RUNNING__", typo(RUNNING))
+    cover_file = STYLE_DIR / f"{style}_cover.html"
+    cover_tpl = cover_file.read_text(encoding="utf-8") if cover_file.exists() else DEFAULT_COVER
+    fields = {
+        "KICKER": typo(KICKER),
+        "TITLE": typo(TITLE_MAIN),
+        "TITLE_PLAIN": re.sub(f"[{MARKS}]", "", TITLE_MAIN),
+        "SUB": typo(TITLE_SUB),
+        "BASIS": typo(BASIS),
+        "AUTHOR_PREFIX": typo(AUTHOR_PREFIX),
+        "AUTHOR": typo(AUTHOR),
+        "ORN": ORN_SVG,
+        "VERSE1": inline("[[רְאֵה אָנֹכִי נֹתֵן לִפְנֵיכֶם הַיּוֹם בְּרָכָה וּקְלָלָה]] {דברים יא, כו}"),
+        "VERSE2": inline("[[וּבָחַרְתָּ בַּחַיִּים]] {דברים ל, יט}"),
+    }
+    cover = cover_tpl
+    for k, v in fields.items():
+        cover = cover.replace("{" + k + "}", v)
     doc = f"""<!doctype html>
 <html lang="he" dir="rtl">
 <head>
 <meta charset="utf-8">
 <title>ראה אנכי – על סוד הבחירה</title>
 <link rel="stylesheet" href="fonts.css">
+<link rel="stylesheet" href="fonts_extra.css">
 <style>{css}</style>
 </head>
-<body>
-<div class="cover">
-  <div class="frame">
-    <div class="bsd">בס״ד</div>
-    <div class="cover-inner">
-      <div class="kicker">{typo("דְּרָשָׁה לְפָרָשַׁת רְאֵה")}</div>
-      <h1>{typo(TITLE_MAIN)}</h1>
-      <div class="sub">{typo(TITLE_SUB)}</div>
-      {ORN_SVG}
-      <div class="basis">{typo("עַל פִּי סֵפֶר עֲקֵדַת יִצְחָק")}</div>
-    </div>
-    <div class="cover-verse">
-      <p>{inline("[[רְאֵה אָנֹכִי נֹתֵן לִפְנֵיכֶם הַיּוֹם בְּרָכָה וּקְלָלָה]] {דברים יא, כו}")}</p>
-      <p>{inline("[[וּבָחַרְתָּ בַּחַיִּים]] {דברים ל, יט}")}</p>
-    </div>
-    <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
-  </div>
-</div>
+<body class="style-{style}">
+{cover}
 <div class="toc">
   <div class="toc-title">{typo("תֹּכֶן הָעִנְיָנִים")}</div>
   {ORN_SVG}
@@ -180,14 +210,14 @@ def build(pages=None, with_markers=False):
 </body>
 </html>
 """
-    doc = doc.replace("__RUNNING__", typo(RUNNING))
     return doc, headings
 
 
 if __name__ == "__main__":
     out = Path(sys.argv[1])
-    pages = [int(x) for x in sys.argv[2].split(",")] if len(sys.argv) > 2 and sys.argv[2] else None
-    markers = len(sys.argv) > 3 and sys.argv[3] == "markers"
-    doc, heads = build(pages, markers)
+    style = sys.argv[2] if len(sys.argv) > 2 and sys.argv[2] else "classic"
+    pages = [int(x) for x in sys.argv[3].split(",")] if len(sys.argv) > 3 and sys.argv[3] else None
+    markers = len(sys.argv) > 4 and sys.argv[4] == "markers"
+    doc, heads = build(style, pages, markers)
     out.write_text(doc, encoding="utf-8")
     print(len(heads), "sections")

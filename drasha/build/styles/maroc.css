@@ -1,0 +1,148 @@
+/* Style C — "מורשת מרוקו": Sephardi-Moroccan heritage. Ivory paper, zellige tile bands,
+   horseshoe-arch frames, deep blue / terracotta / saffron palette. */
+:root {
+  --ink: #1b2433;
+  --ink-soft: #55607a;
+  --blue: #1f3b63;
+  --terra: #b4532f;
+  --saffron: #c89b3c;
+  --ivory: #fbf7ee;
+  --tile: #f3eadb;
+}
+
+@page {
+  size: A4;
+  margin: 30mm 21mm 24mm 21mm;
+  background: var(--ivory);
+  @top-center {
+    content: "__RUNNING__";
+    font-family: "Taamey David", serif;
+    font-size: 10pt;
+    color: var(--blue);
+    vertical-align: bottom;
+    padding-bottom: 9.5mm;
+    margin-bottom: 4mm;
+    background: url("styles/assets/zellige-strip.svg") repeat-x left bottom / 10mm 4mm;
+  }
+  @bottom-center {
+    content: "– " counter(page, hebrew) " –";
+    font-family: "Makabi YG", serif;
+    font-size: 12pt;
+    color: var(--terra);
+    vertical-align: top;
+    padding-top: 5mm;
+  }
+}
+@page cover { margin: 0; @top-center { content: none; background: none; } @bottom-center { content: none; } }
+@page toc { @top-center { content: none; background: none; } }
+
+html { background: var(--ivory); }
+body {
+  margin: 0;
+  color: var(--ink);
+  font-family: "Taamey David", "Frank Ruhl Libre", serif;
+  font-size: 13.2pt;
+  line-height: 1.95;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+svg.orn { display: block; width: 40mm; height: 4mm; margin: 0 auto; overflow: visible; break-after: avoid; }
+svg.orn line { stroke: var(--saffron); stroke-width: 0.9; }
+svg.orn .fill { fill: var(--terra); }
+
+/* ---------- cover: zellige wall with a horseshoe arch ---------- */
+.cover { page: cover; break-after: page; width: 210mm; height: 297mm; position: relative; overflow: hidden; }
+.cover svg.wall { position: absolute; inset: 0; width: 210mm; height: 297mm; }
+.cover .t { position: absolute; left: 46mm; right: 46mm; text-align: center; }
+.cover .bsd { top: 54mm; font-size: 10pt; color: var(--ink-soft); }
+.cover .kicker { top: 66mm; font-size: 13pt; color: var(--terra); letter-spacing: 0.08em; }
+.cover h1 { top: 82mm; margin: 0; font-family: "Makabi YG", serif; font-weight: 400; font-size: 50pt; line-height: 1.35; color: var(--blue); }
+.cover .sub { top: 116mm; font-family: "Makabi YG", serif; font-size: 21pt; color: var(--ink); }
+.cover .rosette { top: 136mm; height: 13mm; background: url("styles/assets/rosette.svg") center / contain no-repeat; }
+.cover .basis { top: 153mm; font-size: 14.5pt; color: var(--ink-soft); }
+.cover .author { top: 176mm; }
+.cover .author .pre { display: block; font-size: 12.5pt; color: var(--terra); letter-spacing: 0.1em; }
+.cover .author .name { display: block; font-family: "Makabi YG", serif; font-size: 22pt; line-height: 1.6; color: var(--blue); }
+.cover .verse { top: 214mm; font-size: 12.5pt; line-height: 1.9; color: var(--ink-soft); }
+.cover .verse p { margin: 0; text-align: center; }
+.cover .verse .q { color: var(--terra); }
+
+/* ---------- table of contents ---------- */
+.toc { page: toc; break-after: page; padding-top: 12mm; }
+.toc-title { text-align: center; font-family: "Makabi YG", serif; font-size: 25pt; color: var(--blue); margin-bottom: 3mm; }
+.toc ol { list-style: none; margin: 10mm 8mm 0; padding: 0; }
+.toc li { display: flex; align-items: baseline; gap: 3mm; font-size: 13.5pt; line-height: 2.2; }
+.toc li .dots { flex: 1 1 auto; border-bottom: 1px dotted var(--saffron); transform: translateY(-1.5mm); }
+.toc li .n { min-width: 8mm; text-align: left; color: var(--terra); font-family: "Makabi YG", serif; }
+
+/* ---------- body ---------- */
+section.sec { position: relative; }
+.marker { position: absolute; top: 0; left: 0; font-size: 2pt; color: var(--ivory); }
+section.sec > svg.orn { display: none; }
+
+h2 {
+  margin: 9mm 0 5mm;
+  text-align: center;
+  font-family: "Makabi YG", serif;
+  font-weight: 400;
+  font-size: 19.5pt;
+  line-height: 1.55;
+  color: var(--blue);
+  break-after: avoid;
+}
+section.sec:first-child h2 { margin-top: 0; }
+h2::before {
+  content: "";
+  display: block;
+  height: 10mm;
+  margin: 0 auto 1.5mm;
+  background: url("styles/assets/rosette.svg") center / contain no-repeat;
+}
+h2::after {
+  content: "";
+  display: block;
+  width: 26mm;
+  margin: 2.6mm auto 0;
+  border-top: 0.9pt solid var(--terra);
+}
+h2 .q { color: inherit; font-weight: inherit; }
+
+p { margin: 0 0 3.2mm; text-align: justify; orphans: 2; widows: 2; hyphens: none; }
+p.short { break-inside: avoid; }
+p.first .lead { font-family: "Makabi YG", serif; font-size: 1.15em; color: var(--terra); }
+
+.q { color: var(--terra); font-weight: 700; }
+.ref { font-size: 0.7em; color: var(--ink-soft); white-space: nowrap; margin-inline-start: 0.15em; font-weight: 400; }
+
+/* Akeida: a tiled panel */
+.akeida {
+  break-inside: avoid;
+  break-after: avoid;
+  margin: 4.5mm 0 4mm;
+  padding: 6.2mm 5mm 2.2mm 4mm;
+  background: url("styles/assets/zellige-strip.svg") repeat-x left top / 8mm 3.2mm, var(--tile);
+  border-inline-start: 3.2pt solid var(--blue);
+  border-bottom: 0.8pt solid var(--saffron);
+}
+.akeida p { margin: 0; font-weight: 700; font-size: 13.2pt; line-height: 1.9; color: #18263f; text-align: justify; }
+.akeida cite { display: block; font-style: normal; font-size: 8.8pt; color: var(--ink-soft); text-align: left; }
+
+/* verses: inside a horseshoe-arch window */
+blockquote.pasuk {
+  break-inside: avoid;
+  margin: 6mm 14mm;
+  padding: 8mm 7mm 3mm;
+  border: 1pt solid var(--saffron);
+  outline: 0.5pt solid var(--saffron);
+  outline-offset: 1.2mm;
+  border-radius: 50% 50% 1.5mm 1.5mm / 12mm 12mm 1.5mm 1.5mm;
+  text-align: center;
+}
+blockquote.pasuk p { margin: 0; font-family: "Taamey Frank", serif; font-size: 14.6pt; line-height: 1.95; color: var(--blue); text-align: justify; text-align-last: center; }
+blockquote.pasuk cite { display: block; font-style: normal; font-size: 9pt; color: var(--ink-soft); }
+
+.end { margin-top: 10mm; text-align: center; break-inside: avoid; }
+.end::before { content: ""; display: block; height: 10mm; background: url("styles/assets/rosette.svg") center / contain no-repeat; }
+.end svg.orn { display: none; }
+.end div { margin-top: 2mm; font-family: "Makabi YG", serif; font-size: 14pt; color: var(--terra); }

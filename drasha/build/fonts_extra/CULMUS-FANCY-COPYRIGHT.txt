@@ -1,0 +1,61 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: Culmus Fancy Fonts
+Source: http://culmus.sourceforge.net/fancy/
+Comment:
+ Includes some fonts from Taamey Culmus as well
+
+Files: *
+Copyright:
+ 2002-2013 Maxim Iorsh (iorsh@users.sourceforge.net)
+ 2009-2014 Yoram Gnat (yoram.gnat@gmail.com)
+License: GPL-2
+
+Files: debian/*
+Copyright:
+ 2005-2018 Lior Kaplan <kaplan@debian.org>
+ 2007 Baruch Even <baruch@ev-en.org>
+ 2021 Tzafrir Cohen <tzafrir@debian.org> 
+License: GPL-2
+
+Files:
+ anka/* comix/* dorian/* gan/* gladia/* hillel/* journal/* ktav/*
+ ktav-yad/* ozrad/* trashim/*
+Copyright: 2002-2013 Maxim Iorsh (iorsh@users.sourceforge.net)
+License: GPL-2
+
+Files: KeterAramTsova/* KeterYG/*
+Copyright: 2010-2012 Yoram Gnat (gyoramg@users.sourceforge.net)
+License: GPL-2-fonts-exception
+Comment:
+ Hebrew Cantillation marks GSUB and GPOS OpenType positioning rules
+ Inspired by the Hebrew OpenType Layout logic copyright (c) 2003 & 2007,
+ Ralph Hancock & John Hudson published under the MIT License.
+
+Files:
+ MakabiYG/* ShmulikCLM/* Taamey-Ashkenaz/* TaameyDavidCLM/*
+ TaameyFrankCLM/*
+Copyright: 2009-2014 Yoram Gnat (gyoramg@users.sourceforge.net)
+License: GPL-2-fonts-exception
+
+License: GPL-2
+ This package is distributed under the terms of GNU General Public License
+ version 2 (see file GNU-GPL).
+ .
+ On Debian systems you can find a copy of the GNU General Public License
+ at /usr/share/common-licenses/GPL-2 .
+
+License: GPL-2-fonts-exception
+ This package is distributed under the terms of GNU General Public License
+ version 2 (see file GNU-GPL).
+ .
+ On Debian systems you can find a copy of the GNU General Public License
+ at /usr/share/common-licenses/GPL-2 .
+ .
+ As a special exception, if you create a document which uses this font, and
+ embed this font or unaltered portions of this font into the document, this
+ font does not by itself cause the resulting document to be covered by the
+ GNU General Public License. This exception does not however invalidate any
+ other reasons why the document might be covered by the GNU General Public
+ License. If you modify this font, you may extend this exception to your
+ version of the font, but you are not obligated to do so. If you do not wish
+ to do so, delete this exception statement from your version.
