@@ -1,0 +1,293 @@
+:root {
+  --ink: #1d1712;
+  --ink-soft: #4a3d31;
+  --muted: #8a7a66;
+  --accent: #7b2331;      /* burgundy */
+  --gold: #a8843a;        /* muted gold */
+  --gold-soft: #d9c79c;
+  --tint: #f8f3ea;        /* very light parchment tint for source boxes */
+  --paper: #ffffff;
+}
+
+@page {
+  size: A4;
+  margin: 24mm 21mm 22mm 21mm;
+  @top-center {
+    content: "__RUNNING__";
+    font-family: "Frank Ruhl Libre", serif;
+    font-size: 8.5pt;
+    color: #8a7a66;
+    letter-spacing: 0.04em;
+    vertical-align: bottom;
+    padding-bottom: 5mm;
+  }
+  @bottom-center {
+    content: "– " counter(page, hebrew) " –";
+    font-family: "Frank Ruhl Libre", serif;
+    font-weight: 500;
+    font-size: 10pt;
+    color: #7b2331;
+    vertical-align: top;
+    padding-top: 4mm;
+  }
+}
+@page cover {
+  margin: 0;
+  @top-center { content: none; }
+  @bottom-center { content: none; }
+}
+@page toc {
+  @top-center { content: none; }
+}
+
+html { background: var(--paper); }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Frank Ruhl Libre", "Noto Serif Hebrew", serif;
+  font-size: 13pt;
+  line-height: 1.95;
+  font-kerning: normal;
+  -webkit-font-smoothing: antialiased;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+/* ---------- ornament ---------- */
+svg.orn { break-after: avoid; display: block; width: 46mm; height: 4mm; margin: 0 auto; overflow: visible; }
+svg.orn line { stroke: var(--gold); stroke-width: 0.9; }
+svg.orn .fill { fill: var(--accent); }
+
+/* ---------- cover ---------- */
+.cover {
+  page: cover;
+  break-after: page;
+  width: 210mm;
+  height: 297mm;
+  box-sizing: border-box;
+  padding: 14mm;
+  position: relative;
+}
+.cover .frame {
+  position: relative;
+  height: 100%;
+  box-sizing: border-box;
+  border: 1.2pt solid var(--gold);
+  outline: 0.5pt solid var(--gold);
+  outline-offset: -3.2mm;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 28mm 16mm 22mm;
+  text-align: center;
+}
+.cover .corner {
+  position: absolute;
+  width: 3.2mm;
+  height: 3.2mm;
+  background: var(--accent);
+  transform: translate(50%, -50%) rotate(45deg);
+}
+.cover .corner.tl { top: 6.5mm; left: 6.5mm; transform: translate(-50%, -50%) rotate(45deg); }
+.cover .corner.tr { top: 6.5mm; right: 6.5mm; transform: translate(50%, -50%) rotate(45deg); }
+.cover .corner.bl { bottom: 6.5mm; left: 6.5mm; transform: translate(-50%, 50%) rotate(45deg); }
+.cover .corner.br { bottom: 6.5mm; right: 6.5mm; transform: translate(50%, 50%) rotate(45deg); }
+.cover .frame::before {
+  content: "";
+  position: absolute;
+  inset: 6.5mm;
+  border: 0.6pt solid var(--accent);
+  opacity: 0.55;
+  pointer-events: none;
+}
+.cover .bsd {
+  position: absolute;
+  top: 12mm;
+  right: 14mm;
+  font-size: 10pt;
+  color: var(--ink-soft);
+}
+.cover-inner {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 6mm;
+}
+.cover .kicker {
+  font-size: 13pt;
+  font-weight: 500;
+  color: var(--gold);
+  letter-spacing: 0.12em;
+  margin-bottom: 7mm;
+}
+.cover h1 {
+  font-weight: 900;
+  font-size: 66pt;
+  line-height: 1.25;
+  color: var(--accent);
+  margin: 0;
+}
+.cover .sub {
+  font-weight: 500;
+  font-size: 28pt;
+  line-height: 1.5;
+  color: var(--ink);
+  margin: 2mm 0 9mm;
+}
+.cover .basis {
+  margin-top: 8mm;
+  font-size: 15pt;
+  color: var(--ink-soft);
+}
+.cover-verse {
+  flex: 0 0 auto;
+  text-align: center;
+  color: var(--ink-soft);
+  border-top: 0.6pt solid var(--gold-soft);
+  padding-top: 6mm;
+  margin: 0 18mm;
+}
+.cover-verse p { margin: 0; font-size: 14pt; line-height: 1.9; text-align: center; }
+.cover-verse .q { color: var(--accent); font-weight: 500; }
+
+/* ---------- table of contents ---------- */
+.toc {
+  page: toc;
+  break-after: page;
+  padding-top: 18mm;
+}
+.toc-title {
+  text-align: center;
+  font-size: 22pt;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 3mm;
+}
+.toc ol {
+  list-style: none;
+  margin: 12mm 8mm 0;
+  padding: 0;
+}
+.toc li {
+  display: flex;
+  align-items: baseline;
+  gap: 3mm;
+  font-size: 13.5pt;
+  line-height: 2.25;
+}
+.toc li .t { flex: 0 1 auto; }
+.toc li .dots {
+  flex: 1 1 auto;
+  border-bottom: 1px dotted var(--gold);
+  transform: translateY(-1.6mm);
+}
+.toc li .n { flex: 0 0 auto; color: var(--accent); font-weight: 600; min-width: 8mm; text-align: left; }
+
+/* ---------- body ---------- */
+main { }
+section.sec { position: relative; }
+.marker { position: absolute; top: 0; left: 0; font-size: 2pt; color: #fff; }
+
+section.sec > svg.orn { margin-top: 9mm; }
+section.sec:first-child > svg.orn { margin-top: 0; }
+
+h2 {
+  text-align: center;
+  font-weight: 700;
+  font-size: 18.5pt;
+  line-height: 1.6;
+  color: var(--accent);
+  margin: 2.5mm 0 4.5mm;
+  break-after: avoid;
+}
+h2 .q { color: inherit; font-weight: inherit; }
+
+p {
+  margin: 0 0 3.2mm;
+  text-align: justify;
+  text-justify: inter-word;
+  orphans: 2;
+  widows: 2;
+  hyphens: none;
+}
+p.short { break-inside: avoid; }
+p.first .lead { font-weight: 700; color: var(--accent); }
+
+.q { color: var(--accent); font-weight: 500; }
+.ref {
+  font-size: 0.7em;
+  color: var(--muted);
+  white-space: nowrap;
+  font-weight: 400;
+  margin-inline: 0.15em 0;
+}
+
+/* source text of the Akeida */
+.akeida {
+  break-inside: avoid;
+  break-after: avoid;
+  margin: 4mm 0 3.6mm;
+  padding: 2.2mm 5mm 2.4mm 4mm;
+  background: var(--tint);
+  border-inline-start: 2.4pt solid var(--gold);
+  border-radius: 0 0 0 0;
+}
+.akeida p {
+  margin: 0;
+  font-weight: 500;
+  font-size: 13.4pt;
+  line-height: 1.9;
+  color: #2b2017;
+  text-align: right;
+}
+.akeida cite {
+  display: block;
+  margin-top: 0.6mm;
+  font-style: normal;
+  font-size: 8.8pt;
+  color: var(--muted);
+  text-align: left;
+}
+
+/* verses and midrash */
+blockquote.pasuk {
+  break-inside: avoid;
+  margin: 5mm 8mm 5mm;
+  padding: 3mm 6mm 2.6mm;
+  border-top: 0.8pt solid var(--gold-soft);
+  border-bottom: 0.8pt solid var(--gold-soft);
+  text-align: center;
+  position: relative;
+}
+blockquote.pasuk p {
+  margin: 0;
+  font-size: 14pt;
+  font-weight: 400;
+  line-height: 1.95;
+  text-align: justify;
+  text-align-last: center;
+  color: var(--ink);
+}
+blockquote.pasuk .q { font-weight: 500; }
+blockquote.pasuk cite {
+  display: block;
+  margin-top: 0.8mm;
+  font-style: normal;
+  font-size: 9pt;
+  color: var(--muted);
+}
+
+.end {
+  margin-top: 10mm;
+  text-align: center;
+  break-inside: avoid;
+}
+.end div {
+  margin-top: 2mm;
+  font-size: 12pt;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+}
