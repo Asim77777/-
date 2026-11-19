@@ -21,7 +21,7 @@ TITLE_SUB = "עַל סוֹד הַבְּחִירָה"
 BASIS = "עַל פִּי סֵפֶר עֲקֵדַת יִצְחָק"
 AUTHOR_PREFIX = "מִפִּי"
 AUTHOR = 'רַבִּי חַיִּים דַּרְעִי שְׁלִיטָ"א'
-RUNNING = 'רְאֵה אָנֹכִי · מִפִּי רַבִּי חַיִּים דַּרְעִי שְׁלִיטָ"א'
+RUNNING = "רְאֵה אָנֹכִי · עַל סוֹד הַבְּחִירָה"
 
 HEB = "א-ת"
 MARKS = "֑-ׇ"
@@ -96,46 +96,77 @@ ORN_SVG = (
 )
 
 
+SHORT = 420  # characters: a paragraph this short is never split across pages
+
+
+def render_block(kind, payload, first=False):
+    """Return (html, text_length, keep_with_next) for one body block."""
+    if kind == "p":
+        content = inline(payload)
+        if first:
+            content = re.sub(r"^(\S+)", r'<span class="lead">\1</span>', content, count=1)
+            cls = "first short" if len(payload) < SHORT else "first"
+        else:
+            cls = "short" if len(payload) < SHORT else ""
+        attr = f' class="{cls}"' if cls else ""
+        # a lead-in sentence ("...:") belongs with the quote that follows it
+        return f"<p{attr}>{content}</p>", len(payload), payload.rstrip().endswith(":")
+    body, cite = payload
+    c = f"<cite>({ref_text(cite)})</cite>" if cite else ""
+    if kind == "pasuk":
+        return f'<blockquote class="pasuk"><p>{inline(body)}</p>{c}</blockquote>', len(body), False
+    return f'<div class="akeida"><p>{inline(body)}</p>{c}</div>', len(body), True
+
+
+def keep_group(items, start, budget=900):
+    """From items[start], take blocks that must stay together (lead-in -> quote -> short text)."""
+    group = [items[start]]
+    total = items[start][1]
+    i = start
+    while items[i][2] and i + 1 < len(items):
+        nxt = items[i + 1]
+        is_long_p = nxt[0].startswith("<p") and nxt[1] >= SHORT
+        if is_long_p or total + nxt[1] > budget:
+            break
+        group.append(nxt)
+        total += nxt[1]
+        i += 1
+    return group, i + 1
+
+
 def render_body(blocks, with_markers: bool):
-    out, headings, after_h2 = [], [], False
+    sections, headings = [], []
     for kind, payload in blocks:
         if kind == "h2":
-            idx = len(headings)
+            sections.append((payload, []))
             headings.append(payload)
-            marker = f'<span class="marker">QQH{idx:02d}QQ</span>' if with_markers else ""
-            out.append(
-                f'<section class="sec" id="s{idx}">{marker}{ORN_SVG}'
-                f'<h2><span class="h2-in">{inline(payload)}</span></h2><div class="sec-body">'
-            )
-            after_h2 = True
-            continue
-        if kind == "p":
-            content = inline(payload)
-            if after_h2:
-                content = re.sub(r"^(\S+)", r'<span class="lead">\1</span>', content, count=1)
-                out.append(f'<p class="first">{content}</p>')
+        else:
+            sections[-1][1].append((kind, payload))
+    out = []
+    for idx, (title, body) in enumerate(sections):
+        items = [render_block(k, p, first=(j == 0)) for j, (k, p) in enumerate(body)]
+        marker = f'<span class="marker">QQH{idx:02d}QQ</span>' if with_markers else ""
+        h2 = f'<h2><span class="h2-in">{inline(title)}</span></h2>'
+        # the heading is kept on the same page as its first block(s)
+        if items and not (items[0][0].startswith("<p") and items[0][1] >= SHORT):
+            first_group, nxt = keep_group(items, 0)
+        else:  # a long opening paragraph may split; orphans/widows keep 2 lines with the heading
+            first_group, nxt = [], 0
+        head = "".join(h for h, _, _ in first_group)
+        parts = [f'<section class="sec" id="s{idx}">{marker}{ORN_SVG}',
+                 f'<div class="hg">{h2}<div class="sec-body sb-first">{head}</div></div>',
+                 '<div class="sec-body">']
+        i = nxt
+        while i < len(items):
+            group, j = keep_group(items, i)
+            if len(group) > 1:
+                parts.append('<div class="keep">' + "".join(h for h, _, _ in group) + "</div>")
             else:
-                cls = ' class="short"' if len(payload) < 420 else ""
-                out.append(f"<p{cls}>{content}</p>")
-        elif kind == "pasuk":
-            body, cite = payload
-            c = f"<cite>({ref_text(cite)})</cite>" if cite else ""
-            out.append(f'<blockquote class="pasuk"><p>{inline(body)}</p>{c}</blockquote>')
-        elif kind == "akeida":
-            body, cite = payload
-            c = f"<cite>({ref_text(cite)})</cite>" if cite else ""
-            out.append(f'<div class="akeida"><p>{inline(body)}</p>{c}</div>')
-        after_h2 = False
-    html_out, open_sec = [], False
-    for frag in out:
-        if frag.startswith('<section class="sec"'):
-            if open_sec:
-                html_out.append("</div></section>")
-            open_sec = True
-        html_out.append(frag)
-    if open_sec:
-        html_out.append("</div></section>")
-    return "\n".join(html_out), headings
+                parts.append(group[0][0])
+            i = j
+        parts.append("</div></section>")
+        out.append("\n".join(parts))
+    return "\n".join(out), headings
 
 
 DEFAULT_COVER = """

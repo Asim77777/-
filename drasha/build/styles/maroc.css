@@ -146,3 +146,7 @@ blockquote.pasuk cite { display: block; font-style: normal; font-size: 9pt; colo
 .end::before { content: ""; display: block; height: 10mm; background: url("styles/assets/rosette.svg") center / contain no-repeat; }
 .end svg.orn { display: none; }
 .end div { margin-top: 2mm; font-family: "Makabi YG", serif; font-size: 14pt; color: var(--terra); }
+
+/* blocks that must stay on one page: heading + opening, lead-in + quote */
+.hg, .keep { break-inside: avoid; }
+h2 + .sec-body:empty { display: none; }

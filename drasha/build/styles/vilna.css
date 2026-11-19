@@ -150,3 +150,7 @@ blockquote.pasuk cite { display: block; font-style: normal; font-size: 8.5pt; co
 
 .end { margin-top: 8mm; text-align: center; }
 .end div { margin-top: 2mm; font-family: "Shmulik", serif; font-size: 13pt; }
+
+/* blocks that must stay on one page: heading + opening, lead-in + quote */
+.hg, .keep { break-inside: avoid; }
+h2 + .sec-body:empty { display: none; }

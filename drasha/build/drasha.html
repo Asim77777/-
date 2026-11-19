@@ -5,47 +5,57 @@
 <title>ראה אנכי – על סוד הבחירה</title>
 <link rel="stylesheet" href="fonts.css">
 <link rel="stylesheet" href="fonts_extra.css">
-<style>:root {
-  --ink: #1d1712;
-  --ink-soft: #4a3d31;
-  --muted: #8a7a66;
-  --accent: #7b2331;      /* burgundy */
-  --gold: #a8843a;        /* muted gold */
-  --gold-soft: #d9c79c;
-  --tint: #f8f3ea;        /* very light parchment tint for source boxes */
+<style>/* Main style — burgundy & gold, upgraded: full-colour cover, numbered chapters,
+   colour-coded source boxes, larger and airier body text. */
+:root {
+  --ink: #231c16;
+  --ink-soft: #4d4033;
+  --muted: #8b7a66;
+  --accent: #7b2331;        /* burgundy */
+  --accent-dark: #561420;
+  --gold: #b8892f;
+  --gold-light: #e2c27d;
+  --gold-soft: #e6d3a6;
+  --teal: #1f5c63;          /* secondary: verses */
+  --teal-ink: #173f44;
+  --tint-akeida: #fbf2e2;
+  --tint-pasuk: #edf5f3;
+  --tint-head: #f8ecd6;
   --paper: #ffffff;
+  --cream: #fbf3e4;
 }
 
 @page {
   size: A4;
-  margin: 24mm 21mm 22mm 21mm;
+  margin: 25mm 23mm 23mm 23mm;
   @top-center {
-    content: "רְאֵה אָנֹכִי · מִפִּי רַבִּי חַיִּים דַּרְעִי שְׁלִיטָ״א";
-    font-family: "Frank Ruhl Libre", serif;
-    font-size: 8.5pt;
-    color: #8a7a66;
-    letter-spacing: 0.04em;
-    vertical-align: bottom;
-    padding-bottom: 5mm;
-  }
-  @bottom-center {
-    content: "– " counter(page, hebrew) " –";
+    content: "רְאֵה אָנֹכִי · עַל סוֹד הַבְּחִירָה";
     font-family: "Frank Ruhl Libre", serif;
     font-weight: 500;
-    font-size: 10pt;
+    font-size: 9pt;
     color: #7b2331;
-    vertical-align: top;
-    padding-top: 4mm;
+    letter-spacing: 0.03em;
+    vertical-align: bottom;
+    padding-bottom: 2.2mm;
+    margin-bottom: 6mm;
+    border-bottom: 0.7pt solid #d9bd7e;
+  }
+  @bottom-center {
+    content: counter(page, hebrew);
+    font-family: "Frank Ruhl Libre", serif;
+    font-weight: 700;
+    font-size: 10pt;
+    color: #ffffff;
+    vertical-align: middle;
+    background: url("styles/assets/num-circle.svg") center / 9mm 9mm no-repeat;
   }
 }
 @page cover {
   margin: 0;
-  @top-center { content: none; }
-  @bottom-center { content: none; }
+  @top-center { content: none; border: none; }
+  @bottom-center { content: none; background: none; }
 }
-@page toc {
-  @top-center { content: none; }
-}
+@page toc { @top-center { content: none; border: none; } }
 
 html { background: var(--paper); }
 body {
@@ -53,181 +63,177 @@ body {
   background: var(--paper);
   color: var(--ink);
   font-family: "Frank Ruhl Libre", "Noto Serif Hebrew", serif;
-  font-size: 13pt;
-  line-height: 1.95;
+  font-size: 13.6pt;
+  line-height: 2;
   font-kerning: normal;
-  -webkit-font-smoothing: antialiased;
   print-color-adjust: exact;
   -webkit-print-color-adjust: exact;
 }
 
 /* ---------- ornament ---------- */
-svg.orn { break-after: avoid; display: block; width: 46mm; height: 4mm; margin: 0 auto; overflow: visible; }
+svg.orn { display: block; width: 46mm; height: 4mm; margin: 0 auto; overflow: visible; break-after: avoid; }
 svg.orn line { stroke: var(--gold); stroke-width: 0.9; }
 svg.orn .fill { fill: var(--accent); }
 
-/* ---------- cover ---------- */
+/* ---------- cover: full burgundy ---------- */
 .cover {
   page: cover;
   break-after: page;
   width: 210mm;
   height: 297mm;
   box-sizing: border-box;
-  padding: 14mm;
+  padding: 13mm;
   position: relative;
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 42%, rgba(255, 220, 160, 0.10), rgba(255, 220, 160, 0) 70%),
+    radial-gradient(ellipse at 50% 45%, #8a2a38 0%, #6e1d2a 55%, #561420 100%);
+  color: var(--cream);
 }
 .cover .frame {
   position: relative;
   height: 100%;
   box-sizing: border-box;
-  border: 1.2pt solid var(--gold);
-  outline: 0.5pt solid var(--gold);
-  outline-offset: -3.2mm;
+  border: 1.6pt solid var(--gold-light);
+  outline: 0.6pt solid var(--gold-light);
+  outline-offset: -3.4mm;
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  padding: 28mm 16mm 22mm;
+  padding: 30mm 16mm 22mm;
   text-align: center;
 }
-.cover .corner {
-  position: absolute;
-  width: 3.2mm;
-  height: 3.2mm;
-  background: var(--accent);
-  transform: translate(50%, -50%) rotate(45deg);
-}
-.cover .corner.tl { top: 6.5mm; left: 6.5mm; transform: translate(-50%, -50%) rotate(45deg); }
-.cover .corner.tr { top: 6.5mm; right: 6.5mm; transform: translate(50%, -50%) rotate(45deg); }
-.cover .corner.bl { bottom: 6.5mm; left: 6.5mm; transform: translate(-50%, 50%) rotate(45deg); }
-.cover .corner.br { bottom: 6.5mm; right: 6.5mm; transform: translate(50%, 50%) rotate(45deg); }
 .cover .frame::before {
   content: "";
   position: absolute;
-  inset: 6.5mm;
-  border: 0.6pt solid var(--accent);
-  opacity: 0.55;
+  inset: 7mm;
+  border: 0.5pt solid rgba(251, 243, 228, 0.35);
   pointer-events: none;
 }
-.cover .bsd {
+.cover .corner {
   position: absolute;
-  top: 12mm;
-  right: 14mm;
-  font-size: 10pt;
-  color: var(--ink-soft);
+  width: 3.6mm;
+  height: 3.6mm;
+  background: var(--gold-light);
 }
+.cover .corner.tl { top: 7mm; left: 7mm; transform: translate(-50%, -50%) rotate(45deg); }
+.cover .corner.tr { top: 7mm; right: 7mm; transform: translate(50%, -50%) rotate(45deg); }
+.cover .corner.bl { bottom: 7mm; left: 7mm; transform: translate(-50%, 50%) rotate(45deg); }
+.cover .corner.br { bottom: 7mm; right: 7mm; transform: translate(50%, 50%) rotate(45deg); }
+.cover .bsd { position: absolute; top: 13mm; right: 15mm; font-size: 10pt; color: var(--gold-light); }
 .cover-inner {
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-bottom: 6mm;
+  padding-bottom: 4mm;
 }
-.cover .kicker {
-  font-size: 13pt;
-  font-weight: 500;
-  color: var(--gold);
-  letter-spacing: 0.12em;
-  margin-bottom: 7mm;
-}
-.cover h1 {
-  font-weight: 900;
-  font-size: 66pt;
-  line-height: 1.25;
-  color: var(--accent);
-  margin: 0;
-}
-.cover .sub {
-  font-weight: 500;
-  font-size: 28pt;
-  line-height: 1.5;
-  color: var(--ink);
-  margin: 2mm 0 9mm;
-}
-.cover .basis {
-  margin-top: 8mm;
-  font-size: 15pt;
-  color: var(--ink-soft);
-}
+.cover .kicker { font-size: 14pt; font-weight: 500; color: var(--gold-light); letter-spacing: 0.14em; margin-bottom: 6mm; }
+.cover h1 { font-weight: 900; font-size: 70pt; line-height: 1.25; color: var(--cream); margin: 0; text-shadow: 0 0.6mm 0 rgba(0, 0, 0, 0.18); }
+.cover .sub { font-weight: 500; font-size: 29pt; line-height: 1.5; color: var(--gold-light); margin: 2mm 0 9mm; }
+.cover svg.orn line { stroke: var(--gold-light); }
+.cover svg.orn .fill { fill: var(--gold-light); }
+.cover .basis { margin-top: 8mm; font-size: 15.5pt; color: rgba(251, 243, 228, 0.88); }
 .cover .author {
-  margin-top: 9mm;
-  font-size: 17pt;
+  margin-top: 12mm;
+  padding: 2.5mm 12mm 3mm;
+  border-top: 1pt solid var(--gold-light);
+  border-bottom: 1pt solid var(--gold-light);
+  background: rgba(0, 0, 0, 0.12);
+  font-size: 19pt;
   font-weight: 700;
-  color: var(--accent);
+  color: var(--cream);
 }
-.cover .author .pre {
-  display: block;
-  font-size: 12pt;
-  font-weight: 500;
-  color: var(--gold);
-  letter-spacing: 0.1em;
-  margin-bottom: 1mm;
-}
+.cover .author .pre { display: block; font-size: 12pt; font-weight: 500; color: var(--gold-light); letter-spacing: 0.12em; }
 .cover-verse {
   flex: 0 0 auto;
-  text-align: center;
-  color: var(--ink-soft);
-  border-top: 0.6pt solid var(--gold-soft);
+  margin: 0 16mm;
   padding-top: 6mm;
-  margin: 0 18mm;
+  border-top: 0.6pt solid rgba(226, 194, 125, 0.6);
+  color: var(--cream);
 }
-.cover-verse p { margin: 0; font-size: 14pt; line-height: 1.9; text-align: center; }
-.cover-verse .q { color: var(--accent); font-weight: 500; }
+.cover-verse p { margin: 0; font-size: 14.5pt; line-height: 1.9; text-align: center; }
+.cover-verse .q { color: var(--cream); font-weight: 500; }
+.cover-verse .ref { color: var(--gold-light); }
 
 /* ---------- table of contents ---------- */
-.toc {
-  page: toc;
-  break-after: page;
-  padding-top: 18mm;
-}
-.toc-title {
-  text-align: center;
-  font-size: 22pt;
-  font-weight: 700;
-  color: var(--accent);
-  margin-bottom: 3mm;
-}
-.toc ol {
-  list-style: none;
-  margin: 12mm 8mm 0;
-  padding: 0;
-}
+.toc { page: toc; break-after: page; padding-top: 14mm; }
+.toc-title { text-align: center; font-size: 24pt; font-weight: 700; color: var(--accent); margin-bottom: 3mm; }
+.toc ol { list-style: none; margin: 11mm 4mm 0; padding: 0; counter-reset: tsec; }
 .toc li {
+  counter-increment: tsec;
   display: flex;
-  align-items: baseline;
-  gap: 3mm;
-  font-size: 13.5pt;
-  line-height: 2.25;
+  align-items: center;
+  gap: 3.5mm;
+  font-size: 13.6pt;
+  line-height: 2.05;
+  padding: 0.6mm 3mm;
+  border-radius: 2mm;
+}
+.toc li:nth-child(odd) { background: #fbf5ea; }
+.toc li::before {
+  content: counter(tsec, hebrew);
+  flex: 0 0 7.5mm;
+  height: 7.5mm;
+  line-height: 7.5mm;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-size: 10pt;
+  font-weight: 700;
+  text-align: center;
 }
 .toc li .t { flex: 0 1 auto; }
-.toc li .dots {
-  flex: 1 1 auto;
-  border-bottom: 1px dotted var(--gold);
-  transform: translateY(-1.6mm);
-}
-.toc li .n { flex: 0 0 auto; color: var(--accent); font-weight: 600; min-width: 8mm; text-align: left; }
+.toc li .dots { flex: 1 1 auto; border-bottom: 1px dotted var(--gold); transform: translateY(1.2mm); }
+.toc li .n { flex: 0 0 auto; color: var(--accent); font-weight: 700; min-width: 8mm; text-align: left; }
 
 /* ---------- body ---------- */
-main { }
-section.sec { position: relative; }
+main { counter-reset: sec; }
+section.sec { position: relative; counter-increment: sec; }
 .marker { position: absolute; top: 0; left: 0; font-size: 2pt; color: #fff; }
-
-section.sec > svg.orn { margin-top: 9mm; }
-section.sec:first-child > svg.orn { margin-top: 0; }
+section.sec > svg.orn { display: none; }
 
 h2 {
   text-align: center;
   font-weight: 700;
-  font-size: 18.5pt;
-  line-height: 1.6;
+  font-size: 19.5pt;
+  line-height: 1.55;
   color: var(--accent);
-  margin: 2.5mm 0 4.5mm;
+  margin: 10mm 0 5mm;
   break-after: avoid;
+}
+section.sec:first-child h2 { margin-top: 0; }
+h2::before {
+  content: counter(sec, hebrew);
+  display: block;
+  width: 9mm;
+  height: 9mm;
+  line-height: 7.6mm;
+  margin: 0 auto 2.2mm;
+  border-radius: 50%;
+  border: 2.4pt double var(--gold);
+  background: #fff;
+  color: var(--accent);
+  font-size: 11.5pt;
+  font-weight: 700;
+}
+h2 .h2-in {
+  display: inline-block;
+  padding: 0.6mm 13mm 1mm;
+  background: linear-gradient(90deg, rgba(248, 236, 214, 0) 0%, var(--tint-head) 16%, var(--tint-head) 84%, rgba(248, 236, 214, 0) 100%);
+}
+h2::after {
+  content: "";
+  display: block;
+  width: 22mm;
+  margin: 2.4mm auto 0;
+  border-top: 1.4pt solid var(--gold);
 }
 h2 .q { color: inherit; font-weight: inherit; }
 
+.sec-body { display: block; }
 p {
-  margin: 0 0 3.2mm;
+  margin: 0 0 3.8mm;
   text-align: justify;
   text-justify: inter-word;
   orphans: 2;
@@ -235,83 +241,62 @@ p {
   hyphens: none;
 }
 p.short { break-inside: avoid; }
-p.first .lead { font-weight: 700; color: var(--accent); }
+p.first .lead { font-weight: 700; color: var(--accent); font-size: 1.08em; }
 
 .q { color: var(--accent); font-weight: 500; }
-.ref {
-  font-size: 0.7em;
-  color: var(--muted);
-  white-space: nowrap;
-  font-weight: 400;
-  margin-inline: 0.15em 0;
-}
+.ref { font-size: 0.68em; color: var(--muted); white-space: nowrap; font-weight: 400; margin-inline: 0.15em 0; }
 
-/* source text of the Akeida */
+/* Akeida source text: warm cream panel with a gold bar */
 .akeida {
   break-inside: avoid;
   break-after: avoid;
-  margin: 4mm 0 3.6mm;
-  padding: 2.2mm 5mm 2.4mm 4mm;
-  background: var(--tint);
-  border-inline-start: 2.4pt solid var(--gold);
+  margin: 4.5mm 0 4mm;
+  padding: 2.6mm 5.5mm 2.8mm 4.5mm;
+  background: var(--tint-akeida);
+  border-inline-start: 3.6pt solid var(--gold);
   border-radius: 0 0 0 0;
+  border-start-end-radius: 2.2mm;
+  border-end-end-radius: 2.2mm;
 }
 .akeida p {
   margin: 0;
   font-weight: 500;
-  font-size: 13.4pt;
-  line-height: 1.9;
-  color: #2b2017;
+  font-size: 13.6pt;
+  line-height: 1.95;
+  color: #3a2614;
   text-align: right;
 }
-.akeida cite {
-  display: block;
-  margin-top: 0.6mm;
-  font-style: normal;
-  font-size: 8.8pt;
-  color: var(--muted);
-  text-align: left;
-}
+.akeida cite { display: block; margin-top: 0.6mm; font-style: normal; font-size: 8.8pt; color: var(--muted); text-align: left; }
 
-/* verses and midrash */
+/* verses and midrash: cool teal-tinted panel */
 blockquote.pasuk {
   break-inside: avoid;
-  margin: 5mm 8mm 5mm;
-  padding: 3mm 6mm 2.6mm;
-  border-top: 0.8pt solid var(--gold-soft);
-  border-bottom: 0.8pt solid var(--gold-soft);
+  margin: 5.5mm 4mm;
+  padding: 3.4mm 8mm 3mm;
+  background: var(--tint-pasuk);
+  border-top: 1.1pt solid var(--teal);
+  border-bottom: 1.1pt solid var(--teal);
+  border-radius: 1.5mm;
   text-align: center;
-  position: relative;
 }
 blockquote.pasuk p {
   margin: 0;
-  font-size: 14pt;
-  font-weight: 400;
+  font-size: 14.2pt;
+  font-weight: 500;
   line-height: 1.95;
+  color: var(--teal-ink);
   text-align: justify;
   text-align-last: center;
-  color: var(--ink);
 }
-blockquote.pasuk .q { font-weight: 500; }
-blockquote.pasuk cite {
-  display: block;
-  margin-top: 0.8mm;
-  font-style: normal;
-  font-size: 9pt;
-  color: var(--muted);
-}
+blockquote.pasuk .q { color: var(--teal-ink); }
+blockquote.pasuk cite { display: block; margin-top: 0.8mm; font-style: normal; font-size: 9pt; color: var(--teal); }
 
-.end {
-  margin-top: 10mm;
-  text-align: center;
-  break-inside: avoid;
-}
-.end div {
-  margin-top: 2mm;
-  font-size: 12pt;
-  color: var(--accent);
-  letter-spacing: 0.1em;
-}
+.end { margin-top: 10mm; text-align: center; break-inside: avoid; }
+.end div { margin-top: 2mm; font-size: 13pt; font-weight: 700; color: var(--accent); letter-spacing: 0.1em; }
+
+/* blocks that must stay on one page: heading + opening, lead-in + quote */
+.hg, .keep { break-inside: avoid; }
+h2 + .sec-body:empty { display: none; }
 </style>
 </head>
 <body class="style-classic">
@@ -338,58 +323,50 @@ blockquote.pasuk cite {
 <div class="toc">
   <div class="toc-title">תֹּכֶן הָעִנְיָנִים</div>
   <svg class="orn" viewBox="0 0 220 16" aria-hidden="true"><line x1="4" y1="8" x2="92" y2="8"/><line x1="128" y1="8" x2="216" y2="8"/><path d="M110 1 L117 8 L110 15 L103 8 Z" class="fill"/><circle cx="97" cy="8" r="1.6" class="fill"/><circle cx="123" cy="8" r="1.6" class="fill"/></svg>
-  <ol><li><span class="t">פֶּתַח: לְשׁוֹן הַמִּדְרָשׁ</span><span class="dots"></span><span class="n">ג</span></li><li><span class="t">הַקְדָּמָה: אֶרֶץ יִשְׂרָאֵל – עֵרֶךְ</span><span class="dots"></span><span class="n">ג</span></li><li><span class="t">"רְאֵה אָנֹכִי" – עִיּוּן בַּמִּדְרָשׁ</span><span class="dots"></span><span class="n">ד</span></li><li><span class="t">"הָעִנְיָן הַנִּכְבָּד": רְצוֹנוֹ הַמֻּחְלָט שֶׁל הַבּוֹרֵא</span><span class="dots"></span><span class="n">ה</span></li><li><span class="t">זֻהֲמַת הַנָּחָשׁ וְאָבְדַן הַבְּחִירָה</span><span class="dots"></span><span class="n">ו</span></li><li><span class="t">"מִפִּי עֶלְיוֹן": דּוֹר הַמַּבּוּל, הַפַּלָּגָה וּסְדוֹם</span><span class="dots"></span><span class="n">ט</span></li><li><span class="t">אַבְרָהָם אָבִינוּ – "קֹנֵה שָׁמַיִם וָאָרֶץ"</span><span class="dots"></span><span class="n">יא</span></li><li><span class="t">הָאֱמוּנָה בְּשַׁבָּת: יֵשׁ מֵאַיִן</span><span class="dots"></span><span class="n">יב</span></li><li><span class="t">אַבְרָהָם מַחֲזִיר אֶת הַבְּחִירָה לִמְקוֹמָהּ</span><span class="dots"></span><span class="n">יג</span></li><li><span class="t">שִׁעְבּוּד מִצְרַיִם – הַכְשָׁרָה לַבְּחִירָה</span><span class="dots"></span><span class="n">יד</span></li><li><span class="t">"בְּחֹזֶק יָד": חָכְמַת הַמַּכּוֹת</span><span class="dots"></span><span class="n">טו</span></li><li><span class="t">"לְשֵׁם שָׁמַיִם": פְּנִנָּה וְחַנָּה</span><span class="dots"></span><span class="n">טז</span></li><li><span class="t">"פָּסְקָה זֻהֲמָתָן"</span><span class="dots"></span><span class="n">יח</span></li><li><span class="t">חֲתִימָה: לִשְׁמֹר עַל הַבְּחִירָה</span><span class="dots"></span><span class="n">יט</span></li></ol>
+  <ol><li><span class="t">פֶּתַח: לְשׁוֹן הַמִּדְרָשׁ</span><span class="dots"></span><span class="n">ג</span></li><li><span class="t">הַקְדָּמָה: אֶרֶץ יִשְׂרָאֵל – עֵרֶךְ</span><span class="dots"></span><span class="n">ג</span></li><li><span class="t">"רְאֵה אָנֹכִי" – עִיּוּן בַּמִּדְרָשׁ</span><span class="dots"></span><span class="n">ד</span></li><li><span class="t">"הָעִנְיָן הַנִּכְבָּד": רְצוֹנוֹ הַמֻּחְלָט שֶׁל הַבּוֹרֵא</span><span class="dots"></span><span class="n">ו</span></li><li><span class="t">זֻהֲמַת הַנָּחָשׁ וְאָבְדַן הַבְּחִירָה</span><span class="dots"></span><span class="n">ז</span></li><li><span class="t">"מִפִּי עֶלְיוֹן": דּוֹר הַמַּבּוּל, הַפַּלָּגָה וּסְדוֹם</span><span class="dots"></span><span class="n">ט</span></li><li><span class="t">אַבְרָהָם אָבִינוּ – "קֹנֵה שָׁמַיִם וָאָרֶץ"</span><span class="dots"></span><span class="n">יב</span></li><li><span class="t">הָאֱמוּנָה בְּשַׁבָּת: יֵשׁ מֵאַיִן</span><span class="dots"></span><span class="n">יג</span></li><li><span class="t">אַבְרָהָם מַחֲזִיר אֶת הַבְּחִירָה לִמְקוֹמָהּ</span><span class="dots"></span><span class="n">יד</span></li><li><span class="t">שִׁעְבּוּד מִצְרַיִם – הַכְשָׁרָה לַבְּחִירָה</span><span class="dots"></span><span class="n">טז</span></li><li><span class="t">"בְּחֹזֶק יָד": חָכְמַת הַמַּכּוֹת</span><span class="dots"></span><span class="n">יז</span></li><li><span class="t">"לְשֵׁם שָׁמַיִם": פְּנִנָּה וְחַנָּה</span><span class="dots"></span><span class="n">יח</span></li><li><span class="t">"פָּסְקָה זֻהֲמָתָן"</span><span class="dots"></span><span class="n">כ</span></li><li><span class="t">חֲתִימָה: לִשְׁמֹר עַל הַבְּחִירָה</span><span class="dots"></span><span class="n">כא</span></li></ol>
 </div>
 <main>
-<section class="sec" id="s0"><svg class="orn" viewBox="0 0 220 16" aria-hidden="true"><line x1="4" y1="8" x2="92" y2="8"/><line x1="128" y1="8" x2="216" y2="8"/><path d="M110 1 L117 8 L110 15 L103 8 Z" class="fill"/><circle cx="97" cy="8" r="1.6" class="fill"/><circle cx="123" cy="8" r="1.6" class="fill"/></svg><h2><span class="h2-in">פֶּתַח: לְשׁוֹן הַמִּדְרָשׁ</span></h2><div class="sec-body">
-<p class="first"><span class="lead">הַמִּדְרָשׁ</span> בְּפָרָשַׁת רְאֵה:</p>
-<blockquote class="pasuk"><p>"רְאֵה אָנֹכִי" – אָמַר רַבִּי אֶלְעָזָר: מִשֶּׁאָמַר הַקָּדוֹשׁ בָּרוּךְ הוּא הַדָּבָר הַזֶּה בְּסִינַי, בְּאוֹתָהּ שָׁעָה "מִפִּי עֶלְיוֹן לֹא תֵצֵא הָרָעוֹת וְהַטּוֹב", אֶלָּא מֵאֵלֶיהָ הָרָעָה בָּאָה עַל עוֹשֵׂי הָרָעָה, וְהַטּוֹבָה בָּאָה עַל עוֹשֵׂי הַטּוֹבָה. דָּבָר אַחֵר, אָמַר רַבִּי חַגַּי: וְלֹא עוֹד שֶׁנָּתַתִּי לָכֶם שְׁתֵּי דְרָכִים, אֶלָּא שֶׁנִּכְנַסְתִּי לִפְנִים מִשּׁוּרַת הַדִּין וְאָמַרְתִּי לָכֶם "וּבָחַרְתָּ בַּחַיִּים".</p><cite>(דברים רבה ד, ג)</cite></blockquote>
+<section class="sec" id="s0"><svg class="orn" viewBox="0 0 220 16" aria-hidden="true"><line x1="4" y1="8" x2="92" y2="8"/><line x1="128" y1="8" x2="216" y2="8"/><path d="M110 1 L117 8 L110 15 L103 8 Z" class="fill"/><circle cx="97" cy="8" r="1.6" class="fill"/><circle cx="123" cy="8" r="1.6" class="fill"/></svg>
+<div class="hg"><h2><span class="h2-in">פֶּתַח: לְשׁוֹן הַמִּדְרָשׁ</span></h2><div class="sec-body sb-first"><p class="first short"><span class="lead">הַמִּדְרָשׁ</span> בְּפָרָשַׁת רְאֵה:</p><blockquote class="pasuk"><p>"רְאֵה אָנֹכִי" – אָמַר רַבִּי אֶלְעָזָר: מִשֶּׁאָמַר הַקָּדוֹשׁ בָּרוּךְ הוּא הַדָּבָר הַזֶּה בְּסִינַי, בְּאוֹתָהּ שָׁעָה "מִפִּי עֶלְיוֹן לֹא תֵצֵא הָרָעוֹת וְהַטּוֹב", אֶלָּא מֵאֵלֶיהָ הָרָעָה בָּאָה עַל עוֹשֵׂי הָרָעָה, וְהַטּוֹבָה בָּאָה עַל עוֹשֵׂי הַטּוֹבָה. דָּבָר אַחֵר, אָמַר רַבִּי חַגַּי: וְלֹא עוֹד שֶׁנָּתַתִּי לָכֶם שְׁתֵּי דְרָכִים, אֶלָּא שֶׁנִּכְנַסְתִּי לִפְנִים מִשּׁוּרַת הַדִּין וְאָמַרְתִּי לָכֶם "וּבָחַרְתָּ בַּחַיִּים".</p><cite>(דברים רבה ד, ג)</cite></blockquote></div></div>
+<div class="sec-body">
 <p class="short">אָנוּ לוֹמְדִים כָּאן כְּדֶרֶךְ הַלִּמּוּד: כְּשֵׁם שֶׁיֵּשׁ שִׁעוּר גְּמָרָא, יֵשׁ שִׁעוּר בְּמִדְרָשׁ וְשִׁעוּר בְּסֵפֶר הָעֲקֵדָה.</p>
 </div></section>
-<section class="sec" id="s1"><svg class="orn" viewBox="0 0 220 16" aria-hidden="true"><line x1="4" y1="8" x2="92" y2="8"/><line x1="128" y1="8" x2="216" y2="8"/><path d="M110 1 L117 8 L110 15 L103 8 Z" class="fill"/><circle cx="97" cy="8" r="1.6" class="fill"/><circle cx="123" cy="8" r="1.6" class="fill"/></svg><h2><span class="h2-in">הַקְדָּמָה: אֶרֶץ יִשְׂרָאֵל – עֵרֶךְ</span></h2><div class="sec-body">
-<p class="first"><span class="lead">כְּשֶׁעָשִׂינוּ</span> אֶת הַיּוֹמַיִם יַחַד בַּיְּשִׁיבָה, יָשַׁבְנוּ עַל נוֹשֵׂא אֶרֶץ יִשְׂרָאֵל: מַה הִיא בְּדִיּוּק אֶרֶץ יִשְׂרָאֵל, וּמַה הַמְיֻחָד שֶׁבָּהּ. בַּתּוֹרָה כָּתוּב פְּעָמִים רַבּוֹת עַל אֶרֶץ יִשְׂרָאֵל, וּבַסּוֹף, לְפִי הַהַשְׁקָפָה שֶׁלִּי, הִגַּעְתִּי לְמַסְקָנָה שֶׁאֶרֶץ יִשְׂרָאֵל הִיא עֵרֶךְ.</p>
+<section class="sec" id="s1"><svg class="orn" viewBox="0 0 220 16" aria-hidden="true"><line x1="4" y1="8" x2="92" y2="8"/><line x1="128" y1="8" x2="216" y2="8"/><path d="M110 1 L117 8 L110 15 L103 8 Z" class="fill"/><circle cx="97" cy="8" r="1.6" class="fill"/><circle cx="123" cy="8" r="1.6" class="fill"/></svg>
+<div class="hg"><h2><span class="h2-in">הַקְדָּמָה: אֶרֶץ יִשְׂרָאֵל – עֵרֶךְ</span></h2><div class="sec-body sb-first"><p class="first short"><span class="lead">כְּשֶׁעָשִׂינוּ</span> אֶת הַיּוֹמַיִם יַחַד בַּיְּשִׁיבָה, יָשַׁבְנוּ עַל נוֹשֵׂא אֶרֶץ יִשְׂרָאֵל: מַה הִיא בְּדִיּוּק אֶרֶץ יִשְׂרָאֵל, וּמַה הַמְיֻחָד שֶׁבָּהּ. בַּתּוֹרָה כָּתוּב פְּעָמִים רַבּוֹת עַל אֶרֶץ יִשְׂרָאֵל, וּבַסּוֹף, לְפִי הַהַשְׁקָפָה שֶׁלִּי, הִגַּעְתִּי לְמַסְקָנָה שֶׁאֶרֶץ יִשְׂרָאֵל הִיא עֵרֶךְ.</p></div></div>
+<div class="sec-body">
 <p>וְזֹאת עַל פִּי מַה שֶּׁלָּמַדְנוּ בְּפָרָשַׁת וָאֵרָא, הַפָּרָשָׁה שֶׁבָּאָה אַחֲרֵי פָּרָשַׁת שְׁמוֹת. כְּשֶׁהַקָּדוֹשׁ בָּרוּךְ הוּא הֵשִׁיב לְמֹשֶׁה רַבֵּנוּ, שֶׁשָּׁאַל אוֹתוֹ <span class="q">"לָמָה הֲרֵעֹתָה לָעָם הַזֶּה"</span> <span class="ref">(שמות ה, כב)</span> – הוּא מֵשִׁיב לוֹ תְּשׁוּבָה אֲרֻכָּה, שֶׁאֵינָהּ עוֹנָה עַל שְׁאֵלָתוֹ שֶׁל מֹשֶׁה רַבֵּנוּ. אֲבָל בַּתְּשׁוּבָה הַזֹּאת הָיָה כִּוּוּנוֹ שֶׁל הַקָּדוֹשׁ בָּרוּךְ הוּא לוֹמַר לוֹ: אֵינְךָ מַכִּיר אֶת הַתָּכְנִיּוֹת שֶׁלִּי; אִלּוּ הָיִיתָ מַכִּיר אֶת תָּכְנִיּוֹתַי, לֹא הָיִיתָ מִתְרַעֵם, וְשׁוֹאֵל, וּמַקְשֶׁה עָלַי אֶת הַקֻּשְׁיָה הַזֹּאת. וְהוּא נוֹתֵן לוֹ אֶת כָּל הַהִיסְטוֹרְיָה, אֶת כָּל הַתָּכְנִית שֶׁלּוֹ.</p>
 <p>כַּמּוּבָן, הַדָּבָר בָּא בְּפָרָשָׁה אַחַת קְטַנָּה, בְּפָרָשַׁת וָאֵרָא. אֶת הַתֹּכֶן בְּוַדַּאי לֹא הֵבַנּוּ, אֲבָל הֵבַנּוּ אֶת הַכִּוּוּן שֶׁבְּתוֹךְ הַתְּשׁוּבָה הַזֹּאת: מִי שֶׁעוֹקֵב אַחֲרֶיהָ יִרְאֶה שֶׁהַקָּדוֹשׁ בָּרוּךְ הוּא הִצְבִּיעַ עַל כַּמָּה עֶרְכֵי יְסוֹד שֶׁיֵּשׁ בְּהַנְהָגָתוֹ שֶׁל בּוֹרֵא עוֹלָם. הָעֵרֶךְ הָרִאשׁוֹן – בְּוַדַּאי בּוֹרֵא עוֹלָם; הָעֵרֶךְ הַבָּא אַחֲרָיו – הָאָבוֹת הַקְּדוֹשִׁים; וְהָעֵרֶךְ הַשְּׁלִישִׁי – אֶרֶץ יִשְׂרָאֵל.</p>
 <p>כְּלוֹמַר, בְּוַדַּאי שֶׁאֶרֶץ יִשְׂרָאֵל אֵינָהּ מַה שֶּׁאָנוּ יוֹדְעִים. הַדָּבָר בָּרוּר כַּשֶּׁמֶשׁ: כְּשֵׁם שֶׁאֵינִי יָכוֹל לוֹמַר שֶׁאָמֶרִיקָה הִיא עֵרֶךְ – הוֹרֵד מֵאָמֶרִיקָה אֶת הָעֹשֶׁר, וְהִיא תִּהְיֶה כְּמוֹ מִצְרַיִם, כְּמוֹ אִינְדּוֹנֶזְיָה, כְּמוֹ הֹדּוּ – אֲנָשִׁים עֲנִיִּים, וְזֶהוּ. הָאֲדָמָה אֵינָהּ עֵרֶךְ; וּבְוַדַּאי שֶׁלֹּא אַדְמַת אָמֶרִיקָה, עַל כָּל עָשְׁרָהּ. אֲבָל אֶרֶץ יִשְׂרָאֵל אֵינָהּ חַיֶּבֶת בְּכָךְ; אֵינָהּ חַיֶּבֶת בִּתְהוֹמוֹת, בְּמַעְיָנוֹת וּבַאֲגַמִּים. גַּם אִם לֹא לָמַדְנוּ תּוֹרָה וְאֵין אָנוּ מְבִינִים – כְּבָר רוֹאִים אָנוּ שֶׁהָאָרֶץ הַזֹּאת הִיא, בְּקִצּוּר, עֵרֶךְ. כֵּן, אֶרֶץ יִשְׂרָאֵל הִיא עֵרֶךְ.</p>
 <p>הַאִם הַיִּשְׂרְאֵלִי מֵבִין אֶת הַנְּקֻדָּה הַזֹּאת, שֶׁאֶרֶץ יִשְׂרָאֵל הִיא עֵרֶךְ? מָה פִּתְאֹם! – עֵרֶךְ הַשָּׁוֶה לָאָבוֹת הַקְּדוֹשִׁים, אוֹ עֵרֶךְ מִן הָעֲרָכִים הַבָּאִים אַחֲרֵי הַקָּדוֹשׁ בָּרוּךְ הוּא? בְּוַדַּאי שֶׁלֹּא. אִלּוּ רַק יָדַע הָעָם הַזֶּה, הַיּוֹשֵׁב כָּאן, שֶׁאֶרֶץ יִשְׂרָאֵל הִיא עֵרֶךְ – הַכֹּל הָיָה אַחֶרֶת. אַחַר כָּךְ לָמַדְנוּ אֶת מַהוּתָהּ שֶׁל אֶרֶץ יִשְׂרָאֵל, וְיָשַׁבְנוּ עַל כָּךְ יוֹמַיִם.</p>
 </div></section>
-<section class="sec" id="s2"><svg class="orn" viewBox="0 0 220 16" aria-hidden="true"><line x1="4" y1="8" x2="92" y2="8"/><line x1="128" y1="8" x2="216" y2="8"/><path d="M110 1 L117 8 L110 15 L103 8 Z" class="fill"/><circle cx="97" cy="8" r="1.6" class="fill"/><circle cx="123" cy="8" r="1.6" class="fill"/></svg><h2><span class="h2-in">"רְאֵה אָנֹכִי" – עִיּוּן בַּמִּדְרָשׁ</span></h2><div class="sec-body">
+<section class="sec" id="s2"><svg class="orn" viewBox="0 0 220 16" aria-hidden="true"><line x1="4" y1="8" x2="92" y2="8"/><line x1="128" y1="8" x2="216" y2="8"/><path d="M110 1 L117 8 L110 15 L103 8 Z" class="fill"/><circle cx="97" cy="8" r="1.6" class="fill"/><circle cx="123" cy="8" r="1.6" class="fill"/></svg>
+<div class="hg"><h2><span class="h2-in">"רְאֵה אָנֹכִי" – עִיּוּן בַּמִּדְרָשׁ</span></h2><div class="sec-body sb-first"></div></div>
+<div class="sec-body">
 <p class="first"><span class="lead">כָּאן</span> אָנוּ רוֹצִים לִלְמֹד נוֹשֵׂא שֶׁהוּא מַעֲרָכָה בִּפְנֵי עַצְמָהּ. אֵין אָנוּ יְכוֹלִים לִדְרֹשׁ; קֹדֶם כָּל, לִפְנֵי הַדְּרָשָׁה, צְרִיכִים לִלְמֹד אֶת הַנּוֹשֵׂא. וְהַנּוֹשֵׂא הַזֶּה עָמֹק הַרְבֵּה יוֹתֵר, מֻרְכָּב הַרְבֵּה יוֹתֵר, וְהַרְבֵּה מִמֶּנּוּ נִמְצָא בַּמַּהוּת שֶׁלָּנוּ. אֵינִי אוֹמֵר מִלָּה אַחַת נוֹסֶפֶת עַל מַה שֶּׁכָּתוּב; כָּךְ נִלְמַד יַחַד, וּבְעֶזְרַת ה׳ נְקַוֶּה שֶׁנֵּצֵא מִזֶּה עִם תֹּכֶן שֶׁל הָעִנְיָן.</p>
-<p class="short">וּבְכֵן, הַמִּדְרָשׁ – הוּא הַמָּקוֹר. הַמִּדְרָשׁ הַזֶּה נִמְצָא, כַּמּוּבָן, בְּפָרָשַׁת רְאֵה שֶׁבְּחֻמַּשׁ דְּבָרִים:</p>
-<blockquote class="pasuk"><p>רְאֵה אָנֹכִי נֹתֵן לִפְנֵיכֶם הַיּוֹם בְּרָכָה וּקְלָלָה.</p><cite>(דברים יא, כו)</cite></blockquote>
+<div class="keep"><p class="short">וּבְכֵן, הַמִּדְרָשׁ – הוּא הַמָּקוֹר. הַמִּדְרָשׁ הַזֶּה נִמְצָא, כַּמּוּבָן, בְּפָרָשַׁת רְאֵה שֶׁבְּחֻמַּשׁ דְּבָרִים:</p><blockquote class="pasuk"><p>רְאֵה אָנֹכִי נֹתֵן לִפְנֵיכֶם הַיּוֹם בְּרָכָה וּקְלָלָה.</p><cite>(דברים יא, כו)</cite></blockquote></div>
 <p class="short">בָּא רַבִּי אֶלְעָזָר וְאוֹמֵר: "מִשֶּׁאָמַר הַקָּדוֹשׁ בָּרוּךְ הוּא הַדָּבָר הַזֶּה בְּסִינַי" – הַדָּבָר הַזֶּה, בְּסִינַי – "בְּאוֹתָהּ שָׁעָה <span class="q">"מִפִּי עֶלְיוֹן לֹא תֵצֵא הָרָעוֹת וְהַטּוֹב"</span>" <span class="ref">(איכה ג, לח)</span>. מֵאוֹתָהּ שָׁעָה כְּבָר אֵינָהּ יוֹצֵאת מִמֶּנּוּ יִתְבָּרַךְ רָעָה אוֹ טוֹבָה.</p>
 <p class="short">"אֶלָּא מֵאֵלֶיהָ הָרָעָה בָּאָה עַל עוֹשֵׂי הָרָעָה": בֶּן אָדָם שֶׁקִּבֵּל עֹנֶשׁ – אֵינוֹ יָכוֹל לִפְנוֹת לְהַקָּדוֹשׁ בָּרוּךְ הוּא; הָרָעָה בָּאָה מֵאֵלֶיהָ. מֵאַיִן? "מֵאֵלֶיהָ" – וְאֶת זֶה נִלְמַד בְּהֶמְשֵׁךְ. "וְהַטּוֹבָה בָּאָה עַל עוֹשֵׂי הַטּוֹבָה". מִלִּים נוֹרָאוֹת וּמְדֻיָּקוֹת הֵן.</p>
 <p class="short">"דָּבָר אַחֵר, אָמַר רַבִּי חַגַּי: וְלֹא עוֹד שֶׁנָּתַתִּי לָכֶם שְׁתֵּי דְרָכִים" – כְּלוֹמַר, לֹא דַּי שֶׁנָּתַתִּי לָכֶם שְׁתֵּי דְּרָכִים, הַבְּרָכָה וְהַקְּלָלָה – "אֶלָּא שֶׁנִּכְנַסְתִּי לִפְנִים מִשּׁוּרַת הַדִּין וְאָמַרְתִּי לָכֶם <span class="q">"וּבָחַרְתָּ בַּחַיִּים"</span>" <span class="ref">(דברים ל, יט)</span>. עַד כָּאן לְשׁוֹן הַמִּדְרָשׁ.</p>
 <p>מִכָּאן נַעֲבֹר לְסֵפֶר הָעֲקֵדָה. יֵשׁ לוֹ כָּאן שְׁלוֹשָׁה דַּפִּים שֶׁהֵם הַהַקְדָּמָה לַמִּדְרָשׁ הַזֶּה – הַקְדָּמוֹתָיו שֶׁלִּפְנֵי שֶׁהוּא מְדַבֵּר עַל הַפָּרָשָׁה. תָּכְנָן שֶׁל הַהַקְדָּמוֹת הָאֵלֶּה קָשֶׁה מְאֹד לַהֲבָנָה, כִּי הוּא מֵבִיא קֹדֶם כָּל מִן הַפִילוֹסוֹפְיָה, אַחַר כָּךְ מִן הַתּוֹרָה וְאַחַר כָּךְ מִן הַמִּדְרָשִׁים – הֲכָנָה, נֹאמַר, בְּעִנְיָנֵנוּ, לְפָרֵשׁ אֶת הַמִּדְרָשׁ הַזֶּה. בָּרוּר שֶׁכְּדֵי לִלְמֹד אֶת מַה שֶּׁלּוֹמְדִים הָעֶרֶב, צְרִיכִים אֶת שְׁלוֹשֶׁת הַדַּפִּים הָאֵלֶּה; אֲבָל לְשֵׁם כָּךְ צָרִיךְ שְׁבוּעַ חֻפְשָׁה. לָכֵן נִסְתַּפֵּק, וְנִגַּשׁ יָשָׁר לָעִנְיָן.</p>
 <p class="short">הַדְּבָרִים מְעַנְיְנִים; וְלֹא רַק שֶׁהֵם מְעַנְיְנִים – נִשְׁמַע בָּהֶם דְּבָרִים שֶׁאֵינֶנּוּ מַכִּירִים כְּלָל. אֲבָל לֹא אַקְדִּים הַקְדָּמוֹת; נִלְמַד עַתָּה.</p>
 </div></section>
-<section class="sec" id="s3"><svg class="orn" viewBox="0 0 220 16" aria-hidden="true"><line x1="4" y1="8" x2="92" y2="8"/><line x1="128" y1="8" x2="216" y2="8"/><path d="M110 1 L117 8 L110 15 L103 8 Z" class="fill"/><circle cx="97" cy="8" r="1.6" class="fill"/><circle cx="123" cy="8" r="1.6" class="fill"/></svg><h2><span class="h2-in">"הָעִנְיָן הַנִּכְבָּד": רְצוֹנוֹ הַמֻּחְלָט שֶׁל הַבּוֹרֵא</span></h2><div class="sec-body">
-<p class="first"><span class="lead">כָּךְ</span> הוּא אוֹמֵר:</p>
-<div class="akeida"><p>וְזֶה הָעִנְיָן הַנִּכְבָּד הוּא שֶׁנִּתְבָּאֵר לַאֲבוֹתֵינוּ בְּמַעֲמַד הַר סִינַי, בְּמַאֲמַר "אָנֹכִי" וְ"לֹא יִהְיֶה לְךָ"</p><cite>(עקדת יצחק, פרשת ראה, שער צ״ג)</cite></div>
-<p class="short">הַמַּאֲמָר הוּא מַה שֶּׁנֶּאֱמַר בְּהַר סִינַי, הַדִּבְּרָה הָרִאשׁוֹנָה: <span class="q">"אָנֹכִי ה׳ אֱלֹקֶיךָ... לֹא יִהְיֶה לְךָ אֱלֹהִים אֲחֵרִים עַל פָּנָי"</span> <span class="ref">(שמות כ, ב–ג)</span>; וְשָׁם יֵשׁ גַּם <span class="q">"זָכוֹר אֶת יוֹם הַשַּׁבָּת"</span> <span class="ref">(שמות כ, ח)</span>.</p>
-<div class="akeida"><p>הַמְּעִידִים עַל הֱיוֹתוֹ רוֹצֶה</p></div>
-<p class="short">כָּאן מַתְחִיל הַנּוֹשֵׂא: "אָנֹכִי ה׳ אֱלֹקֶיךָ" – הַמְּעִידִים עַל הֱיוֹתוֹ רוֹצֶה. כְּלוֹמַר: כְּשֶׁהַקָּדוֹשׁ בָּרוּךְ הוּא בָּרָא אֶת הָעוֹלָם, הוּא בְּרָאוֹ מִתּוֹךְ רְצוֹנוֹ הַבָּרוּר. הוּא לֹא הָיָה מֻכְרָח לִבְרֹא אֶת הָעוֹלָם, אֶלָּא הֶחְלִיט לִבְרֹא אֶת הָעוֹלָם מִתּוֹךְ רְצוֹנוֹ הַבָּרוּר וְהַמֻּחְלָט.</p>
-<div class="akeida"><p>וּפוֹעֵל בַּשָּׁמַיִם וּבָאָרֶץ וּבְכָל אֲשֶׁר בָּהֶם כִּרְצוֹנוֹ הַמֻּחְלָט</p></div>
-<p class="short">הוּא בָּרָא אֶת הַשָּׁמַיִם מִתּוֹךְ רָצוֹן גָּמוּר, וְגַם בְּתוֹךְ הָעוֹלָם הַזֶּה הוּא עוֹשֶׂה מַה שֶּׁהוּא רוֹצֶה: פּוֹעֵל, נוֹתֵן, לוֹקֵחַ, מְסַדֵּר, מַנְהִיג, מַשְׁגִּיחַ – הַכֹּל מִתּוֹךְ רְצוֹנוֹ הַמֻּחְלָט.</p>
+<section class="sec" id="s3"><svg class="orn" viewBox="0 0 220 16" aria-hidden="true"><line x1="4" y1="8" x2="92" y2="8"/><line x1="128" y1="8" x2="216" y2="8"/><path d="M110 1 L117 8 L110 15 L103 8 Z" class="fill"/><circle cx="97" cy="8" r="1.6" class="fill"/><circle cx="123" cy="8" r="1.6" class="fill"/></svg>
+<div class="hg"><h2><span class="h2-in">"הָעִנְיָן הַנִּכְבָּד": רְצוֹנוֹ הַמֻּחְלָט שֶׁל הַבּוֹרֵא</span></h2><div class="sec-body sb-first"><p class="first short"><span class="lead">כָּךְ</span> הוּא אוֹמֵר:</p><div class="akeida"><p>וְזֶה הָעִנְיָן הַנִּכְבָּד הוּא שֶׁנִּתְבָּאֵר לַאֲבוֹתֵינוּ בְּמַעֲמַד הַר סִינַי, בְּמַאֲמַר "אָנֹכִי" וְ"לֹא יִהְיֶה לְךָ"</p><cite>(עקדת יצחק, פרשת ראה, שער צ״ג)</cite></div><p class="short">הַמַּאֲמָר הוּא מַה שֶּׁנֶּאֱמַר בְּהַר סִינַי, הַדִּבְּרָה הָרִאשׁוֹנָה: <span class="q">"אָנֹכִי ה׳ אֱלֹקֶיךָ... לֹא יִהְיֶה לְךָ אֱלֹהִים אֲחֵרִים עַל פָּנָי"</span> <span class="ref">(שמות כ, ב–ג)</span>; וְשָׁם יֵשׁ גַּם <span class="q">"זָכוֹר אֶת יוֹם הַשַּׁבָּת"</span> <span class="ref">(שמות כ, ח)</span>.</p></div></div>
+<div class="sec-body">
+<div class="keep"><div class="akeida"><p>הַמְּעִידִים עַל הֱיוֹתוֹ רוֹצֶה</p></div><p class="short">כָּאן מַתְחִיל הַנּוֹשֵׂא: "אָנֹכִי ה׳ אֱלֹקֶיךָ" – הַמְּעִידִים עַל הֱיוֹתוֹ רוֹצֶה. כְּלוֹמַר: כְּשֶׁהַקָּדוֹשׁ בָּרוּךְ הוּא בָּרָא אֶת הָעוֹלָם, הוּא בְּרָאוֹ מִתּוֹךְ רְצוֹנוֹ הַבָּרוּר. הוּא לֹא הָיָה מֻכְרָח לִבְרֹא אֶת הָעוֹלָם, אֶלָּא הֶחְלִיט לִבְרֹא אֶת הָעוֹלָם מִתּוֹךְ רְצוֹנוֹ הַבָּרוּר וְהַמֻּחְלָט.</p></div>
+<div class="keep"><div class="akeida"><p>וּפוֹעֵל בַּשָּׁמַיִם וּבָאָרֶץ וּבְכָל אֲשֶׁר בָּהֶם כִּרְצוֹנוֹ הַמֻּחְלָט</p></div><p class="short">הוּא בָּרָא אֶת הַשָּׁמַיִם מִתּוֹךְ רָצוֹן גָּמוּר, וְגַם בְּתוֹךְ הָעוֹלָם הַזֶּה הוּא עוֹשֶׂה מַה שֶּׁהוּא רוֹצֶה: פּוֹעֵל, נוֹתֵן, לוֹקֵחַ, מְסַדֵּר, מַנְהִיג, מַשְׁגִּיחַ – הַכֹּל מִתּוֹךְ רְצוֹנוֹ הַמֻּחְלָט.</p></div>
 <p>אֶקַּח אֶת הַנְּקֻדָּה הַזֹּאת. אֵינִי אוֹמֵר שֶׁלֹּא יָדַעְנוּ אֶת הַדָּבָר הַזֶּה, אֲבָל כְּלָל לֹא חָשַׁבְנוּ עָלָיו. וְאוֹמַר עוֹד מִלָּה, וְגַם הִיא מְקֻבֶּלֶת – אֵינִי חָכָם וְאֵינִי גָּדוֹל, אֲבָל אֲנִי אוֹמֵר מַה שֶּׁבַּתְּחוּם שֶׁלִּי: הַדָּבָר הַזֶּה מֻטְבָּע בָּנוּ מִיַּלְדוּתֵנוּ. מִיּוֹם שֶׁנּוֹלַדְנוּ חָקוּק בְּרֹאשֵׁנוּ שֶׁהַקָּדוֹשׁ בָּרוּךְ הוּא הוּא בַּעַל הַבַּיִת, הוּא עוֹשֶׂה מַה שֶּׁהוּא רוֹצֶה, וְאִישׁ לֹא יֹאמַר לוֹ "מַה תַּעֲשֶׂה וּמַה תִּפְעָל". זֶה מֻטְבָּע בָּנוּ; נוֹלַדְנוּ עִם זֶה, בָּרוּךְ ה׳. אוֹי וַאֲבוֹי אִם לֹא הָיִינוּ נוֹלָדִים כָּךְ! וּמַדּוּעַ אֲנִי אוֹמֵר "אוֹי וַאֲבוֹי"? – נַמְשִׁיךְ הָלְאָה.</p>
-<div class="akeida"><p>וְהוּא עַצְמוֹ מַה שֶּׁאָמַר רַבִּי אֶלְעָזָר עַל הַמַּאֲמָרִים הָאֵלּוּ עַצְמָם, בַּמִּדְרָשׁ שֶׁזָּכַרְנוּ רִאשׁוֹנָה: מִשֶּׁאָמַר הַקָּדוֹשׁ בָּרוּךְ הוּא דָּבָר זֶה בְּסִינַי, מֵאוֹתָהּ שָׁעָה וָאֵילָךְ לֹא תֵצֵא מִפִּי עֶלְיוֹן הָרָעוֹת וְהַטּוֹב</p></div>
-<p class="short">זֶהוּ הַמִּדְרָשׁ שֶׁקָּרָאנוּ עַתָּה בַּתְּחִלָּה; לֹא מֵעַצְמִי אָמַרְתִּי זֹאת.</p>
+<div class="keep"><div class="akeida"><p>וְהוּא עַצְמוֹ מַה שֶּׁאָמַר רַבִּי אֶלְעָזָר עַל הַמַּאֲמָרִים הָאֵלּוּ עַצְמָם, בַּמִּדְרָשׁ שֶׁזָּכַרְנוּ רִאשׁוֹנָה: מִשֶּׁאָמַר הַקָּדוֹשׁ בָּרוּךְ הוּא דָּבָר זֶה בְּסִינַי, מֵאוֹתָהּ שָׁעָה וָאֵילָךְ לֹא תֵצֵא מִפִּי עֶלְיוֹן הָרָעוֹת וְהַטּוֹב</p></div><p class="short">זֶהוּ הַמִּדְרָשׁ שֶׁקָּרָאנוּ עַתָּה בַּתְּחִלָּה; לֹא מֵעַצְמִי אָמַרְתִּי זֹאת.</p></div>
 </div></section>
-<section class="sec" id="s4"><svg class="orn" viewBox="0 0 220 16" aria-hidden="true"><line x1="4" y1="8" x2="92" y2="8"/><line x1="128" y1="8" x2="216" y2="8"/><path d="M110 1 L117 8 L110 15 L103 8 Z" class="fill"/><circle cx="97" cy="8" r="1.6" class="fill"/><circle cx="123" cy="8" r="1.6" class="fill"/></svg><h2><span class="h2-in">זֻהֲמַת הַנָּחָשׁ וְאָבְדַן הַבְּחִירָה</span></h2><div class="sec-body">
-<div class="akeida"><p>וְהַכַּוָּנָה, כִּי אַף עַל פִּי שֶׁנִּבְרָא הָאָדָם בַּעַל בְּחִירָה</p></div>
-<p class="short">כְּלוֹמַר: כְּשֶׁהַקָּדוֹשׁ בָּרוּךְ הוּא בָּרָא אֶת אָדָם הָרִאשׁוֹן, הוּא בְּרָאוֹ עִם בְּחִירָה. אָדָם הָרִאשׁוֹן – בְּרָאוֹ הַקָּדוֹשׁ בָּרוּךְ הוּא בַּעַל בְּחִירָה.</p>
-<div class="akeida"><p>הִנֵּה כְּשֶׁבָּא נָחָשׁ עַל חַוָּה וְהִטִּיל בָּהּ זֻהֲמָא</p></div>
-<p class="short">לְפִי חֲזַ״ל, לְפִי הַמִּדְרָשִׁים <span class="ref">(שבת קמו ע״א)</span>, הִטִּיל הַנָּחָשׁ בְּחַוָּה זֻהֲמָא. נָחָשׁ עִם אִשָּׁה – הָעִנְיָן עָמֹק; הַנָּחָשׁ הַזֶּה הָיָה עֲנָק וְכוּ׳. אֲבָל לֹא הַתַּאֲוָה הַזֹּאת, חַס וְשָׁלוֹם; אֶלָּא יֵשׁ לְקַבֵּל אֶת הַדָּבָר כְּמוֹ שֶׁהוּא.</p>
-<div class="akeida"><p>נִמְשְׁכָה זֻהֲמָתוֹ בְּכָל הַדּוֹרוֹת הַנִּמְשָׁכִים אַחֲרֶיהָ</p></div>
-<p class="short">הַזֻּהֲמָא הַזֹּאת לֹא הָיְתָה נְקֻדָּתִית, בְּחַוָּה בִּלְבַד, אֶלָּא כָּל צֶאֱצָאֶיהָ שֶׁל חַוָּה הָיוּ נְגוּעִים בַּזֻּהֲמָא הַזֹּאת. וּמַה קָּרָה לָעוֹלָם אַחֲרֵי הַזֻּהֲמָא הַזֹּאת?</p>
-<div class="akeida"><p>עַד שֶׁיִּהְיוּ כֻּלָּם נְגוּעִים וּמֻכִּים בְּשִׁגָּעוֹן וּבְעִוָּרוֹן</p></div>
-<p class="short">מִשָּׁעָה שֶׁהַזֻּהֲמָא הַזֹּאת חָדְרָה לָאֵם הָרִאשׁוֹנָה, הָיוּ כָּל הַנִּמְשָׁכִים אַחֲרֶיהָ מֻכִּים בְּעִוָּרוֹן וּבְשִׁגָּעוֹן –</p>
-<div class="akeida"><p>אֲשֶׁר לֹא רָאוּ אֶת כְּבוֹד ה׳</p></div>
-<p class="short">בְּוַדַּאי שֶׁלֹּא. לָמָּה? לֹא מִשּׁוּם שֶׁהָיוּ יְלָדִים רָעִים; הֵם הָיוּ עִוְרִים, הָיוּ מְשֻׁגָּעִים.</p>
-<div class="akeida"><p>וְלֹא יָדְעוּ כִּי הוּא יִתְעַלֶּה הַמַּנְהִיג אוֹתוֹ בְּחֵפֶץ וְרָצוֹן</p></div>
-<p class="short">הֵם בְּוַדַּאי הָיוּ מְשֻׁגָּעִים, עִוְרִים – לֹא עִוְרִים בָּעֵינַיִם, אֶלָּא עִוְרִים בַּמֹּחַ, בַּשֵּׂכֶל. לָכֵן לֹא יָדְעוּ יְסוֹד אֶחָד: שֶׁהַבּוֹרֵא יִתְבָּרַךְ מַנְהִיג אֶת הָעוֹלָם בְּחֵפֶץ וּבְרָצוֹן –</p>
-<div class="akeida"><p>עַל יְדֵי כֹּשֶׁר מַעֲשֵׂי הָאֲנָשִׁים אוֹ הַהֵפֶךְ</p></div>
-<p class="short">כְּלוֹמַר: הֵם לֹא יָדְעוּ שֶׁה׳ יִתְבָּרַךְ מַנְהִיג אֶת הָעוֹלָם הַזֶּה בְּיַחַס לָאָדָם; הֵם לֹא קִשְּׁרוּ שֶׁהַנְהָגַת ה׳ קְשׁוּרָה בְּמַעֲשֵׂיהֶם. הֵם לֹא יָדְעוּ שֶׁה׳ מַנְהִיג אֶת עוֹלָמָם שֶׁל הָאֲנָשִׁים הַטּוֹבִים לְפִי הִתְנַהֲגוּתָם, וְשֶׁל הָאֲנָשִׁים הָרָעִים לְפִי מַעֲשֵׂיהֶם.</p>
+<section class="sec" id="s4"><svg class="orn" viewBox="0 0 220 16" aria-hidden="true"><line x1="4" y1="8" x2="92" y2="8"/><line x1="128" y1="8" x2="216" y2="8"/><path d="M110 1 L117 8 L110 15 L103 8 Z" class="fill"/><circle cx="97" cy="8" r="1.6" class="fill"/><circle cx="123" cy="8" r="1.6" class="fill"/></svg>
+<div class="hg"><h2><span class="h2-in">זֻהֲמַת הַנָּחָשׁ וְאָבְדַן הַבְּחִירָה</span></h2><div class="sec-body sb-first"><div class="akeida"><p>וְהַכַּוָּנָה, כִּי אַף עַל פִּי שֶׁנִּבְרָא הָאָדָם בַּעַל בְּחִירָה</p></div><p class="short">כְּלוֹמַר: כְּשֶׁהַקָּדוֹשׁ בָּרוּךְ הוּא בָּרָא אֶת אָדָם הָרִאשׁוֹן, הוּא בְּרָאוֹ עִם בְּחִירָה. אָדָם הָרִאשׁוֹן – בְּרָאוֹ הַקָּדוֹשׁ בָּרוּךְ הוּא בַּעַל בְּחִירָה.</p></div></div>
+<div class="sec-body">
+<div class="keep"><div class="akeida"><p>הִנֵּה כְּשֶׁבָּא נָחָשׁ עַל חַוָּה וְהִטִּיל בָּהּ זֻהֲמָא</p></div><p class="short">לְפִי חֲזַ״ל, לְפִי הַמִּדְרָשִׁים <span class="ref">(שבת קמו ע״א)</span>, הִטִּיל הַנָּחָשׁ בְּחַוָּה זֻהֲמָא. נָחָשׁ עִם אִשָּׁה – הָעִנְיָן עָמֹק; הַנָּחָשׁ הַזֶּה הָיָה עֲנָק וְכוּ׳. אֲבָל לֹא הַתַּאֲוָה הַזֹּאת, חַס וְשָׁלוֹם; אֶלָּא יֵשׁ לְקַבֵּל אֶת הַדָּבָר כְּמוֹ שֶׁהוּא.</p></div>
+<div class="keep"><div class="akeida"><p>נִמְשְׁכָה זֻהֲמָתוֹ בְּכָל הַדּוֹרוֹת הַנִּמְשָׁכִים אַחֲרֶיהָ</p></div><p class="short">הַזֻּהֲמָא הַזֹּאת לֹא הָיְתָה נְקֻדָּתִית, בְּחַוָּה בִּלְבַד, אֶלָּא כָּל צֶאֱצָאֶיהָ שֶׁל חַוָּה הָיוּ נְגוּעִים בַּזֻּהֲמָא הַזֹּאת. וּמַה קָּרָה לָעוֹלָם אַחֲרֵי הַזֻּהֲמָא הַזֹּאת?</p></div>
+<div class="keep"><div class="akeida"><p>עַד שֶׁיִּהְיוּ כֻּלָּם נְגוּעִים וּמֻכִּים בְּשִׁגָּעוֹן וּבְעִוָּרוֹן</p></div><p class="short">מִשָּׁעָה שֶׁהַזֻּהֲמָא הַזֹּאת חָדְרָה לָאֵם הָרִאשׁוֹנָה, הָיוּ כָּל הַנִּמְשָׁכִים אַחֲרֶיהָ מֻכִּים בְּעִוָּרוֹן וּבְשִׁגָּעוֹן –</p></div>
+<div class="keep"><div class="akeida"><p>אֲשֶׁר לֹא רָאוּ אֶת כְּבוֹד ה׳</p></div><p class="short">בְּוַדַּאי שֶׁלֹּא. לָמָּה? לֹא מִשּׁוּם שֶׁהָיוּ יְלָדִים רָעִים; הֵם הָיוּ עִוְרִים, הָיוּ מְשֻׁגָּעִים.</p></div>
+<div class="keep"><div class="akeida"><p>וְלֹא יָדְעוּ כִּי הוּא יִתְעַלֶּה הַמַּנְהִיג אוֹתוֹ בְּחֵפֶץ וְרָצוֹן</p></div><p class="short">הֵם בְּוַדַּאי הָיוּ מְשֻׁגָּעִים, עִוְרִים – לֹא עִוְרִים בָּעֵינַיִם, אֶלָּא עִוְרִים בַּמֹּחַ, בַּשֵּׂכֶל. לָכֵן לֹא יָדְעוּ יְסוֹד אֶחָד: שֶׁהַבּוֹרֵא יִתְבָּרַךְ מַנְהִיג אֶת הָעוֹלָם בְּחֵפֶץ וּבְרָצוֹן –</p></div>
+<div class="keep"><div class="akeida"><p>עַל יְדֵי כֹּשֶׁר מַעֲשֵׂי הָאֲנָשִׁים אוֹ הַהֵפֶךְ</p></div><p class="short">כְּלוֹמַר: הֵם לֹא יָדְעוּ שֶׁה׳ יִתְבָּרַךְ מַנְהִיג אֶת הָעוֹלָם הַזֶּה בְּיַחַס לָאָדָם; הֵם לֹא קִשְּׁרוּ שֶׁהַנְהָגַת ה׳ קְשׁוּרָה בְּמַעֲשֵׂיהֶם. הֵם לֹא יָדְעוּ שֶׁה׳ מַנְהִיג אֶת עוֹלָמָם שֶׁל הָאֲנָשִׁים הַטּוֹבִים לְפִי הִתְנַהֲגוּתָם, וְשֶׁל הָאֲנָשִׁים הָרָעִים לְפִי מַעֲשֵׂיהֶם.</p></div>
 <div class="akeida"><p>אֲבָל חָשְׁבוּ הַכֹּל לִמְחֻיָּב</p></div>
 <p>מַה פֵּרוּשׁ "מְחֻיָּב"? חָשְׁבוּ שֶׁהָעוֹלָם הוּא פָּשׁוּט כָּזֶה. בְּמִלִּים פְּשׁוּטוֹת: לֹא חִבְּרוּ אֶת הַשָּׁמַיִם עִם הָאָרֶץ. קַח לְךָ אָדָם וְהוֹרֵד מִמֶּנּוּ אֶת הַמֻּשָּׂג "אֱמוּנָה", אוֹ "מַעֲשֶׂה טוֹב", אוֹ "מַעֲשֶׂה רַע" – שׁוּם דָּבָר: הוּא עִוֵּר, עִוֵּר בַּמֹּחַ שֶׁלּוֹ. כָּךְ הוּא נוֹלַד – נוֹלַד עִם פְּגִיעָה בָּרֹאשׁ, מַה שֶּׁקּוֹרְאִים לוֹ "שְׂרִיטָה בָּרֹאשׁ"; אֲבָל זֶה הַרְבֵּה יוֹתֵר מִשְּׂרִיטָה. הוּא נוֹלַד עִם "הָעוֹלָם הוּא כְּמוֹ שֶׁהוּא; אֵין כָּאן מִישֶׁהוּ שֶׁמַּנְהִיג אֶת הָעוֹלָם; אִם אֲנִי עוֹשֶׂה טוֹב אוֹ עוֹשֶׂה רַע – מָה הָלְאָה?".</p>
 <p class="short">"אֲבָל חָשְׁבוּ הַכֹּל לִמְחֻיָּב" – מַה פֵּרוּשׁ "לִמְחֻיָּב"? הַהֵפֶךְ מִמַּה שֶּׁאָמַרְנוּ, שֶׁהַבּוֹרֵא בָּרָא אֶת הָעוֹלָם מֵרְצוֹנוֹ הַטָּהוֹר וְהַמֻּחְלָט; וְזֶהוּ יְסוֹד הַיְסוֹדוֹת.</p>
@@ -398,31 +375,32 @@ blockquote.pasuk cite {
 <div class="akeida"><p>וְאֵין בִּטּוּל הַבְּחִירָה גָּדוֹל מִזֶּה</p></div>
 <p>מַה פֵּרוּשׁ? אָמַרְנוּ שֶׁכְּשֶׁה׳ בָּרָא אֶת אָדָם הָרִאשׁוֹן, הוּא בְּרָאוֹ בַּעַל בְּחִירָה. אֲבָל הַבְּחִירָה הַזֹּאת פָּעֲלָה לִפְנֵי סִפּוּר הַנָּחָשׁ עִם חַוָּה. מִשֶּׁהָיָה סִפּוּר הַנָּחָשׁ עִם חַוָּה, וְהָאֲנָשִׁים הָיוּ מֻכִּים בְּשִׁגָּעוֹן וּבְעִוָּרוֹן – כְּבָר תַּם כָּל עִנְיַן הַבְּחִירָה. לָאָדָם כְּבָר אֵין בְּחִירָה. לָמָּה? כִּי אַחֲרֵי שֶׁאִבֵּד אֶת הַהַרְגָּשָׁה, אֶת הַתְּבוּנָה לְהָבִין מַה הוּא עוֹשֶׂה – הוּא בִּטֵּל אֶת הַבְּחִירָה, אוֹתָהּ בְּחִירָה שֶׁנִּבְרָא עִמָּהּ. אֵין לוֹ עוֹד בְּחִירָה; כָּל מַה שֶּׁהוּא עוֹשֶׂה – עוֹשֶׂה בְּלִי בְּחִירָה. עוֹשֶׂה טוֹב, עוֹשֶׂה רַע – אֵינוֹ מַבְדִּיל בֵּין הַטּוֹב לָרַע. כַּמּוּבָן, קָשֶׁה לָנוּ לְקַבֵּל אֶת הַדְּבָרִים; אֲבָל נַמְשִׁיךְ.</p>
 </div></section>
-<section class="sec" id="s5"><svg class="orn" viewBox="0 0 220 16" aria-hidden="true"><line x1="4" y1="8" x2="92" y2="8"/><line x1="128" y1="8" x2="216" y2="8"/><path d="M110 1 L117 8 L110 15 L103 8 Z" class="fill"/><circle cx="97" cy="8" r="1.6" class="fill"/><circle cx="123" cy="8" r="1.6" class="fill"/></svg><h2><span class="h2-in">"מִפִּי עֶלְיוֹן": דּוֹר הַמַּבּוּל, הַפַּלָּגָה וּסְדוֹם</span></h2><div class="sec-body">
-<div class="akeida"><p>וְהִנֵּה הָיוּ הַטּוֹבוֹת וְהָרָעוֹת בָּאוֹת בְּכָל הַדּוֹרוֹת הָהֵם מִפִּי עֶלְיוֹן</p></div>
+<section class="sec" id="s5"><svg class="orn" viewBox="0 0 220 16" aria-hidden="true"><line x1="4" y1="8" x2="92" y2="8"/><line x1="128" y1="8" x2="216" y2="8"/><path d="M110 1 L117 8 L110 15 L103 8 Z" class="fill"/><circle cx="97" cy="8" r="1.6" class="fill"/><circle cx="123" cy="8" r="1.6" class="fill"/></svg>
+<div class="hg"><h2><span class="h2-in">"מִפִּי עֶלְיוֹן": דּוֹר הַמַּבּוּל, הַפַּלָּגָה וּסְדוֹם</span></h2><div class="sec-body sb-first"><div class="akeida"><p>וְהִנֵּה הָיוּ הַטּוֹבוֹת וְהָרָעוֹת בָּאוֹת בְּכָל הַדּוֹרוֹת הָהֵם מִפִּי עֶלְיוֹן</p></div></div></div>
+<div class="sec-body">
 <p>זֶהוּ דָּבָר חָדָשׁ וְאַדִּיר, שֶׁלֹּא שָׁמַעְנוּ וְלֹא הִכַּרְנוּ: בַּמַּצָּב הַזֶּה, הָעוֹלָם וְהָאָדָם – הַכֹּל הָיָה עַל פִּי עֶלְיוֹן, מִכֵּיוָן שֶׁלֹּא הָיְתָה בְּחִירָה לָאָדָם. כְּשֶׁיֵּשׁ לְךָ צִבּוּר שָׁלֵם הַמֻּכֶּה בְּשִׁגָּעוֹן וּבְעִוָּרוֹן, וְאֵין לוֹ בְּחִירָה – אַתָּה חַיָּב לְהַנְהִיג אוֹתוֹ. קַח צֹאן: אַתָּה חַיָּב לְהַנְהִיג אוֹתוֹ, שֶׁכֵּן אֶצְלוֹ הַבְּחִירָה בְּטֵלָה. אַתָּה מֻכְרָח לְהַנְהִיג אוֹתוֹ: לִפְעָמִים אַתָּה מַחְלִיט לְהַרְבִּיץ לוֹ, וְלִפְעָמִים אַתָּה מַחְלִיט לַעֲשׂוֹת לוֹ טוֹבָה.</p>
 <p>וְאִם נַשְׁוֶה מְעַט אֶת הַדָּבָר לַדּוֹרוֹת שֶׁלָּנוּ – מֻתָּר לָנוּ עַתָּה לָקַחַת דֻּגְמָה: הַקּוֹמוּנִיזְם. זוֹ הָיְתָה שְׁלִיטָתוֹ: הוּא שָׁלַט לֹא רַק בַּמְּדִינָה וּבְמִשְׂרְדֵי הַמְּדִינָה – הוּא שָׁלַט בָּאָדָם. וְהַשְּׁלִיטָה הַזֹּאת עַכְשָׁו, בַּמּוֹדֶרְנָה שֶׁל חַיֵּינוּ: הַבִּינָה הַמְּלָאכוּתִית רוֹצָה לִשְׁלֹט בַּמֹּחַ שֶׁלְּךָ וּבַמֹּחַ שֶׁלִּי. זֶהוּ, לְמַעֲשֶׂה, אוֹתוֹ בִּטּוּל הַבְּחִירָה: הַבִּינָה הַמְּלָאכוּתִית עוֹשָׂה אֶת כָּל מַה שֶּׁהָאָדָם חוֹשֵׁב, כָּל מַה שֶּׁהוּא מְתַכְנֵן, וּמְבַטֶּלֶת אֶת מַחֲשַׁבְתּוֹ; הִיא חוֹדֶרֶת לְחַיֵּי הַיּוֹמְיוֹם שֶׁלּוֹ, עַד שֶׁהוּא מְאַבֵּד אֶת בְּחִירָתוֹ. הֲלָכָה לְמַעֲשֶׂה – זוֹ הַשְּׁלִיטָה כַּיּוֹם. וְהִנֵּה, אוֹתָם אֲנָשִׁים שֶׁיֵּשׁ לָהֶם הַרְבֵּה כֶּסֶף, הַמִּילְיַארְדֶּרִים, בְּמוּבָן הָאִינְטֶרְנַצְיוֹנָלִי – כְּלוֹמַר, הַמָּמוֹן – הֵם שׁוֹלְטִים. ה׳ יְרַחֵם עָלֵינוּ! וּבָרוּר לָנוּ שֶׁמִּבְּחִינַת הַתּוֹרָה – בְּוַדַּאי וּבְוַדַּאי שֶׁזֶּה כָּךְ. וּבְעֶזְרַת ה׳ נַמְשִׁיךְ לִלְמֹד אֶת הַנּוֹשֵׂא הַזֶּה, וְנִרְאֶה.</p>
 <p class="short">עַל כֵּן, אָז הָיְתָה שְׁלִיטָה מְלֵאָה: ה׳ הָיָה רוֹאֶה אֲנָשִׁים כִּילָדִים רָעִים – וּמַרְבִּיץ לָהֶם. זֶה כָּל מַה שֶּׁהָיָה. וְכַאֲשֶׁר נִתְמַלְּאָה סְאָתָם – כַּאֲשֶׁר רָאָה שֶׁהָרַע הוֹלֵךְ לְהַכְחִיד אֶת הָעוֹלָם – מֶה הָיָה עוֹשֶׂה? מֵבִיא עֲלֵיהֶם מַבּוּל; וּבְדוֹר הַפַּלָּגָה – בִּלְבֵּל אוֹתָם.</p>
 <p class="short">עַד כַּמָּה מַסְבִּיר הַמַּאֲמָר הַזֶּה אֶת הַתּוֹרָה הַקְּדוֹשָׁה!</p>
 <blockquote class="pasuk"><p>וַיֹּאמֶר אֱלֹקִים לְנֹחַ קֵץ כָּל בָּשָׂר בָּא לְפָנַי כִּי מָלְאָה הָאָרֶץ חָמָס מִפְּנֵיהֶם.</p><cite>(בראשית ו, יג)</cite></blockquote>
 <p class="short">לֹא רָאִינוּ שׁוּם דָּבָר; הַתּוֹרָה לֹא סִפְּרָה כְּלוּם, חוּץ מִפָּסוּק אוֹ שְׁנֵי פְּסוּקִים – וּפִתְאֹם ה׳ מַנְחִית אֶת הַפָּסוּק הַזֶּה. הֵיכָן נִכְנָס הַפָּסוּק הַזֶּה? הֵיכָן הַסִּפּוּרִים? אֵין שׁוּם דָּבָר. יוֹם אֶחָד בָּא ה׳ אֶל נֹחַ וְאוֹמֵר: "שְׁמַע, נֹחַ חֲבִיבִי, אֲנִי הוֹלֵךְ לִסְגֹּר; אֲנִי הוֹלֵךְ לְכַלּוֹת אֶת הָעוֹלָם". זֶה מַאֲמָר אֶחָד.</p>
-<p class="short">וְהַמַּאֲמָר הַשֵּׁנִי, שֶׁאֲנִי עַצְמִי מֵעוֹלָם לֹא הֵבַנְתִּי אוֹתוֹ: "וַיֹּאמֶר ה׳" – בְּפָרָשַׁת וַיֵּרָא, אַחֲרֵי שֶׁהַמַּלְאָכִים בָּאוּ לְבַשֵּׂר אֶת שָׂרָה, וְהִתְכּוֹנְנוּ לָלֶכֶת לִסְדוֹם לַהֲפֹךְ אוֹתָהּ. כָּךְ כָּתוּב: "וַיֹּאמֶר ה׳" – לְמִי אָמַר? לְעַצְמוֹ:</p>
-<blockquote class="pasuk"><p>אֵרְדָה נָּא וְאֶרְאֶה הַכְּצַעֲקָתָהּ הַבָּאָה אֵלַי עָשׂוּ כָּלָה.</p><cite>(בראשית יח, כא)</cite></blockquote>
+<div class="keep"><p class="short">וְהַמַּאֲמָר הַשֵּׁנִי, שֶׁאֲנִי עַצְמִי מֵעוֹלָם לֹא הֵבַנְתִּי אוֹתוֹ: "וַיֹּאמֶר ה׳" – בְּפָרָשַׁת וַיֵּרָא, אַחֲרֵי שֶׁהַמַּלְאָכִים בָּאוּ לְבַשֵּׂר אֶת שָׂרָה, וְהִתְכּוֹנְנוּ לָלֶכֶת לִסְדוֹם לַהֲפֹךְ אוֹתָהּ. כָּךְ כָּתוּב: "וַיֹּאמֶר ה׳" – לְמִי אָמַר? לְעַצְמוֹ:</p><blockquote class="pasuk"><p>אֵרְדָה נָּא וְאֶרְאֶה הַכְּצַעֲקָתָהּ הַבָּאָה אֵלַי עָשׂוּ כָּלָה.</p><cite>(בראשית יח, כא)</cite></blockquote></div>
 <p class="short">לַפָּסוּק הַזֶּה אֵין לֹא הַתְחָלָה וְלֹא סוֹף; הוּא סְתָם מֻנְחָת כָּךְ בָּאֶמְצַע. מַה זֹּאת אוֹמֶרֶת? הַקָּדוֹשׁ בָּרוּךְ הוּא – "אֵרְדָה נָּא וְאֶרְאֶה"? עַד עַכְשָׁו לֹא רָאִיתָ? מַה צָּרִיךְ בִּכְלָל לוֹמַר "אֵרְדָה נָּא וְאֶרְאֶה"? אַתָּה רוֹאֶה – אַתָּה צָרִיךְ לָרֶדֶת כְּדֵי לִרְאוֹת?!</p>
 <p>מִכֵּיוָן שֶׁלָּאָדָם לֹא הָיְתָה בְּחִירָה כְּלָל, וְכֻלּוֹ הָיָה מֻנְהָג עַל יְדֵי הַקָּדוֹשׁ בָּרוּךְ הוּא, אוֹמֵר הַקָּדוֹשׁ בָּרוּךְ הוּא כָּךְ: כְּשֶׁרָאָה שֶׁהָעוֹלָם פָּחוֹת אוֹ יוֹתֵר מְאֻזָּן – הִמְשִׁיךְ לְהַנְהִיג אֶת הָעוֹלָם, וְכוּ׳. כָּל אָדָם קִבֵּל עֹנֶשׁ – אַךְ הוּא לֹא אָמַר "קִבַּלְתִּי עֹנֶשׁ מִפְּנֵי שֶׁחִלַּלְתִּי שַׁבָּת"; מָה פִּתְאֹם! אֵין קֶשֶׁר. כָּךְ הוּא הָעוֹלָם: קִבַּלְתִּי מַכָּה בָּרֶגֶל; קִבַּלְתִּי יַהֲלוֹם, מָצָאתִי יַהֲלוֹמִים – הוּא לֹא קָשַׁר זֹאת עִם מַעֲשָׂיו, אֶלָּא "כָּךְ": מָצָאתִי מְצִיאָה – אֵין שׁוּם קֶשֶׁר; לָקַחְתִּי מִמִּישֶׁהוּ כֶּסֶף...</p>
 <p class="short">"אֵרְדָה נָּא וְאֶרְאֶה הַכְּצַעֲקָתָהּ": כַּאֲשֶׁר רוֹאֶה הַקָּדוֹשׁ בָּרוּךְ הוּא שֶׁהַצֹּאן הַזֶּה, שֶׁאֵין לוֹ בְּחִירָה, לֹא טוֹב וְלֹא רַע – מֶה הוּא מַחְלִיט? לָרֶדֶת, וּלְהוֹרִיד לָזֶה אֶת חֶלְקוֹ. כְּמוֹ הָרוֹעֶה הָרוֹאֶה כֶּבֶשׂ אֶחָד שֶׁפּוֹגֵעַ בַּשֵּׁנִי – הוּא מוֹרִיד אוֹתוֹ. כְּמוֹ צֹאן; זֶהוּ.</p>
-<div class="akeida"><p>וְהִנֵּה הָיוּ הַטּוֹבוֹת וְהָרָעוֹת בָּאוֹת בְּכָל הַדּוֹרוֹת הָהֵם מִפִּי עֶלְיוֹן, וְהוּא הַסֵּדֶר הַנָּתוּן בְּיַד מַעַרְכוֹת הַשָּׁמַיִם</p></div>
-<p class="short">זֹאת אוֹמֶרֶת: כָּךְ הִנְהִיג הַקָּדוֹשׁ בָּרוּךְ הוּא אֶת הָעוֹלָם בַּתְּקוּפָה הַהִיא. הוּא הָאָדוֹן, הַמּוֹלֵךְ, הַשּׁוֹלֵט, הַמַּפְתֵּחַ, הַשַּׁלִּיט; הוּא כִּוֵּן אֶת כָּל מַעַרְכוֹתָיו. וּבְשָׁעָה שֶׁרָאָה שֶׁהָעוֹלָם הִגִּיעַ לְקִצּוֹ – נָתַן אֶת הַפְּקֻדָּה לַמַּעֲרָכוֹת, וְהֵן הוֹרִידוּ מַבּוּל לָעוֹלָם. וְאִם כָּךְ – הַדָּבָר מַסְבִּיר לָנוּ עוֹד דְּבָרִים רַבִּים.</p>
-<div class="akeida"><p>זוּלָתִי בִּפְעָמִים אֲשֶׁר נִתְמַלְּאָה סְאָתָם, כְּעִנְיַן הַמַּבּוּל וּסְדוֹם וְדוֹר הַפַּלָּגָה וְכַיּוֹצֵא, כְּמוֹ שֶׁזָּכַרְנוּ בְּפָרָשַׁת פְּקוּדֵי</p></div>
-<p class="short">אָמְנָם זוֹ הָיְתָה הַתְּקוּפָה שֶׁל דּוֹר הַמַּבּוּל וְדוֹר הַפַּלָּגָה, שֶׁבָּהּ הַכֹּל הָיָה בִּידֵי בּוֹרֵא עוֹלָם: הוּא הַמַּנְהִיג, הוּא הַמַּנְחִית אֶת הַטּוֹב וְהַמַּנְחִית אֶת הָרַע, וְאֵין הַדָּבָר תָּלוּי כְּלָל בְּמַעֲשֵׂי בְּנֵי הָאָדָם. בְּוַדַּאי יֵשׁ כָּאן אֶלֶף שְׁאֵלוֹת, אֲבָל אֵין כְּדַאי לָנוּ לְהִכָּנֵס בָּזֶה.</p>
+<div class="keep"><div class="akeida"><p>וְהִנֵּה הָיוּ הַטּוֹבוֹת וְהָרָעוֹת בָּאוֹת בְּכָל הַדּוֹרוֹת הָהֵם מִפִּי עֶלְיוֹן, וְהוּא הַסֵּדֶר הַנָּתוּן בְּיַד מַעַרְכוֹת הַשָּׁמַיִם</p></div><p class="short">זֹאת אוֹמֶרֶת: כָּךְ הִנְהִיג הַקָּדוֹשׁ בָּרוּךְ הוּא אֶת הָעוֹלָם בַּתְּקוּפָה הַהִיא. הוּא הָאָדוֹן, הַמּוֹלֵךְ, הַשּׁוֹלֵט, הַמַּפְתֵּחַ, הַשַּׁלִּיט; הוּא כִּוֵּן אֶת כָּל מַעַרְכוֹתָיו. וּבְשָׁעָה שֶׁרָאָה שֶׁהָעוֹלָם הִגִּיעַ לְקִצּוֹ – נָתַן אֶת הַפְּקֻדָּה לַמַּעֲרָכוֹת, וְהֵן הוֹרִידוּ מַבּוּל לָעוֹלָם. וְאִם כָּךְ – הַדָּבָר מַסְבִּיר לָנוּ עוֹד דְּבָרִים רַבִּים.</p></div>
+<div class="keep"><div class="akeida"><p>זוּלָתִי בִּפְעָמִים אֲשֶׁר נִתְמַלְּאָה סְאָתָם, כְּעִנְיַן הַמַּבּוּל וּסְדוֹם וְדוֹר הַפַּלָּגָה וְכַיּוֹצֵא, כְּמוֹ שֶׁזָּכַרְנוּ בְּפָרָשַׁת פְּקוּדֵי</p></div><p class="short">אָמְנָם זוֹ הָיְתָה הַתְּקוּפָה שֶׁל דּוֹר הַמַּבּוּל וְדוֹר הַפַּלָּגָה, שֶׁבָּהּ הַכֹּל הָיָה בִּידֵי בּוֹרֵא עוֹלָם: הוּא הַמַּנְהִיג, הוּא הַמַּנְחִית אֶת הַטּוֹב וְהַמַּנְחִית אֶת הָרַע, וְאֵין הַדָּבָר תָּלוּי כְּלָל בְּמַעֲשֵׂי בְּנֵי הָאָדָם. בְּוַדַּאי יֵשׁ כָּאן אֶלֶף שְׁאֵלוֹת, אֲבָל אֵין כְּדַאי לָנוּ לְהִכָּנֵס בָּזֶה.</p></div>
 </div></section>
-<section class="sec" id="s6"><svg class="orn" viewBox="0 0 220 16" aria-hidden="true"><line x1="4" y1="8" x2="92" y2="8"/><line x1="128" y1="8" x2="216" y2="8"/><path d="M110 1 L117 8 L110 15 L103 8 Z" class="fill"/><circle cx="97" cy="8" r="1.6" class="fill"/><circle cx="123" cy="8" r="1.6" class="fill"/></svg><h2><span class="h2-in">אַבְרָהָם אָבִינוּ – "קֹנֵה שָׁמַיִם וָאָרֶץ"</span></h2><div class="sec-body">
-<div class="akeida"><p>אָמְנָם כַּאֲשֶׁר זָרַח שִׁמְשׁוֹ שֶׁל אַבְרָהָם אָבִינוּ, אֲשֶׁר בָּא בְּכֹחַ גָּדוֹל וּבְיָד חֲזָקָה לְהַכִּיר אֶת בּוֹרְאוֹ, וְהִגִּיעַ לִכְלַל יְדִיעָה הֱיוֹתוֹ קֹנֵה שָׁמַיִם וָאָרֶץ</p></div>
+<section class="sec" id="s6"><svg class="orn" viewBox="0 0 220 16" aria-hidden="true"><line x1="4" y1="8" x2="92" y2="8"/><line x1="128" y1="8" x2="216" y2="8"/><path d="M110 1 L117 8 L110 15 L103 8 Z" class="fill"/><circle cx="97" cy="8" r="1.6" class="fill"/><circle cx="123" cy="8" r="1.6" class="fill"/></svg>
+<div class="hg"><h2><span class="h2-in">אַבְרָהָם אָבִינוּ – "קֹנֵה שָׁמַיִם וָאָרֶץ"</span></h2><div class="sec-body sb-first"><div class="akeida"><p>אָמְנָם כַּאֲשֶׁר זָרַח שִׁמְשׁוֹ שֶׁל אַבְרָהָם אָבִינוּ, אֲשֶׁר בָּא בְּכֹחַ גָּדוֹל וּבְיָד חֲזָקָה לְהַכִּיר אֶת בּוֹרְאוֹ, וְהִגִּיעַ לִכְלַל יְדִיעָה הֱיוֹתוֹ קֹנֵה שָׁמַיִם וָאָרֶץ</p></div></div></div>
+<div class="sec-body">
 <p>מֵעוֹלָם לֹא שָׁמַעְנוּ אֶת הַמִּלִּים הָאֵלֶּה: שֶׁאַבְרָהָם בָּא "בְּכֹחַ גָּדוֹל וּבְיָד חֲזָקָה" לְהַכִּיר אֶת בּוֹרְאוֹ, וְהִגִּיעַ לִכְלַל יְדִיעָה "הֱיוֹתוֹ קֹנֵה שָׁמַיִם וָאָרֶץ". אַבְרָהָם אָבִינוּ – לֹא סְתָם, כְּמוֹ בַּסִּפּוּרִים שֶׁלָּנוּ, שֶׁהָיְתָה לוֹ אֱמוּנָה, וְהָיָה אוֹמֵר לִבְנֵי אָדָם: "אַתֶּם יוֹדְעִים? יֵשׁ אֱלוֹהַּ אֶחָד בַּשָּׁמַיִם" וְכוּ׳. הָיָה זֶה הַרְבֵּה יוֹתֵר מִזֶּה. שֶׁאַבְרָהָם אָבִינוּ הִכִּיר שֶׁיֵּשׁ מַנְהִיג לָעוֹלָם – אֶת זֶה אָנוּ יוֹדְעִים; אֲבָל "הֱיוֹתוֹ קֹנֵה שָׁמַיִם וָאָרֶץ"!</p>
 <p class="short">עַכְשָׁו אָנוּ מְבִינִים אֶת הַפְּסוּקִים שָׁם, כְּשֶׁנִּפְגַּשׁ עִם מֶלֶךְ סְדוֹם אַחֲרֵי הַמִּלְחָמָה בְּאַרְבַּעַת הַמְּלָכִים <span class="ref">(בראשית יד, יט–כב)</span>: הוּא יָדַע שֶׁה׳ יִתְבָּרַךְ הוּא בַּעַל הַבַּיִת בְּקִנְיָן – הוּא קָנָה אֶת הָעוֹלָם. זֶה מַה שֶּׁאָנוּ אוֹמְרִים בִּתְפִלַּת שַׁבָּת, <span class="q">"קֹנֵה שָׁמַיִם וָאָרֶץ"</span>, וְאֵין אָנוּ מְבִינִים כָּל כָּךְ מַה זֶּה "קֹנֶה".</p>
 <p>זֹאת אוֹמֶרֶת: אֱמוּנָתוֹ שֶׁל אַבְרָהָם לֹא הָיְתָה אֱמוּנָה שֶׁל "אֲנִי מַאֲמִין שֶׁיֵּשׁ ה׳ בָּעוֹלָם"; אֱמוּנָתוֹ הָיְתָה שֶׁה׳ יִתְבָּרַךְ הוּא בַּעַל הַבַּיִת שֶׁל הָעוֹלָם – וְלֹא בַּעַל בַּיִת שֶׁקָּנָה אֶת הָעוֹלָם מִמִּישֶׁהוּ אַחֵר. "קֹנֵה שָׁמַיִם וָאָרֶץ" – כַּנִּרְאֶה, לַמִּלָּה "קִנְיָן" יֵשׁ מַשְׁמָעוּת רַבָּה הַרְבֵּה יוֹתֵר מִמַּה שֶּׁאָנוּ מְבִינִים. "קֹנֶה" פֵּרוּשׁוֹ: אֶת הָרְכוּשׁ הַזֶּה, הַנִּקְרָא "עוֹלָם" – הוּא יָצַר אוֹתוֹ; הוּא יָצַר אֶת הָרְכוּשׁ הַזֶּה הַנִּקְרָא "שָׁמַיִם וָאָרֶץ".</p>
 </div></section>
-<section class="sec" id="s7"><svg class="orn" viewBox="0 0 220 16" aria-hidden="true"><line x1="4" y1="8" x2="92" y2="8"/><line x1="128" y1="8" x2="216" y2="8"/><path d="M110 1 L117 8 L110 15 L103 8 Z" class="fill"/><circle cx="97" cy="8" r="1.6" class="fill"/><circle cx="123" cy="8" r="1.6" class="fill"/></svg><h2><span class="h2-in">הָאֱמוּנָה בְּשַׁבָּת: יֵשׁ מֵאַיִן</span></h2><div class="sec-body">
+<section class="sec" id="s7"><svg class="orn" viewBox="0 0 220 16" aria-hidden="true"><line x1="4" y1="8" x2="92" y2="8"/><line x1="128" y1="8" x2="216" y2="8"/><path d="M110 1 L117 8 L110 15 L103 8 Z" class="fill"/><circle cx="97" cy="8" r="1.6" class="fill"/><circle cx="123" cy="8" r="1.6" class="fill"/></svg>
+<div class="hg"><h2><span class="h2-in">הָאֱמוּנָה בְּשַׁבָּת: יֵשׁ מֵאַיִן</span></h2><div class="sec-body sb-first"></div></div>
+<div class="sec-body">
 <p class="first"><span class="lead">אֶסְטֶה</span> מְעַט מִן הָעִנְיָן. בַּעַל הָעֲקֵדָה אוֹמֵר שֶׁהָאֱמוּנָה שֶׁלָּנוּ בְּשַׁבָּת הִיא אֱמוּנָה מִינִימָלִית: אָנוּ מְבִינִים שֶׁה׳ עָבַד שִׁשָּׁה יָמִים, בָּרָא אֶת הָעוֹלָם בְּשִׁשָּׁה יָמִים, וְנָח בַּיּוֹם הַשְּׁבִיעִי. וְהוּא אוֹמֵר: לֹא זוֹ הָאֱמוּנָה שֶׁאָנוּ צְרִיכִים לְהַאֲמִין. הָאֱמוּנָה שֶׁאָנוּ צְרִיכִים לְהַאֲמִין בָּהּ הִיא שֶׁה׳ בָּרָא יֵשׁ מֵאַיִן. הָאֱמוּנָה שֶׁלָּנוּ בְּשַׁבָּת אֵינָהּ מַה שֶּׁאָנוּ אוֹמְרִים בַּקִּדּוּשׁ – שֶׁה׳ עָבַד שִׁשָּׁה יָמִים וְנָח – אֶלָּא הָאֱמוּנָה הִיא, לְדַיֵּק, לְדַקְדֵּק וּלְמַקֵּד: שֶׁה׳ בָּרָא יֵשׁ מֵאַיִן.</p>
 <p>וּבָזֶה הוּא עוֹנֶה עַל הַשְּׁאֵלָה הַיְּדוּעָה, שֶׁדִּבַּרְנוּ עָלֶיהָ בְּשַׁבָּת: מֶה הָיָה הַקָּדוֹשׁ בָּרוּךְ הוּא צָרִיךְ לָתֵת לָנוּ כְּדֵי שֶׁנִּזְכֹּר שֶׁהוּא עָשָׂה מַעֲשֵׂה בְרֵאשִׁית? וּמַה נָּתַן לָנוּ? – שַׁבָּת. אֲבָל הַשַּׁבָּת אֵינָהּ מְעִידָה עַל שֵׁשֶׁת הַיָּמִים! הָיָה צָרִיךְ לַעֲשׂוֹת לָנוּ זִכָּרוֹן – לַעֲשׂוֹת מַשֶּׁהוּ שֶׁהוּא זֵכֶר לָעֲבוֹדָה, לְכָךְ שֶׁה׳ בָּרָא אֶת הָעוֹלָם. וּמָה עָשָׂה לָנוּ? נָתַן לָנוּ אֱמוּנָה שֶׁה׳ נָח בְּיוֹם הַשַּׁבָּת. נָכוֹן, הוּא נָח בְּיוֹם הַשַּׁבָּת אַחֲרֵי שֶׁעָבַד; אֲבָל לֵךְ יָשָׁר: עֲשֵׂה מַשֶּׁהוּ שֶׁהוּא זֵכֶר לַבְּרִיאָה, לֹא זֵכֶר לַמְּנוּחָה! זוֹ הַשְּׁאֵלָה שֶׁשּׁוֹאֲלִים, וְכָךְ הוּא עוֹנֶה עָלֶיהָ.</p>
 <p>אִם כֵּן, אַבְרָהָם אָבִינוּ – אֱמוּנָתוֹ לֹא הָיְתָה הָאֱמוּנָה הַפְּשׁוּטָה שֶׁבָּהּ אָנוּ מַאֲמִינִים, אֶלָּא הוּא הִגִּיעַ לִידִיעָה. הַמִּלָּה הַזֹּאת, "יְדִיעָה" – לָדַעַת אֶת ה׳ – אֵינָהּ שַׁיֶּכֶת לַדּוֹרוֹת שֶׁלָּנוּ; הַדּוֹרוֹת שֶׁלָּנוּ – הַלְוַאי הָאֱמוּנָה הַפְּשׁוּטָה! אֲבָל אִם רוֹצִים אָנוּ לָדַעַת לְמָה הִגִּיעַ אַבְרָהָם אָבִינוּ – לֹא הָיָה זֶה רַק כְּמוֹ שֶׁשּׁוֹמְעִים בַּסִּפּוּרִים שֶׁבַּמִּדְרָשִׁים: "אֵין זֶה הַשֶּׁמֶשׁ – אִם כֵּן יֵשׁ מַנְהִיג לָעוֹלָם", וּבָזֶה סִיַּמְנוּ. לֹא! אַבְרָהָם אָבִינוּ הִגִּיעַ לִידִיעָה שֶׁה׳ יִתְבָּרַךְ הוּא שֶׁבָּרָא אֶת הָעוֹלָם, הוּא בַּעַל הַבַּיִת שֶׁל הָעוֹלָם, הוּא הַמַּנְהִיג, הוּא הַשַּׁלִּיט, הוּא עוֹשֶׂה מַה שֶּׁהוּא רוֹצֶה.</p>
@@ -430,40 +408,35 @@ blockquote.pasuk cite {
 <p>בְּמָרוֹקוֹ – הָעֲרָבִים הָרָעִים הָאֵלֶּה – הָיוּ שָׁם רְחָבוֹת, כִּכָּרוֹת. לֹא הָיָה אָז הַמָּסָךְ הַזֶּה, אֲבָל הָיָה מַשֶּׁהוּ מְעַנְיֵן בְּכָל זֹאת: מְבִיאִים קוֹף וְאוֹמְרִים לוֹ: "עֲשֵׂה, עֲשֵׂה אֵיךְ הַיְּהוּדִי מִתְנַהֵג אַחֲרֵי שֶׁהוּא אוֹכֵל סְחִינָה בְּשַׁבָּת!". מֶה הָיָה הַקּוֹף עוֹשֶׂה? הָיָה שׁוֹכֵב עַל גַּבּוֹ וְשָׂם רֶגֶל עַל רֶגֶל. כָּךְ הָיָה הַיְּהוּדִי, בִּמְחִילָה מִכְּבוֹדֵנוּ. זֶה מַה שֶּׁאָנוּ עוֹשִׂים בְּשַׁבָּת: "עֹנֶג שַׁבָּת"! וַאֲנִי עוֹשֶׂה עוֹד – אַתָּה יוֹדֵעַ מָה? אֲנִי, וְאִתִּי יַיִן – אֵיזֶה יַיִן מְשֻׁבָּח! זֶה הָעֹנֶג? עַל מָה אַתָּה מִתְעַנֵּג?</p>
 <p class="short">לַעֲבֹד! לַעֲבֹד בִּתְפִלַּת שְׁמוֹנֶה עֶשְׂרֵה שֶׁל שַׁבָּת. הַתְּפִלָּה – לִפְנֵי שֶׁאַתָּה מַגִּיעַ לַשֻּׁלְחָן: עֲמֹד בִּתְפִלַּת לֵיל שַׁבַּת קֹדֶשׁ, רְאֵה מַה שֶּׁיֵּשׁ שָׁם בִּשְׁמוֹנֶה עֶשְׂרֵה, וְתִרְאֶה לְמָה תַּגִּיעַ. כָּל אֶחָד יָכוֹל לְהַגִּיעַ.</p>
 </div></section>
-<section class="sec" id="s8"><svg class="orn" viewBox="0 0 220 16" aria-hidden="true"><line x1="4" y1="8" x2="92" y2="8"/><line x1="128" y1="8" x2="216" y2="8"/><path d="M110 1 L117 8 L110 15 L103 8 Z" class="fill"/><circle cx="97" cy="8" r="1.6" class="fill"/><circle cx="123" cy="8" r="1.6" class="fill"/></svg><h2><span class="h2-in">אַבְרָהָם מַחֲזִיר אֶת הַבְּחִירָה לִמְקוֹמָהּ</span></h2><div class="sec-body">
-<p class="first"><span class="lead">נַמְשִׁיךְ:</span></p>
-<div class="akeida"><p>וּמַנְהִיגָם עַל דֶּרֶךְ הַחֵפֶץ וְהָרָצוֹן, כְּמוֹ שֶׁאָמַרְנוּ, וְהִתְחִיל לְפַרְסְמוֹ בָּעוֹלָם – הִנֵּה הוּא הֶחֱזִיר עִנְיַן הַבְּחִירָה לִמְקוֹמָהּ</p></div>
-<p class="short">אַחֲרֵי שֶׁהָעוֹלָם אִבֵּד אֶת בְּחִירָתוֹ – לְדוֹר הַמַּבּוּל וּלְדוֹר הַפַּלָּגָה לֹא הָיְתָה בְּחִירָה; הֵם הָיוּ מֻנְהָגִים כְּמוֹ צֹאן, וְאֵין עוֹד בְּחִירָה – בָּא אַבְרָהָם אָבִינוּ עָלָיו הַשָּׁלוֹם, וְהִגִּיעַ לִידִיעָה.</p>
+<section class="sec" id="s8"><svg class="orn" viewBox="0 0 220 16" aria-hidden="true"><line x1="4" y1="8" x2="92" y2="8"/><line x1="128" y1="8" x2="216" y2="8"/><path d="M110 1 L117 8 L110 15 L103 8 Z" class="fill"/><circle cx="97" cy="8" r="1.6" class="fill"/><circle cx="123" cy="8" r="1.6" class="fill"/></svg>
+<div class="hg"><h2><span class="h2-in">אַבְרָהָם מַחֲזִיר אֶת הַבְּחִירָה לִמְקוֹמָהּ</span></h2><div class="sec-body sb-first"><p class="first short"><span class="lead">נַמְשִׁיךְ:</span></p><div class="akeida"><p>וּמַנְהִיגָם עַל דֶּרֶךְ הַחֵפֶץ וְהָרָצוֹן, כְּמוֹ שֶׁאָמַרְנוּ, וְהִתְחִיל לְפַרְסְמוֹ בָּעוֹלָם – הִנֵּה הוּא הֶחֱזִיר עִנְיַן הַבְּחִירָה לִמְקוֹמָהּ</p></div><p class="short">אַחֲרֵי שֶׁהָעוֹלָם אִבֵּד אֶת בְּחִירָתוֹ – לְדוֹר הַמַּבּוּל וּלְדוֹר הַפַּלָּגָה לֹא הָיְתָה בְּחִירָה; הֵם הָיוּ מֻנְהָגִים כְּמוֹ צֹאן, וְאֵין עוֹד בְּחִירָה – בָּא אַבְרָהָם אָבִינוּ עָלָיו הַשָּׁלוֹם, וְהִגִּיעַ לִידִיעָה.</p></div></div>
+<div class="sec-body">
 <p>יְדִיעָה הִיא יְדִיעָה – לָדַעַת. <span class="q">"וְנֵדְעָה נִרְדְּפָה לָדַעַת אֶת ה׳"</span> <span class="ref">(הושע ו, ג)</span>, אוֹמֵר הַנָּבִיא. זֹאת אוֹמֶרֶת: כְּדֵי לְהַגִּיעַ לִידִיעָה צָרִיךְ לִרְדֹּף אַחַר הַקָּדוֹשׁ בָּרוּךְ הוּא, לְחַפֵּשׂ אוֹתוֹ, לְחַפֵּשׂ אוֹתוֹ בְּכָל חַיֶּיךָ – חַפֵּשׂ אוֹתוֹ, רְדֹף אַחֲרָיו. הֲרֵי כָּל הָעִנְיָן הוּא כְּמוֹ שֶׁאוֹמֵר הָאִבְּן עֶזְרָא בְּמָקוֹם אֶחָד: שֶׁבִּשְׁבִיל זֶה נִבְרָא הָאָדָם, בִּשְׁבִיל זֶה לְבַד נִבְרָא הָאָדָם. אִם כֵּן, כְּדֵי לָדַעַת אֶת הַקָּדוֹשׁ בָּרוּךְ הוּא – אַתָּה צָרִיךְ לִרְדֹּף.</p>
-<p class="short">בַּיְדִיעָה הַזֹּאת – שֶׁה׳ הוּא בַּעַל הַבַּיִת שֶׁל הָעוֹלָם, שֶׁהוּא מַנְהִיג אוֹתוֹ לְפִי רְצוֹנוֹ – הֶחֱזִיר אַבְרָהָם אֶת הַבְּחִירָה לָעוֹלָם. אָדָם הָרִאשׁוֹן קִבֵּל אֶת הַבְּחִירָה בִּבְרִיאָתוֹ, וְאִבֵּד אוֹתָהּ אַחֲרֵי זֻהֲמַת הַנָּחָשׁ; אַבְרָהָם אָבִינוּ הוּא שֶׁבָּא וְהֶחֱזִיר אֶת הַבְּחִירָה לָעוֹלָם. אֲבָל אֵיךְ מַחְזִירִים בְּחִירָה לְאָדָם שֶׁאִבֵּד אוֹתָהּ? זוֹ הַנְּקֻדָּה:</p>
-<div class="akeida"><p>לְהוֹדִיעַ כִּי יֵשׁ שָׂכָר לִפְעֻלּוֹת הָאֲנָשִׁים</p></div>
-<p class="short">בַּבְּחִירָה הַזֹּאת שֶׁחִדֵּשׁ, הוּא לִמֵּד אֶת עַצְמוֹ וְלִמֵּד אֶת הַבָּאִים אַחֲרָיו שֶׁהַקָּדוֹשׁ בָּרוּךְ הוּא מַנְהִיג אֶת הָעוֹלָם לְפִי כֹּשֶׁר הַמַּעֲשִׂים – לְפִי כֹּשֶׁר מַעֲשָׂיו שֶׁל הָאָדָם: אִם הוּא כָּשֵׁר וְאִם הוּא פָּסוּל.</p>
+<div class="keep"><p class="short">בַּיְדִיעָה הַזֹּאת – שֶׁה׳ הוּא בַּעַל הַבַּיִת שֶׁל הָעוֹלָם, שֶׁהוּא מַנְהִיג אוֹתוֹ לְפִי רְצוֹנוֹ – הֶחֱזִיר אַבְרָהָם אֶת הַבְּחִירָה לָעוֹלָם. אָדָם הָרִאשׁוֹן קִבֵּל אֶת הַבְּחִירָה בִּבְרִיאָתוֹ, וְאִבֵּד אוֹתָהּ אַחֲרֵי זֻהֲמַת הַנָּחָשׁ; אַבְרָהָם אָבִינוּ הוּא שֶׁבָּא וְהֶחֱזִיר אֶת הַבְּחִירָה לָעוֹלָם. אֲבָל אֵיךְ מַחְזִירִים בְּחִירָה לְאָדָם שֶׁאִבֵּד אוֹתָהּ? זוֹ הַנְּקֻדָּה:</p><div class="akeida"><p>לְהוֹדִיעַ כִּי יֵשׁ שָׂכָר לִפְעֻלּוֹת הָאֲנָשִׁים</p></div><p class="short">בַּבְּחִירָה הַזֹּאת שֶׁחִדֵּשׁ, הוּא לִמֵּד אֶת עַצְמוֹ וְלִמֵּד אֶת הַבָּאִים אַחֲרָיו שֶׁהַקָּדוֹשׁ בָּרוּךְ הוּא מַנְהִיג אֶת הָעוֹלָם לְפִי כֹּשֶׁר הַמַּעֲשִׂים – לְפִי כֹּשֶׁר מַעֲשָׂיו שֶׁל הָאָדָם: אִם הוּא כָּשֵׁר וְאִם הוּא פָּסוּל.</p></div>
 <div class="akeida"><p>וְצִוָּה עָלֶיהָ אֶת בָּנָיו וְאֶת בֵּיתוֹ אַחֲרָיו</p></div>
 <p>כָּאן אָנוּ נִכְנָסִים לַפָּסוּק הַנִּפְלָא הַזֶּה, שֶׁגַּם בּוֹ לֹא יָדַעְנוּ מַה הוּא עוֹשֶׂה, וּמַה הוּא מְחַפֵּשׂ פִּתְאֹם כָּאן. לִפְנֵי שֶׁה׳ נָתַן אֶת הַפְּקֻדָּה לְהַשְׁמִיד אֶת סְדוֹם, לְהַחֲרִיב אֶת סְדוֹם – מַה כָּתוּב שָׁם? <span class="q">"וַה׳ אָמָר הַמְכַסֶּה אֲנִי מֵאַבְרָהָם אֲשֶׁר אֲנִי עֹשֶׂה"</span> <span class="ref">(בראשית יח, יז)</span>. לִפְנֵי שֶׁנָּתַן אֶת הַפְּקֻדָּה לְהַחֲרִיב, אָמַר: אֲנִי מֻכְרָח לְדַבֵּר עִם אַבְרָהָם. לָמָּה? מַה הַפָּסוּק הַזֶּה עוֹשֶׂה כָּאן?</p>
-<p class="short">מוּבָן: אַנְשֵׁי סְדוֹם עֲדַיִן הָיוּ בְּעִוָּרוֹנָם, בְּשִׁגְעוֹנָם, וּבְסַךְ הַכֹּל הָעֹנֶשׁ שֶׁקִּבְּלוּ בָּא מִשּׁוּם שֶׁרָאָה ה׳ יִתְבָּרַךְ שֶׁהֵם הִטּוּ אֶת הָעוֹלָם לְהַשְׁמָדָה. אֲבָל יֵשׁ אֶחָד שֶׁנּוֹלַד חָדָשׁ: "זָרַח שִׁמְשׁוֹ" שֶׁל אַבְרָהָם. כֵּיצַד אוֹמֵר הַפָּסוּק? <span class="q">"זָרַח בַּחֹשֶׁךְ אוֹר לַיְשָׁרִים"</span> <span class="ref">(תהלים קיב, ד)</span>. וְאָז אוֹמֵר הַקָּדוֹשׁ בָּרוּךְ הוּא בְּדִיּוּק:</p>
-<blockquote class="pasuk"><p>וַה׳ אָמָר הַמְכַסֶּה אֲנִי מֵאַבְרָהָם אֲשֶׁר אֲנִי עֹשֶׂה. וְאַבְרָהָם הָיוֹ יִהְיֶה לְגוֹי גָּדוֹל וְעָצוּם וְנִבְרְכוּ בוֹ כֹּל גּוֹיֵי הָאָרֶץ. כִּי יְדַעְתִּיו לְמַעַן אֲשֶׁר יְצַוֶּה אֶת בָּנָיו וְאֶת בֵּיתוֹ אַחֲרָיו וְשָׁמְרוּ דֶּרֶךְ ה׳ לַעֲשׂוֹת צְדָקָה וּמִשְׁפָּט לְמַעַן הָבִיא ה׳ עַל אַבְרָהָם אֵת אֲשֶׁר דִּבֶּר עָלָיו.</p><cite>(בראשית יח, יז–יט)</cite></blockquote>
+<div class="keep"><p class="short">מוּבָן: אַנְשֵׁי סְדוֹם עֲדַיִן הָיוּ בְּעִוָּרוֹנָם, בְּשִׁגְעוֹנָם, וּבְסַךְ הַכֹּל הָעֹנֶשׁ שֶׁקִּבְּלוּ בָּא מִשּׁוּם שֶׁרָאָה ה׳ יִתְבָּרַךְ שֶׁהֵם הִטּוּ אֶת הָעוֹלָם לְהַשְׁמָדָה. אֲבָל יֵשׁ אֶחָד שֶׁנּוֹלַד חָדָשׁ: "זָרַח שִׁמְשׁוֹ" שֶׁל אַבְרָהָם. כֵּיצַד אוֹמֵר הַפָּסוּק? <span class="q">"זָרַח בַּחֹשֶׁךְ אוֹר לַיְשָׁרִים"</span> <span class="ref">(תהלים קיב, ד)</span>. וְאָז אוֹמֵר הַקָּדוֹשׁ בָּרוּךְ הוּא בְּדִיּוּק:</p><blockquote class="pasuk"><p>וַה׳ אָמָר הַמְכַסֶּה אֲנִי מֵאַבְרָהָם אֲשֶׁר אֲנִי עֹשֶׂה. וְאַבְרָהָם הָיוֹ יִהְיֶה לְגוֹי גָּדוֹל וְעָצוּם וְנִבְרְכוּ בוֹ כֹּל גּוֹיֵי הָאָרֶץ. כִּי יְדַעְתִּיו לְמַעַן אֲשֶׁר יְצַוֶּה אֶת בָּנָיו וְאֶת בֵּיתוֹ אַחֲרָיו וְשָׁמְרוּ דֶּרֶךְ ה׳ לַעֲשׂוֹת צְדָקָה וּמִשְׁפָּט לְמַעַן הָבִיא ה׳ עַל אַבְרָהָם אֵת אֲשֶׁר דִּבֶּר עָלָיו.</p><cite>(בראשית יח, יז–יט)</cite></blockquote></div>
 <p class="short">זֶהוּ הַפָּסוּק. זֹאת אוֹמֶרֶת: מִשֶּׁבָּא אַבְרָהָם וְחִדֵּשׁ אֶת הַבְּחִירָה – שֶׁהָיְתָה קַיֶּמֶת בְּשָׁעָה שֶׁה׳ בָּרָא אֶת אָדָם הָרִאשׁוֹן, לִפְנֵי הַזֻּהֲמָא –</p>
 <div class="akeida"><p>וְאַחֲרָיו נִמְשְׁכוּ הַבָּאִים, הֵם הָאָבוֹת הַקְּדוֹשִׁים</p></div>
 </div></section>
-<section class="sec" id="s9"><svg class="orn" viewBox="0 0 220 16" aria-hidden="true"><line x1="4" y1="8" x2="92" y2="8"/><line x1="128" y1="8" x2="216" y2="8"/><path d="M110 1 L117 8 L110 15 L103 8 Z" class="fill"/><circle cx="97" cy="8" r="1.6" class="fill"/><circle cx="123" cy="8" r="1.6" class="fill"/></svg><h2><span class="h2-in">שִׁעְבּוּד מִצְרַיִם – הַכְשָׁרָה לַבְּחִירָה</span></h2><div class="sec-body">
-<p class="first"><span class="lead">כֵּיצַד</span> לוֹמֵד בַּעַל הָעֲקֵדָה אֶת הַחֻמָּשׁ? הוּא מַסְבִּיר כָּךְ: אַחֲרֵי שֶׁיִּצְחָק וְיַעֲקֹב הִמְשִׁיכוּ אֶת דַּרְכָּם בַּבְּחִירָה הַזֹּאת שֶׁחִדֵּשׁ אַבְרָהָם – מַה קָּרָה אַחַר כָּךְ? יָרְדוּ לְמִצְרַיִם. מַה הַקֶּשֶׁר? כָּךְ אָנוּ קוֹרְאִים אֶת הַחֻמָּשׁ: הָיוּ סְדוֹם וַעֲמֹרָה; אַבְרָהָם, יִצְחָק וְיַעֲקֹב; הָיָה סִפּוּר יוֹסֵף וְאֶחָיו – וּמַה קָּרָה? יָרְדוּ לְמִצְרַיִם. מָה הוּא עוֹשֶׂה? הוּא אוֹמֵר:</p>
-<div class="akeida"><p>אֲשֶׁר לְהַשְׁלִים עִנְיָנָהּ נִתְגַּלְגְּלוּ הַדְּבָרִים, וְיָרְדוּ לְהִשְׁתַּעְבֵּד בַּעֲבוֹדַת עֲבוֹדָה וַעֲבוֹדַת מַשָּׂא מִצְרַיִם, הַגּוֹי הַמַּר וְהַנִּמְהָר</p></div>
-<p class="short">כְּדֵי לְהַשְׁלִים אֶת עִנְיָנָהּ – עִנְיָן שֶׁל מָה? עִנְיַן הַבְּחִירָה – נִתְגַּלְגְּלוּ הַדְּבָרִים, וְיָרְדוּ לְהִשְׁתַּעְבֵּד.</p>
+<section class="sec" id="s9"><svg class="orn" viewBox="0 0 220 16" aria-hidden="true"><line x1="4" y1="8" x2="92" y2="8"/><line x1="128" y1="8" x2="216" y2="8"/><path d="M110 1 L117 8 L110 15 L103 8 Z" class="fill"/><circle cx="97" cy="8" r="1.6" class="fill"/><circle cx="123" cy="8" r="1.6" class="fill"/></svg>
+<div class="hg"><h2><span class="h2-in">שִׁעְבּוּד מִצְרַיִם – הַכְשָׁרָה לַבְּחִירָה</span></h2><div class="sec-body sb-first"><p class="first short"><span class="lead">כֵּיצַד</span> לוֹמֵד בַּעַל הָעֲקֵדָה אֶת הַחֻמָּשׁ? הוּא מַסְבִּיר כָּךְ: אַחֲרֵי שֶׁיִּצְחָק וְיַעֲקֹב הִמְשִׁיכוּ אֶת דַּרְכָּם בַּבְּחִירָה הַזֹּאת שֶׁחִדֵּשׁ אַבְרָהָם – מַה קָּרָה אַחַר כָּךְ? יָרְדוּ לְמִצְרַיִם. מַה הַקֶּשֶׁר? כָּךְ אָנוּ קוֹרְאִים אֶת הַחֻמָּשׁ: הָיוּ סְדוֹם וַעֲמֹרָה; אַבְרָהָם, יִצְחָק וְיַעֲקֹב; הָיָה סִפּוּר יוֹסֵף וְאֶחָיו – וּמַה קָּרָה? יָרְדוּ לְמִצְרַיִם. מָה הוּא עוֹשֶׂה? הוּא אוֹמֵר:</p><div class="akeida"><p>אֲשֶׁר לְהַשְׁלִים עִנְיָנָהּ נִתְגַּלְגְּלוּ הַדְּבָרִים, וְיָרְדוּ לְהִשְׁתַּעְבֵּד בַּעֲבוֹדַת עֲבוֹדָה וַעֲבוֹדַת מַשָּׂא מִצְרַיִם, הַגּוֹי הַמַּר וְהַנִּמְהָר</p></div><p class="short">כְּדֵי לְהַשְׁלִים אֶת עִנְיָנָהּ – עִנְיָן שֶׁל מָה? עִנְיַן הַבְּחִירָה – נִתְגַּלְגְּלוּ הַדְּבָרִים, וְיָרְדוּ לְהִשְׁתַּעְבֵּד.</p></div></div>
+<div class="sec-body">
 <div class="akeida"><p>אֲשֶׁר בְּקַבָּלָתָם הַשִּׁעְבּוּד, וִהְיוֹתָם אַחֲרֵי כֵן נִגְאָלִים עַל יְדֵי הַהַשְׁגָּחָה וְהַיְכֹלֶת הָאֱלֹקִי</p></div>
 <p>זֹאת אוֹמֶרֶת: גִּלְגּוּל הַשִּׁעְבּוּד כֻּלּוֹ הָיָה לְשֵׁם מַטָּרָה אַחַת. מַה הַמַּטָּרָה? הֵם קִבְּלוּ – הֵם הִתְחִילוּ לִשְׁמֹעַ מִיַּעֲקֹב אָבִינוּ, הִתְחִילוּ לְהִתְנַהֵג עַל פִּי הַבְּחִירָה שֶׁחִדֵּשׁ אַבְרָהָם אָבִינוּ. אֲבָל כְּשֶׁבָּאִים וּמַנְחִיתִים עַל אָדָם – עַל אִישׁ סְדוֹם, לְמָשָׁל – אִם תַּנְחִית עָלָיו בְּחִירָה, הוּא כְּלָל אֵינוֹ מֵבִין עַל מָה אַתָּה מְדַבֵּר. מַה פֵּרוּשׁ? לָכֵן הוּא אוֹמֵר שֶׁיִּשְׁתַּעְבְּדוּ: הֵם עָבְדוּ אַרְבַּע מֵאוֹת שָׁנָה מֵרֹאשׁ, כְּדֵי לְהַכְשִׁיר אוֹתָם – לַהֲפֹךְ מֵאוֹתוֹ גֹּלֶם שֶׁהָיוּ אַנְשֵׁי סְדוֹם וַעֲמֹרָה, וְלִהְיוֹת הָאָדָם שֶׁל הַבְּחִירָה. אֲבָל מַה זֶּה בְּדִיּוּק "בְּחִירָה"? הוּא אוֹמֵר: צָרִיךְ אַרְבַּע מֵאוֹת שָׁנָה שֶׁל עֲבוֹדָה. הִגִּיעוּ לִכְלַל זֶה – וְאַחַר כָּךְ יָצְאוּ מִמִּצְרַיִם.</p>
 </div></section>
-<section class="sec" id="s10"><svg class="orn" viewBox="0 0 220 16" aria-hidden="true"><line x1="4" y1="8" x2="92" y2="8"/><line x1="128" y1="8" x2="216" y2="8"/><path d="M110 1 L117 8 L110 15 L103 8 Z" class="fill"/><circle cx="97" cy="8" r="1.6" class="fill"/><circle cx="123" cy="8" r="1.6" class="fill"/></svg><h2><span class="h2-in">"בְּחֹזֶק יָד": חָכְמַת הַמַּכּוֹת</span></h2><div class="sec-body">
-<p class="first"><span class="lead">עַתָּה</span> – יְצִיאַת מִצְרַיִם. דָּבָר נִפְלָא מְאֹד: בְּכָל פַּעַם שֶׁה׳ מְדַבֵּר עַל יְצִיאַת מִצְרַיִם, נֶאֱמַר <span class="q">"כִּי בְּחֹזֶק יָד הוֹצִיאָנוּ ה׳ מִמִּצְרָיִם"</span> <span class="ref">(שמות יג, טז)</span>. מַה זֶּה "בְּחֹזֶק יָד" הַזֶּה? מֶה הָיָה "חֹזֶק יָד" אֵצֶל הַקָּדוֹשׁ בָּרוּךְ הוּא?</p>
+<section class="sec" id="s10"><svg class="orn" viewBox="0 0 220 16" aria-hidden="true"><line x1="4" y1="8" x2="92" y2="8"/><line x1="128" y1="8" x2="216" y2="8"/><path d="M110 1 L117 8 L110 15 L103 8 Z" class="fill"/><circle cx="97" cy="8" r="1.6" class="fill"/><circle cx="123" cy="8" r="1.6" class="fill"/></svg>
+<div class="hg"><h2><span class="h2-in">"בְּחֹזֶק יָד": חָכְמַת הַמַּכּוֹת</span></h2><div class="sec-body sb-first"><p class="first short"><span class="lead">עַתָּה</span> – יְצִיאַת מִצְרַיִם. דָּבָר נִפְלָא מְאֹד: בְּכָל פַּעַם שֶׁה׳ מְדַבֵּר עַל יְצִיאַת מִצְרַיִם, נֶאֱמַר <span class="q">"כִּי בְּחֹזֶק יָד הוֹצִיאָנוּ ה׳ מִמִּצְרָיִם"</span> <span class="ref">(שמות יג, טז)</span>. מַה זֶּה "בְּחֹזֶק יָד" הַזֶּה? מֶה הָיָה "חֹזֶק יָד" אֵצֶל הַקָּדוֹשׁ בָּרוּךְ הוּא?</p></div></div>
+<div class="sec-body">
 <p>הוּא אוֹמֵר שֶׁהַפְּשָׁט שֶׁל "חֹזֶק יָד" הוּא: כַּאֲשֶׁר הֵבִיא ה׳ יִתְבָּרַךְ אֶת עֶשֶׂר הַמַּכּוֹת עַל פַּרְעֹה, הוּא לֹא הֵבִיא אוֹתָן כְּמַכּוֹת שֶׁל עֹנֶשׁ – לְהַעֲנִישׁ אֶת פַּרְעֹה וְכוּ׳. לֹא! כְּשֶׁמִּתְבּוֹנְנִים, כְּשֶׁלּוֹמְדִים בַּסְּפָרִים הַקְּדוֹשִׁים וּבַמִּדְרָשִׁים, וְרוֹאִים כָּל מַכָּה וּמַכָּה – אֵיךְ הָיְתָה פּוֹעֶלֶת – שָׂמִים לֵב לְדָבָר נִפְלָא מְאֹד, וְהוּא: אֵיךְ הָיְתָה הַמַּכָּה, אֵיךְ פָּעֲלָה הַמַּכָּה.</p>
 <p>בָּטוּחַ אֲנִי שֶׁכְּשֶׁיָּשְׁבוּ רַבִּי אֱלִיעֶזֶר וְרַבִּי עֲקִיבָא בִּבְנֵי בְרַק וְסִפְּרוּ בִּיצִיאַת מִצְרַיִם, הֵם לֹא אָמְרוּ כְּמוֹ שֶׁאָנוּ אוֹמְרִים – אָנוּ אֵינֶנּוּ יוֹדְעִים; אֶצְלֵנוּ אֵלּוּ כְּמוֹ חִידוֹת – אֶלָּא הֵם יָשְׁבוּ וְחָקְרוּ כָּל מַכָּה וּמַכָּה: אֵיךְ הִיא פָּעֲלָה. וּמִתּוֹךְ הַחֲקִירָה הַזֹּאת הֵבִינוּ אֵיךְ הִפְעִיל הַקָּדוֹשׁ בָּרוּךְ הוּא אֶת הַמַּכּוֹת הָהֵן. זֶהוּ "בְּחֹזֶק יָד": לֹא סְתָם עָשָׂה דָּם בַּמַּיִם וְכוּ׳, אֶלָּא – אֵיךְ עָשָׂה אֶת הַדָּם, אֵיךְ פָּעַל הַדָּם, אֵיזֶה דָּם, אֵיזֶה צֶבַע, וְכוּ׳ וְכוּ׳. הֵם יָדְעוּ לַחְקֹר – זֶהוּ "בְּחֹזֶק יָד".</p>
 <p>כְּשֶׁבָּאִים וּמְבִיאִים צְפַרְדֵּעַ – בְּסֵדֶר, צְפַרְדֵּעַ. הַאִם פַּרְעֹה הֵבִין צְפַרְדֵּעַ? הוּא בִּקֵּשׁ: "הוֹרֵד מִמֶּנִּי אֶת הַצְּפַרְדֵּעַ". אֲבָל עַם יִשְׂרָאֵל, שֶׁיָּשְׁבוּ שָׁם וְהִשְׁתַּעְבְּדוּ וְסָבְלוּ – הֵם רָאוּ בַּצְּפַרְדֵּעַ אֶת הָאֹפֶן. <span class="q">"וְשַׂמְתִּי פְדֻת"</span> <span class="ref">(שמות ח, יט)</span> – הַתּוֹרָה אוֹמֶרֶת זֹאת רַק בְּמִלָּה אוֹ שְׁתַּיִם: "וְשַׂמְתִּי פְדֻת", הֶבְדֵּל. אֲבָל כְּשֶׁאָדָם מִתְבּוֹנֵן בְּכָל מַכָּה וּמַכָּה, הוּא רוֹאֶה שֶׁכָּאן הָיְתָה חָכְמָה גְּדוֹלָה וְאַדִּירָה.</p>
-<p>וּמָה עָשְׂתָה הַחָכְמָה הַזֹּאת? הִיא הִתְחִילָה לַחְדֹּר בָּהֶם, לְחַלְחֵל בָּהֶם, וְלַעֲשׂוֹת מֵהֶם – מָה? לַעֲשׂוֹת מֵהֶם אֲנָשִׁים; לְחַזֵּק אֶת הַבְּחִירָה הַזֹּאת. כִּי אִם הַקָּדוֹשׁ בָּרוּךְ הוּא הֵבִיא אֶת מַכַּת הַצְּפַרְדֵּעַ, הַדָּם וְהֶעָרֹב וְכוּ׳ – זֹאת אוֹמֶרֶת שֶׁיֵּשׁ מִישֶׁהוּ לְמַעְלָה שֶׁיּוֹדֵעַ בְּדִיּוּק מַה שֶּׁקּוֹרֶה לְמַטָּה, וְשֶׁהוּא בַּעַל הָרָצוֹן הַמֻּחְלָט, שֶׁעוֹשֶׂה אֶת הַכֹּל בְּהַשְׁגָּחָה פְּרָטִית, וְשֶׁהוּא הַשַּׁלִּיט בָּעוֹלָם. כָּל זֶה – מֶה עָשָׂה אֶצְלָם? אוֹ, בִּלְשׁוֹנוֹ:</p>
-<div class="akeida"><p>עַל יְדֵי הַהַשְׁגָּחָה וְהַיְכֹלֶת הָאֱלֹקִי הִגִּיעוּ לִכְלַל זֶה הַדַּעַת לְגַמְרֵי, לְהַזְמִין רְצוֹנָם לַעֲבוֹדָתוֹ</p></div>
-<p class="short">כְּלוֹמַר: לְהַכְשִׁיר אוֹתָם לַעֲבוֹדָתוֹ. אֵלּוּ הֵם הַשְּׁלַבִּים: הַשָּׁלָב הַזֶּה הִכְשִׁיר אֶת עַם יִשְׂרָאֵל לְהַסְכִּים, לְהַתְחִיל לַעֲבֹד אֶת ה׳.</p>
+<div class="keep"><p>וּמָה עָשְׂתָה הַחָכְמָה הַזֹּאת? הִיא הִתְחִילָה לַחְדֹּר בָּהֶם, לְחַלְחֵל בָּהֶם, וְלַעֲשׂוֹת מֵהֶם – מָה? לַעֲשׂוֹת מֵהֶם אֲנָשִׁים; לְחַזֵּק אֶת הַבְּחִירָה הַזֹּאת. כִּי אִם הַקָּדוֹשׁ בָּרוּךְ הוּא הֵבִיא אֶת מַכַּת הַצְּפַרְדֵּעַ, הַדָּם וְהֶעָרֹב וְכוּ׳ – זֹאת אוֹמֶרֶת שֶׁיֵּשׁ מִישֶׁהוּ לְמַעְלָה שֶׁיּוֹדֵעַ בְּדִיּוּק מַה שֶּׁקּוֹרֶה לְמַטָּה, וְשֶׁהוּא בַּעַל הָרָצוֹן הַמֻּחְלָט, שֶׁעוֹשֶׂה אֶת הַכֹּל בְּהַשְׁגָּחָה פְּרָטִית, וְשֶׁהוּא הַשַּׁלִּיט בָּעוֹלָם. כָּל זֶה – מֶה עָשָׂה אֶצְלָם? אוֹ, בִּלְשׁוֹנוֹ:</p><div class="akeida"><p>עַל יְדֵי הַהַשְׁגָּחָה וְהַיְכֹלֶת הָאֱלֹקִי הִגִּיעוּ לִכְלַל זֶה הַדַּעַת לְגַמְרֵי, לְהַזְמִין רְצוֹנָם לַעֲבוֹדָתוֹ</p></div><p class="short">כְּלוֹמַר: לְהַכְשִׁיר אוֹתָם לַעֲבוֹדָתוֹ. אֵלּוּ הֵם הַשְּׁלַבִּים: הַשָּׁלָב הַזֶּה הִכְשִׁיר אֶת עַם יִשְׂרָאֵל לְהַסְכִּים, לְהַתְחִיל לַעֲבֹד אֶת ה׳.</p></div>
 <p>מַה הַפֵּרוּשׁ? "בְּסֵדֶר, ה׳ מַנְהִיג אֶת הָעוֹלָם; טוֹב, הוּא מַנְהִיג אֶת הָעוֹלָם – וּמָה אֲנִי קָשׁוּר לְכָךְ שֶׁהוּא מַנְהִיג אֶת הָעוֹלָם? בְּסֵדֶר, שֶׁיִּהְיֶה בָּרִיא...". כַּמָּה פְּעָמִים, בַּעֲוֹנוֹתֵינוּ הָרַבִּים, אָנוּ מַזְכִּירִים: "ה׳ סוֹמֵךְ נוֹפְלִים וְרוֹפֵא חוֹלִים וּמַתִּיר אֲסוּרִים". בִּמְחִילָה: לְאָדָם יֵשׁ חוֹלֶה בְּבֵית הַחוֹלִים, וְהוּא קוֹרֵא בִּשְׁמוֹנֶה עֶשְׂרֵה שֶׁה׳ "רוֹפֵא חוֹלִים", וְאוֹמֵר: "טוֹב, הוּא רוֹפֵא חוֹלִים – אֲבָל מַה עִם הַחוֹלֶה שֶׁלִּי?". הוּא מְרַפֵּא אֶת הַחוֹלִים – מַה הַפֵּרוּשׁ? ה׳ גָּדוֹל, ה׳ "סוֹמֵךְ נוֹפְלִים", "מַתִּיר אֲסוּרִים", הוּא <span class="q">"מוֹרִישׁ וּמַעֲשִׁיר"</span> <span class="ref">(שמואל א ב, ז)</span> – אֲבָל, נֹאמַר, שֶׁיִּהְיֶה בָּרִיא: מָה הוּא נוֹתֵן לִי?</p>
 </div></section>
-<section class="sec" id="s11"><svg class="orn" viewBox="0 0 220 16" aria-hidden="true"><line x1="4" y1="8" x2="92" y2="8"/><line x1="128" y1="8" x2="216" y2="8"/><path d="M110 1 L117 8 L110 15 L103 8 Z" class="fill"/><circle cx="97" cy="8" r="1.6" class="fill"/><circle cx="123" cy="8" r="1.6" class="fill"/></svg><h2><span class="h2-in">"לְשֵׁם שָׁמַיִם": פְּנִנָּה וְחַנָּה</span></h2><div class="sec-body">
-<p class="first"><span class="lead">כְּשֶׁבֶּן</span> אָדָם רוֹאֶה אֶת תְּפִלָּתָהּ שֶׁל חַנָּה הַקְּדוֹשָׁה – אֵיךְ אִשָּׁה מְדַבֶּרֶת, אֵיךְ הִיא מְתָאֶרֶת – תֵּאוּרָהּ אֵינוֹ סְתָם שֶׁל אִשָּׁה שֶׁהִתְפַּלְּלָה וְכוּ׳.</p>
+<section class="sec" id="s11"><svg class="orn" viewBox="0 0 220 16" aria-hidden="true"><line x1="4" y1="8" x2="92" y2="8"/><line x1="128" y1="8" x2="216" y2="8"/><path d="M110 1 L117 8 L110 15 L103 8 Z" class="fill"/><circle cx="97" cy="8" r="1.6" class="fill"/><circle cx="123" cy="8" r="1.6" class="fill"/></svg>
+<div class="hg"><h2><span class="h2-in">"לְשֵׁם שָׁמַיִם": פְּנִנָּה וְחַנָּה</span></h2><div class="sec-body sb-first"><p class="first short"><span class="lead">כְּשֶׁבֶּן</span> אָדָם רוֹאֶה אֶת תְּפִלָּתָהּ שֶׁל חַנָּה הַקְּדוֹשָׁה – אֵיךְ אִשָּׁה מְדַבֶּרֶת, אֵיךְ הִיא מְתָאֶרֶת – תֵּאוּרָהּ אֵינוֹ סְתָם שֶׁל אִשָּׁה שֶׁהִתְפַּלְּלָה וְכוּ׳.</p></div></div>
+<div class="sec-body">
 <p>רָאִיתִי פַּעַם מַאֲמָר שֶׁל הָרַב שָׁלוֹם שְׁבַדְרוֹן עָלָיו הַשָּׁלוֹם, שֶׁהָיָה דַּרְשָׁן גָּדוֹל בְּחֶסֶד, שֶׁהוּא אוֹמֵר שֶׁפְּנִנָּה הָיְתָה מְצִיקָה. אִם תַּעֲבֹר עַל כָּל חֻמַּשׁ בְּרֵאשִׁית – עֶרְכָּהּ שֶׁל הָאִשָּׁה הָיָה: הַאִם הִיא מְבִיאָה בָּנִים אוֹ אֵינָהּ מְבִיאָה בָּנִים. הַיְנוּ, אֵצֶל הָאִמָּהוֹת הַקְּדוֹשׁוֹת: שָׂרָה אִמֵּנוּ, שָׂרָה הַגְּדוֹלָה – שָׂרָה הִיא שֶׁהֵבִיאָה יוֹם אֶחָד אֶת הָגָר, שֶׁהֵבִיאָה לוֹ אֶת כָּל הַצָּרוֹת הָעֲצוּמוֹת, וְנָתְנָה אוֹתָהּ לְאַבְרָהָם. וְאָנוּ רוֹאִים שֶׁאַבְרָהָם אָבִינוּ הַגָּדוֹל הָיָה כָּפוּף לְשָׂרָה, עַד שֶׁה׳ אָמַר לוֹ: <span class="q">"כֹּל אֲשֶׁר תֹּאמַר אֵלֶיךָ שָׂרָה שְׁמַע בְּקֹלָהּ"</span> <span class="ref">(בראשית כא, יב)</span>. אֲבָל מִשּׁוּם שֶׁלֹּא הָיוּ לָהּ בָּנִים – <span class="q">"וַתִּקַּח שָׂרַי אֵשֶׁת אַבְרָם אֶת הָגָר הַמִּצְרִית שִׁפְחָתָהּ... וַתִּתֵּן אֹתָהּ לְאַבְרָם אִישָׁהּ לוֹ לְאִשָּׁה"</span> <span class="ref">(בראשית טז, ג)</span>. לָמָּה? כִּי בְּלִי בָּנִים. רָחֵל אִמֵּנוּ – <span class="q">"וַתֹּאמֶר אֶל יַעֲקֹב הָבָה לִּי בָנִים וְאִם אַיִן מֵתָה אָנֹכִי"</span> <span class="ref">(בראשית ל, א)</span>. אֵיךְ? זֹאת אוֹמֶרֶת: אִשָּׁה שֶׁאֵינָהּ מְבִיאָה בָּנִים – מַה תּוֹעַלְתָּהּ? בַּדּוֹרוֹת שֶׁלָּנוּ זֶה לֹא הוֹלֵךְ בְּדִיּוּק כָּךְ, אֲבָל נֶאֱמָנִים עָלֵינוּ דִּבְרֵי הַתּוֹרָה הַקְּדוֹשָׁה עַל כָּל פָּנִים.</p>
 <p>נַחֲזֹר לָעִנְיָן שֶׁלָּנוּ. רָאִיתִי אֶת הַמַּאֲמָר הַזֶּה שֶׁל הָרַב שְׁבַדְרוֹן עָלָיו הַשָּׁלוֹם: פְּנִנָּה הָיְתָה מְצִיקָה לְחַנָּה – לָמָּה? "בְּלִי בָּנִים אַתְּ לֹא שָׁוָה כְּלוּם". הָיְתָה מְקַנְטֶרֶת אוֹתָהּ, מַשְׁפִּילָה אוֹתָהּ וּמְצַעֶרֶת אוֹתָהּ: "אַתְּ לֹא שָׁוָה כְּלוּם, וַאֲנִי הֵבֵאתִי שִׁבְעָה בָּנִים". פְּנִנָּה הָיְתָה הָאִשָּׁה הַשְּׁנִיָּה שֶׁל אֶלְקָנָה וְכוּ׳. וְהוּא שָׁאַל: אֵיךְ יָכוֹל לִהְיוֹת אַכְזָרִיּוּת כָּזוֹ שֶׁל אִשָּׁה לַחֲבֶרְתָּהּ?</p>
 <p>בְּסֵדֶר – אֵצֶל הָגָר כָּתוּב "וַתֵּרֶא כִּי הָרָתָה"; וְכָךְ שָׂרָה מִתְלוֹנֶנֶת לִפְנֵי אַבְרָהָם אָבִינוּ: <span class="q">"יִשְׁפֹּט ה׳ בֵּינִי וּבֵינֶיךָ"</span> <span class="ref">(בראשית טז, ה)</span>, מִשּׁוּם שֶׁ<span class="q">"וַתֵּרֶא כִּי הָרָתָה וַתֵּקַל גְּבִרְתָּהּ בְּעֵינֶיהָ"</span> <span class="ref">(שם, ד)</span>. הָגָר הַמִּצְרִית – הַשִּׁפְחָה הַזֹּאת הִתְחִילָה לְזַלְזֵל בְּשָׂרָה, לֹא פָּחוֹת! – וְאָז יָצְאָה שָׂרָה מִגִּדְרָהּ וְאָמְרָה לְאַבְרָהָם כָּךְ וְכָךְ. אֲבָל פְּנִנָּה הָיְתָה מְצִיקָה בְּאַכְזָרִיּוּת כָּזוֹ שֶׁאֵין לְתָאֵר! בְּסֵדֶר – אַתְּ רַבַּת בָּנִים, וְהִיא אֵינָהּ מְבִיאָה בָּנִים; אֲבָל לֹא דַּי בְּצָרָתָהּ, שֶׁאֵינָהּ מְבִיאָה בָּנִים וְאֵינָהּ נֶחְשֶׁבֶת לְאִשָּׁה, כְּפִי שֶׁדִּבַּרְנוּ? לָמָּה אַתְּ מְצִיקָה לָהּ? שִׂמְחִי בְּחֶלְקֵךְ!</p>
@@ -473,15 +446,17 @@ blockquote.pasuk cite {
 <p class="short">וְכָךְ אָמַר הוּא עַצְמוֹ פַּעַם, וְהָיָה מְתָאֵר זֹאת יָפֶה: לִפְעָמִים הַיְּהוּדִי הַחֲרֵדִי נִמְצָא בָּאוּלָם, וְהַמֶּלְצַר מְחַלֵּק לְכֻלָּם – וְשָׁכַח מַשֶּׁהוּ, שָׁכַח אֵיזוֹ תּוֹסֶפֶת. אוֹמֵר הוּא, שֶׁהַיְּהוּדִי הַזֶּה רוֹדֵף אַחֲרָיו עַד הַמִּטְבָּח. "מַה זֶּה?!" – "נוּ, מָה אַתָּה אוֹמֵר? זוֹ סְעוּדַת מִצְוָה!". אוֹמֵר הָרַב שָׁלוֹם: רַק אִם זֶה "לְשֵׁם שָׁמַיִם" – רַק אָז אֶפְשָׁר לִהְיוֹת כָּךְ.</p>
 <p>כִּי חֲזַ״ל אָמְרוּ: פְּנִנָּה לְשֵׁם שָׁמַיִם נִתְכַּוְּנָה <span class="ref">(בבא בתרא טז ע״א)</span>. וְהוּא שָׁאַל: אֵיךְ פְּנִנָּה הָיְתָה רְשָׁעָה כָּזוֹ? אוֹמֵר: לֹא – פְּנִנָּה נִתְכַּוְּנָה לְשֵׁם שָׁמַיִם, וּבֶטַח נִתְכַּוְּנָה לְהָצִיק לָהּ. הַשְּׁאֵלָה הָיְתָה כָּזוֹ: הִיא נִתְכַּוְּנָה לְהָצִיק לָהּ כְּדֵי שֶׁתִּתְפַּלֵּל יוֹתֵר חָזָק. אֲבָל עַל זֶה הוּא שָׁאַל: בְּכָל זֹאת – טוֹב, בְּסֵדֶר, "תַּצְלִיחִי" – אֲבָל אַכְזָרִיּוּת כָּזוֹ?! לֹא יָכוֹל לִהְיוֹת; זֶה לֹא טִבְעוֹ שֶׁל בֶּן אָדָם. וְאָמַר: זֶה "לְשֵׁם שָׁמַיִם"; כְּשֶׁזֶּה "לְשֵׁם שָׁמַיִם" – מֻתָּר הַכֹּל.</p>
 </div></section>
-<section class="sec" id="s12"><svg class="orn" viewBox="0 0 220 16" aria-hidden="true"><line x1="4" y1="8" x2="92" y2="8"/><line x1="128" y1="8" x2="216" y2="8"/><path d="M110 1 L117 8 L110 15 L103 8 Z" class="fill"/><circle cx="97" cy="8" r="1.6" class="fill"/><circle cx="123" cy="8" r="1.6" class="fill"/></svg><h2><span class="h2-in">"פָּסְקָה זֻהֲמָתָן"</span></h2><div class="sec-body">
+<section class="sec" id="s12"><svg class="orn" viewBox="0 0 220 16" aria-hidden="true"><line x1="4" y1="8" x2="92" y2="8"/><line x1="128" y1="8" x2="216" y2="8"/><path d="M110 1 L117 8 L110 15 L103 8 Z" class="fill"/><circle cx="97" cy="8" r="1.6" class="fill"/><circle cx="123" cy="8" r="1.6" class="fill"/></svg>
+<div class="hg"><h2><span class="h2-in">"פָּסְקָה זֻהֲמָתָן"</span></h2><div class="sec-body sb-first"></div></div>
+<div class="sec-body">
 <p class="first"><span class="lead">זוֹ</span> הַנְּקֻדָּה: כְּשֶׁאֲבוֹתֵינוּ בְּמִצְרַיִם רָאוּ אֶת מַכַּת הַצְּפַרְדֵּעַ, שָׂמוּ לֵב שֶׁכָּאן יֵשׁ הַשְׁגָּחָה פְּרָטִית – בַּצְּפַרְדֵּעַ. וְאָז קִשְּׁרוּ: אִם יֵשׁ הַשְׁגָּחָה פְּרָטִית, זֹאת אוֹמֶרֶת שֶׁהַקָּדוֹשׁ בָּרוּךְ הוּא פּוֹעֵל מִתּוֹךְ רְצוֹנוֹ, וְלֹא שֶׁהָיָה מְחֻיָּב לִבְרֹא עוֹלָם. מִי שֶׁמְּחֻיָּב לִבְרֹא עוֹלָם – אֵינוֹ בּוֹרֵא אוֹתוֹ לְפִי רְצוֹנוֹ; הוּא מְחֻיָּב, וּמַה שֶּׁבָּרָא – בָּרָא. אֲבָל הַנְּקֻדָּה הַזֹּאת שֶׁל הַבְּחִירָה הִתְחַדְּשָׁה לָהֶם כַּאֲשֶׁר רָאוּ אֶת הַמַּכּוֹת, וְכַאֲשֶׁר יָצְאוּ מִמִּצְרַיִם.</p>
 <p>וְאָז, אוֹמֵר הוּא, אָנוּ מְבִינִים מַה זֶּה "פָּסְקָה" – זוֹ הַמַּטָּרָה. הֲרֵי כָּתוּב בְּדִבְרֵי רַבּוֹתֵינוּ: "פָּסְקָה זֻהֲמָתָן" <span class="ref">(שבת קמו ע״א)</span>. מַה זּוֹ הַזֻּהֲמָא הַזֹּאת? עַל מָה מְדֻבָּר? מַה זֶּה "זֻהֲמָתָן"? הוּא מַסְבִּיר יָפֶה מְאֹד: הֲרֵי כְּשֶׁהַנָּחָשׁ הָיָה עִם חַוָּה, הוּא הִטִּיל בָּהּ זֻהֲמָא, וּבְעִקְבוֹת הַזֻּהֲמָא הַזֹּאת אִבֵּד הָאָדָם אֶת בְּחִירָתוֹ. כְּשֶׁהָיְתָה יְצִיאַת מִצְרַיִם וְהַשְׁגָּחָה פְּרָטִית – הֵם הִגִּיעוּ לַבְּחִירָה: שֶׁה׳ בָּרָא אֶת הָעוֹלָם מֵרְצוֹנוֹ הַטּוֹב וְכוּ׳.</p>
-<p>הִגִּיעוּ לַנְּקֻדָּה שֶׁל הַבְּחִירָה, שֶׁהִתְחַדְּשָׁה אַחֲרֵי הַזֻּהֲמָא בְּאוֹתָהּ שָׁעָה שֶׁיָּצְאוּ מִמִּצְרַיִם, וְהֵבִינוּ שֶׁהָאָדָם הוּא בַּעַל בְּחִירָה. וְהַבְּחִירָה הִגִּיעָה לְדַרְגָּה מְסֻיֶּמֶת – עֲדַיִן לֹא נִגְמְרָה הַבְּחִירָה – אֲבָל הִגִּיעוּ לַדַּרְגָּה הַזֹּאת: שֶׁה׳ עוֹשֶׂה הַכֹּל בְּחֶפְצוֹ. הִגִּיעוּ לְדַרְגָּה מְסֻיֶּמֶת בַּבְּחִירָה הַזֹּאת. לָמָּה? מַה פִּתְאֹם? ה׳ רָאָה אֶת עָנְיֵנוּ, אֶת עֳנִי אֲבוֹתֵינוּ בְּמִצְרַיִם, וְאֶת זַעֲקָתָם שָׁמַע וְכוּ׳. הֵם הֵבִינוּ שֶׁבּוֹרֵא עוֹלָם, שֶׁבָּרָא אֶת הָעוֹלָם הַזֶּה וְרָאָה אֶת הָרַע וְאֶת הַטּוֹב – הוּא הִצִּיל אוֹתָם. הֵם הֵבִינוּ שֶׁיֵּשׁ כָּאן הַנְהָגָה אֱלֹקִית שְׁמֵימִית, הַפּוֹעֶלֶת לְפִי הָרָצוֹן וּלְפִי מַצָּבוֹ שֶׁל הָאָדָם:</p>
-<blockquote class="pasuk"><p>וַתֵּרֶא אֶת עֳנִי אֲבֹתֵינוּ בְּמִצְרָיִם וְאֶת זַעֲקָתָם שָׁמַעְתָּ עַל יַם סוּף.</p><cite>(נחמיה ט, ט)</cite></blockquote>
+<div class="keep"><p>הִגִּיעוּ לַנְּקֻדָּה שֶׁל הַבְּחִירָה, שֶׁהִתְחַדְּשָׁה אַחֲרֵי הַזֻּהֲמָא בְּאוֹתָהּ שָׁעָה שֶׁיָּצְאוּ מִמִּצְרַיִם, וְהֵבִינוּ שֶׁהָאָדָם הוּא בַּעַל בְּחִירָה. וְהַבְּחִירָה הִגִּיעָה לְדַרְגָּה מְסֻיֶּמֶת – עֲדַיִן לֹא נִגְמְרָה הַבְּחִירָה – אֲבָל הִגִּיעוּ לַדַּרְגָּה הַזֹּאת: שֶׁה׳ עוֹשֶׂה הַכֹּל בְּחֶפְצוֹ. הִגִּיעוּ לְדַרְגָּה מְסֻיֶּמֶת בַּבְּחִירָה הַזֹּאת. לָמָּה? מַה פִּתְאֹם? ה׳ רָאָה אֶת עָנְיֵנוּ, אֶת עֳנִי אֲבוֹתֵינוּ בְּמִצְרַיִם, וְאֶת זַעֲקָתָם שָׁמַע וְכוּ׳. הֵם הֵבִינוּ שֶׁבּוֹרֵא עוֹלָם, שֶׁבָּרָא אֶת הָעוֹלָם הַזֶּה וְרָאָה אֶת הָרַע וְאֶת הַטּוֹב – הוּא הִצִּיל אוֹתָם. הֵם הֵבִינוּ שֶׁיֵּשׁ כָּאן הַנְהָגָה אֱלֹקִית שְׁמֵימִית, הַפּוֹעֶלֶת לְפִי הָרָצוֹן וּלְפִי מַצָּבוֹ שֶׁל הָאָדָם:</p><blockquote class="pasuk"><p>וַתֵּרֶא אֶת עֳנִי אֲבֹתֵינוּ בְּמִצְרָיִם וְאֶת זַעֲקָתָם שָׁמַעְתָּ עַל יַם סוּף.</p><cite>(נחמיה ט, ט)</cite></blockquote></div>
 <p class="short">שֶׁהוּא מַשְׁגִּיחַ וְכוּ׳ – הִנֵּה לְךָ בְּחִירָה! וּכְשֶׁהִגִּיעוּ לַדַּרְגָּה הַמְסֻיֶּמֶת הַזֹּאת בַּבְּחִירָה – "פָּסְקָה זֻהֲמָתָן": אוֹתָהּ זֻהֲמָא שֶׁלָּקְחָה אֶת הַבְּחִירָה מִן הָאָדָם – פָּסְקָה.</p>
 </div></section>
-<section class="sec" id="s13"><svg class="orn" viewBox="0 0 220 16" aria-hidden="true"><line x1="4" y1="8" x2="92" y2="8"/><line x1="128" y1="8" x2="216" y2="8"/><path d="M110 1 L117 8 L110 15 L103 8 Z" class="fill"/><circle cx="97" cy="8" r="1.6" class="fill"/><circle cx="123" cy="8" r="1.6" class="fill"/></svg><h2><span class="h2-in">חֲתִימָה: לִשְׁמֹר עַל הַבְּחִירָה</span></h2><div class="sec-body">
-<p class="first"><span class="lead">לְעֵת</span> עַתָּה – רַק לָשִׂים לֵב מַהוּ הַמֻּשָּׂג הַזֶּה, "בְּחִירָה". מֶה חָשַׁבְנוּ שֶׁהִיא בְּחִירָה? לֹא חָשַׁבְנוּ כְּלוּם. אֲבָל בְּעֶזְרַת ה׳, בְּהֶמְשֵׁךְ, נִלְמַד אֶת נְקֻדַּת הַשִּׁעוּר הַזֶּה לְפִי מַה שֶּׁבַּעַל הָעֲקֵדָה עָלָיו הַשָּׁלוֹם מְלַמֵּד אוֹתָנוּ, וְאָז נַתְחִיל לְהָבִין מַהִי בְּחִירָה.</p>
+<section class="sec" id="s13"><svg class="orn" viewBox="0 0 220 16" aria-hidden="true"><line x1="4" y1="8" x2="92" y2="8"/><line x1="128" y1="8" x2="216" y2="8"/><path d="M110 1 L117 8 L110 15 L103 8 Z" class="fill"/><circle cx="97" cy="8" r="1.6" class="fill"/><circle cx="123" cy="8" r="1.6" class="fill"/></svg>
+<div class="hg"><h2><span class="h2-in">חֲתִימָה: לִשְׁמֹר עַל הַבְּחִירָה</span></h2><div class="sec-body sb-first"><p class="first short"><span class="lead">לְעֵת</span> עַתָּה – רַק לָשִׂים לֵב מַהוּ הַמֻּשָּׂג הַזֶּה, "בְּחִירָה". מֶה חָשַׁבְנוּ שֶׁהִיא בְּחִירָה? לֹא חָשַׁבְנוּ כְּלוּם. אֲבָל בְּעֶזְרַת ה׳, בְּהֶמְשֵׁךְ, נִלְמַד אֶת נְקֻדַּת הַשִּׁעוּר הַזֶּה לְפִי מַה שֶּׁבַּעַל הָעֲקֵדָה עָלָיו הַשָּׁלוֹם מְלַמֵּד אוֹתָנוּ, וְאָז נַתְחִיל לְהָבִין מַהִי בְּחִירָה.</p></div></div>
+<div class="sec-body">
 <p class="short">דָּבָר אֶחָד בָּרוּר, שֶׁלָּמַדְנוּ הָעֶרֶב: בֶּן אָדָם עָשׂוּי לְאַבֵּד אֶת הַבְּחִירָה. כְּשֶׁנִּכְנָס בְּאָדָם שִׁגָּעוֹן וְעִוָּרוֹן, וְהוּא אֵינוֹ מֵבִין מַה הוּא עוֹשֶׂה, וְעוֹשֶׂה גַּם שְׁטֻיּוֹת – הוּא עָשׂוּי לְאַבֵּד גַּם אֶת בְּחִירָתוֹ. וְאָז מְבִינִים שֶׁהַבְּחִירָה הִיא דָּבָר עָדִין מְאֹד, דָּבָר שֶׁיֵּשׁ לְהַחְזִיק אוֹתוֹ בַּיָּדַיִם.</p>
 <p class="short">וְאָז צָרִיךְ לְהַתְחִיל לַחְשֹׁב: הַאִם יֵשׁ לִי בְּחִירָה, אוֹ אֵין לִי בְּחִירָה? וּמַגִּיעִים גַּם לְמַצָּב שֶׁאוֹמְרִים: מַה מַּבְדִּיל בֵּין אָדָם לְאָדָם? הַמַּבְדִּיל הוּא – הַאִם לָאָדָם הַזֶּה יֵשׁ מֵאָה אָחוּז בְּחִירָה, אוֹ שֶׁהוּא נָתוּן בְּעִוָּרוֹן וּבְשִׁגָּעוֹן, כְּמוֹ שֶׁלָּמַדְנוּ.</p>
 <p>הַקָּדוֹשׁ בָּרוּךְ הוּא יַעֲזֹר, וְנַמְשִׁיךְ. נְסַכֵּם אֶת הַדָּבָר הַזֶּה, וְנַתְחִיל לְהִתְפַּלֵּל עַל דָּבָר אֶחָד: "הַקָּדוֹשׁ בָּרוּךְ הוּא, עֲזֹר לִי שֶׁלֹּא אֲאַבֵּד אֶת בְּחִירָתִי!". כִּי הָאָדָם שֶׁמָּכוּר לִשְׁתִיָּה – אוֹמְרִים: הוּא מָכוּר. מַה זֶּה "מָכוּר"? בְּמִלִּים שֶׁל הַתֵּאוֹרְיָה, שֶׁל הַפִילוֹסוֹפְיָה שֶׁל בַּעַל הָעֲקֵדָה: הוּא פָּשׁוּט אִבֵּד אֶת זְכוּת הַבְּחִירָה עַל הַיַּיִן. הוּא כְּבָר בּוֹחֵר בַּיַּיִן – זוֹ הַבְּחִירָה שֶׁלּוֹ; אֵין לוֹ בְּחִירָה לְגַבֵּי הַיַּיִן.</p>

@@ -123,3 +123,7 @@ blockquote.pasuk cite { display: block; font-style: normal; font-size: 9pt; colo
 
 .end { margin-top: 10mm; text-align: center; break-inside: avoid; }
 .end div { margin-top: 2mm; font-family: "Keter Aram Tsova", serif; font-size: 14pt; color: var(--red); }
+
+/* blocks that must stay on one page: heading + opening, lead-in + quote */
+.hg, .keep { break-inside: avoid; }
+h2 + .sec-body:empty { display: none; }
