@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0F172A">
+<meta name="description" content="מצפן הלב: בחרו מה הלב מרגיש וקבלו את הרגע המדויק בשיעורי רבי חיים דרעי שליט״א שמדבר אליכם.">
+<title>מצפן הלב</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Frank+Ruhl+Libre:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #0B1222;
+    --bg-2: #0F172A;
+    --surface: #131D33;
+    --surface-2: #1A2642;
+    --line: rgba(212, 175, 55, 0.18);
+    --line-strong: rgba(212, 175, 55, 0.45);
+    --gold: #D4AF37;
+    --gold-soft: #E9CF7A;
+    --text: #F1F5F9;
+    --muted: #A3B1C6;
+    --radius: 18px;
+    --serif: "Frank Ruhl Libre", "David", "Times New Roman", serif;
+    --sans: "Assistant", "Rubik", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+      radial-gradient(1200px 600px at 50% -10%, rgba(212, 175, 55, 0.10), transparent 60%),
+      radial-gradient(800px 500px at 100% 100%, rgba(56, 89, 160, 0.18), transparent 60%),
+      var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.6;
+  }
+  a { color: var(--gold-soft); }
+  .wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) 48px max(16px, env(safe-area-inset-left));
+  }
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+  :focus-visible { outline: 2px solid var(--gold-soft); outline-offset: 3px; border-radius: 10px; }
+
+  /* ---------- top bar ---------- */
+  .topbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .back {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--muted); text-decoration: none; font-size: 15px;
+    padding: 8px 12px; border: 1px solid var(--line); border-radius: 999px;
+  }
+  .back:hover { color: var(--text); border-color: var(--line-strong); }
+  .brand-mini { color: var(--muted); font-size: 14px; }
+
+  /* ---------- hero ---------- */
+  header.hero { text-align: center; padding: 20px 0 8px; }
+  .compass { width: 112px; height: 112px; display: block; margin: 8px auto 10px; filter: drop-shadow(0 6px 24px rgba(212, 175, 55, 0.25)); }
+  #needle {
+    transform-box: view-box; transform-origin: 60px 60px;
+    transition: transform 1.3s cubic-bezier(.2, 1.5, .35, 1);
+  }
+  #needle.idle { animation: seek 4.5s ease-in-out infinite; }
+  @keyframes seek {
+    0% { transform: rotate(-18deg); } 35% { transform: rotate(24deg); }
+    60% { transform: rotate(-6deg); } 100% { transform: rotate(-18deg); }
+  }
+  h1 {
+    font-family: var(--serif); font-weight: 900;
+    font-size: clamp(34px, 8vw, 48px); line-height: 1.1;
+    margin: 0; letter-spacing: 0.5px;
+    background: linear-gradient(180deg, #F6E3A1, var(--gold));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .lede { color: var(--muted); margin: 10px auto 0; max-width: 34ch; font-size: 18px; }
+
+  /* ---------- picker ---------- */
+  .picker { margin-top: 26px; }
+  .picker h2 { font-family: var(--serif); font-weight: 700; font-size: 24px; text-align: center; margin: 0 0 14px; }
+  .states {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px;
+  }
+  .state {
+    width: 100%; min-height: 84px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+    padding: 12px 8px;
+    background: linear-gradient(180deg, var(--surface-2), var(--surface));
+    color: var(--text); font: 600 16px/1.25 var(--sans);
+    border: 1px solid var(--line); border-radius: 16px; cursor: pointer;
+    transition: transform .15s ease, border-color .15s ease, background .15s ease;
+  }
+  .state .emo { font-size: 28px; line-height: 1; }
+  .state:hover { border-color: var(--line-strong); transform: translateY(-2px); }
+  .state[aria-pressed="true"] {
+    border-color: var(--gold);
+    background: linear-gradient(180deg, rgba(212, 175, 55, 0.22), rgba(212, 175, 55, 0.08));
+    box-shadow: 0 0 0 1px var(--gold) inset, 0 8px 28px rgba(212, 175, 55, 0.18);
+  }
+
+  form.free { display: flex; gap: 8px; margin-top: 16px; }
+  form.free input {
+    flex: 1; min-width: 0;
+    background: var(--surface); color: var(--text);
+    border: 1px solid var(--line); border-radius: 14px;
+    padding: 12px 14px; font: 400 17px var(--sans);
+  }
+  form.free input::placeholder { color: #7D8BA3; }
+  form.free input:focus { outline: none; border-color: var(--gold); }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    min-height: 46px; padding: 10px 18px;
+    border-radius: 14px; border: 1px solid var(--line-strong);
+    background: transparent; color: var(--text);
+    font: 700 16px var(--sans); text-decoration: none; cursor: pointer;
+    transition: background .15s ease, border-color .15s ease, transform .1s ease;
+  }
+  .btn:hover { border-color: var(--gold); background: rgba(212, 175, 55, 0.08); }
+  .btn:active { transform: scale(.98); }
+  .btn.primary {
+    background: linear-gradient(180deg, #E9CF7A, var(--gold));
+    color: #1B1406; border-color: transparent;
+  }
+  .btn.primary:hover { background: linear-gradient(180deg, #F2DC92, #DDB945); }
+  .btn.wa { border-color: rgba(37, 211, 102, 0.55); }
+  .btn.wa:hover { background: rgba(37, 211, 102, 0.10); border-color: #25D366; }
+
+  /* ---------- result ---------- */
+  #result { margin-top: 28px; scroll-margin-top: 12px; }
+  .card {
+    background: linear-gradient(180deg, var(--surface-2), var(--surface));
+    border: 1px solid var(--line); border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+  }
+  .card.enter { animation: rise .5s ease both; }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  .intro {
+    margin: 0; padding: 14px 18px;
+    font-family: var(--serif); font-size: 19px; color: var(--gold-soft);
+    border-bottom: 1px solid var(--line); text-align: center;
+  }
+  .media { position: relative; aspect-ratio: 16 / 9; background: #000; }
+  .media img, .media iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .media img { object-fit: cover; opacity: .85; }
+  .media .play {
+    position: absolute; inset: 0; display: grid; place-items: center;
+    background: linear-gradient(180deg, transparent 40%, rgba(11, 18, 34, 0.85));
+    border: 0; cursor: pointer; color: #fff;
+  }
+  .media .play .disc {
+    width: 72px; height: 72px; border-radius: 50%;
+    display: grid; place-items: center;
+    background: rgba(212, 175, 55, 0.92); color: #1B1406;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+    transition: transform .15s ease;
+  }
+  .media .play:hover .disc { transform: scale(1.06); }
+  .media .play .at {
+    position: absolute; bottom: 12px; right: 14px;
+    font: 700 15px var(--sans); background: rgba(11, 18, 34, 0.8);
+    padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line-strong);
+  }
+  .body { padding: 18px; }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; color: var(--muted); font-size: 14px; }
+  .pill { border: 1px solid var(--line-strong); color: var(--gold-soft); border-radius: 999px; padding: 2px 10px; }
+  #lessonTitle { font-family: var(--serif); font-weight: 700; font-size: 26px; line-height: 1.3; margin: 10px 0 14px; outline: none; }
+  .moment {
+    border-right: 3px solid var(--gold);
+    background: rgba(212, 175, 55, 0.06);
+    border-radius: 12px 0 0 12px; padding: 12px 14px; margin: 0 0 14px;
+  }
+  .moment .time {
+    display: inline-block; font: 700 14px var(--sans); color: #1B1406;
+    background: var(--gold); border-radius: 8px; padding: 1px 8px; margin-bottom: 6px;
+    direction: ltr;
+  }
+  .moment h3 { margin: 0 0 4px; font-size: 18px; font-weight: 700; }
+  .moment blockquote { margin: 0; font-family: var(--serif); font-size: 21px; line-height: 1.55; }
+  details { color: var(--muted); margin-bottom: 16px; }
+  details summary { cursor: pointer; color: var(--text); font-weight: 600; }
+  details p { margin: 8px 0 0; }
+  .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .actions .wide { grid-column: 1 / -1; }
+  .nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+  .nav .btn { flex: 1 1 auto; }
+  .counter { color: var(--muted); font-weight: 400; font-size: 14px; }
+  .empty { text-align: center; padding: 28px 18px; color: var(--muted); }
+
+  /* ---------- dialog ---------- */
+  dialog {
+    width: min(520px, calc(100vw - 32px)); max-height: calc(100vh - 32px);
+    padding: 16px; border-radius: var(--radius);
+    background: var(--surface); color: var(--text); border: 1px solid var(--line-strong);
+  }
+  dialog::backdrop { background: rgba(5, 9, 18, 0.75); backdrop-filter: blur(3px); }
+  dialog h2 { font-family: var(--serif); margin: 0 0 10px; font-size: 22px; text-align: center; }
+  #cardImg { width: 100%; height: auto; display: block; border-radius: 12px; background: var(--bg-2); aspect-ratio: 1; }
+  .dlg-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .dlg-actions .btn { flex: 1 1 120px; }
+
+  footer.note { margin-top: 36px; text-align: center; color: #7D8BA3; font-size: 14px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="topbar" aria-label="ניווט">
+    <a class="back" href="index.html">→ לאתר השיעורים</a>
+    <span class="brand-mini">שיעורי רבי חיים דרעי שליט״א</span>
+  </nav>
+
+  <header class="hero">
+    <svg class="compass" viewBox="0 0 120 120" aria-hidden="true">
+      <defs>
+        <radialGradient id="face" cx="50%" cy="40%" r="65%">
+          <stop offset="0" stop-color="#22305A"/>
+          <stop offset="1" stop-color="#0E1528"/>
+        </radialGradient>
+      </defs>
+      <circle cx="60" cy="60" r="56" fill="url(#face)" stroke="#D4AF37" stroke-opacity=".7" stroke-width="1.5"/>
+      <circle cx="60" cy="60" r="50" fill="none" stroke="#D4AF37" stroke-opacity=".55" stroke-width="5" stroke-dasharray="1 7.73"/>
+      <circle cx="60" cy="60" r="42" fill="none" stroke="#D4AF37" stroke-opacity=".2"/>
+      <path d="M60 22 L63 57 L60 60 L57 57 Z M98 60 L63 63 L60 60 L63 57 Z M60 98 L57 63 L60 60 L63 63 Z M22 60 L57 57 L60 60 L57 63 Z" fill="#D4AF37" fill-opacity=".18"/>
+      <g id="needle" class="idle">
+        <path d="M60 16 L66.5 60 L53.5 60 Z" fill="#E9CF7A"/>
+        <path d="M60 104 L66.5 60 L53.5 60 Z" fill="#5B6B88"/>
+        <circle cx="60" cy="60" r="5.5" fill="#0F172A" stroke="#E9CF7A" stroke-width="2"/>
+      </g>
+    </svg>
+    <h1>מצפן הלב</h1>
+    <p class="lede">בחרו מה הלב מרגיש עכשיו, ותקבלו את הרגע בשיעור שמדבר בדיוק על זה.</p>
+  </header>
+
+  <section class="picker" aria-labelledby="pickTitle">
+    <h2 id="pickTitle">מה הלב מרגיש עכשיו?</h2>
+    <ul class="states" id="states"></ul>
+    <form class="free" id="freeForm" role="search">
+      <label for="freeText" class="sr-only">תארו במילים שלכם מה אתם מרגישים</label>
+      <input id="freeText" type="search" placeholder="או כתבו במילים שלכם…" autocomplete="off" enterkeyhint="search">
+      <button class="btn" type="submit">מצא</button>
+    </form>
+  </section>
+
+  <section id="result" aria-live="polite" hidden>
+    <article class="card" id="card">
+      <p class="intro" id="intro"></p>
+      <div class="media" id="media"></div>
+      <div class="body">
+        <div class="meta"><span class="pill" id="category"></span><span id="hebDate"></span></div>
+        <h2 id="lessonTitle" tabindex="-1"></h2>
+        <div class="moment">
+          <span class="time" id="time"></span>
+          <h3 id="chTitle"></h3>
+          <blockquote id="chText"></blockquote>
+        </div>
+        <details>
+          <summary>על השיעור</summary>
+          <p id="summary"></p>
+        </details>
+        <div class="actions">
+          <button class="btn primary wide" id="playBtn" type="button"></button>
+          <button class="btn" id="cardBtn" type="button">✦ כרטיס חיזוק</button>
+          <a class="btn wa" id="waBtn" target="_blank" rel="noopener">שתפו בוואטסאפ</a>
+          <a class="btn wide" id="ytBtn" target="_blank" rel="noopener">פתיחה ביוטיוב ↗</a>
+        </div>
+        <div class="nav">
+          <button class="btn" id="nextBtn" type="button"></button>
+          <button class="btn" id="resetBtn" type="button">בחירה מחדש</button>
+        </div>
+      </div>
+    </article>
+    <div class="card empty" id="empty" hidden>
+      <p id="emptyText"></p>
+      <button class="btn" id="emptyReset" type="button">בחירה מהרשימה</button>
+    </div>
+  </section>
+
+  <footer class="note">
+    התכנים, התקצירים והסרטונים מתוך אתר שיעורי רבי חיים דרעי שליט״א.<br>
+    הסרטונים מוטמעים במצב פרטיות מוגברת של יוטיוב.
+  </footer>
+</div>
+
+<dialog id="cardDlg" aria-labelledby="cardDlgTitle">
+  <h2 id="cardDlgTitle">כרטיס חיזוק</h2>
+  <img id="cardImg" alt="">
+  <div class="dlg-actions">
+    <button class="btn primary" id="cardShare" type="button" hidden>שיתוף</button>
+    <a class="btn" id="cardDownload" download="chizuk.png">הורדה</a>
+    <button class="btn" id="cardClose" type="button">סגירה</button>
+  </div>
+</dialog>
+
+<script src="shiurim-data.js"></script>
+<script>
+(() => {
+  'use strict';
+
+  const DATA = window.SHIURIM || [];
+  const BY_ID = Object.fromEntries(DATA.map((s) => [s.id, s]));
+  const toSec = (t) => t.split(':').reduce((acc, v) => acc * 60 + Number(v), 0);
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // כל מצב: רשימת [מזהה שיעור, מספר פרק] לפי סדר עדיפות, ומילים שמובילות אליו בחיפוש חופשי.
+  const STATES = [
+    { key: 'sad', emoji: '😔', label: 'עצוב לי',
+      intro: 'גם ברגעים כבדים יש פתח של אור. הנה רגע על כוחה של השמחה.',
+      picks: [['t8R5ivR8n0Y', 0], ['XCFpL3_3gv8', 0], ['3MR0NYqQ7sE', 0], ['HEtIYo1VmLE', 0]],
+      words: ['עצוב', 'עצב', 'עצבות', 'דכדוך', 'מדוכדך', 'דיכאון', 'בוכה', 'בכי', 'מבואס', 'באסה', 'שבור', 'בודד', 'בדידות', 'אין לי שמחה', 'חסר לי שמחה', 'בלי שמחה'] },
+    { key: 'angry', emoji: '😤', label: 'כעס',
+      intro: 'רגע לפני שהכעס מחליט במקומכם, עצרו והקשיבו.',
+      picks: [['4UZcOlzG2t4', 0], ['ZHnnOmQLZug', 0], ['BbbUY1kw-9A', 0], ['8DmLWXbg70A', 1]],
+      words: ['כועס', 'כעס', 'עצבני', 'עצבים', 'מתעצבן', 'נרגז', 'רוגז', 'זעם', 'מתפוצץ', 'רותח', 'אין לי סבלנות'] },
+    { key: 'worried', emoji: '😟', label: 'דאגה ולחץ',
+      intro: 'הדאגה גדולה, אבל יש מי ששומר. רגע על ביטחון ושקט פנימי.',
+      picks: [['XASnmCt9dIw', 0], ['uZAB0wZxw0c', 0], ['uhJJSGht4cc', 0], ['_4aLg4GiA1M', 0]],
+      words: ['דואג', 'דאגה', 'דאגות', 'פחד', 'מפחד', 'חושש', 'חשש', 'לחוץ', 'לחץ', 'חרדה', 'חרד', 'סטרס', 'מתוח', 'לא רגוע', 'אין לי שקט'] },
+    { key: 'despair', emoji: '🌑', label: 'ייאוש',
+      intro: 'אין נפילה שאי אפשר לקום ממנה. הנה רגע על התחדשות.',
+      picks: [['3MR0NYqQ7sE', 0], ['J8xJOWZUcvc', 0], ['_7R4G2NaRjA', 0], ['rHfmvIcBMrc', 0]],
+      words: ['ייאוש', 'יאוש', 'יואש', 'מיואש', 'נכשל', 'כישלון', 'כשלון', 'נפלתי', 'נפילה', 'אין טעם', 'אין תקווה', 'חטא', 'אשמה', 'אשם', 'תשובה'] },
+    { key: 'distant', emoji: '🌫️', label: 'ריחוק',
+      intro: 'הדרך חזרה קצרה ממה שנדמה. רגע על חיבור ותפילה.',
+      picks: [['qWg-HXYi0DQ', 0], ['rWWomO7unQ0', 0], ['Qo5JugDBrpw', 0], ['K3uAQbnA9VA', 0], ['3pN3C8CEzUU', 0]],
+      words: ['רחוק', 'ריחוק', 'מנותק', 'ניתוק', 'ריקנות', 'תפילה', 'להתפלל', 'מתפלל', 'חיבור', 'קרבה', 'להתקרב', 'שגרה', 'אדישות'] },
+    { key: 'struggling', emoji: '⛈️', label: 'ניסיון קשה',
+      intro: 'הניסיון לא בא לשבור, הוא בא לרומם. רגע של חיזוק באמונה.',
+      picks: [['ixhegtkSOF4', 0], ['ljoLnMAm11s', 0], ['UTC3zNDf4GE', 0], ['NvUxSvKnXmM', 0]],
+      words: ['ניסיון', 'נסיון', 'קשה', 'קושי', 'קשיים', 'ייסורים', 'יסורים', 'סבל', 'סובל', 'צרה', 'משבר', 'מחלה', 'חולה', 'אבל', 'כאב', 'הסתר'] },
+    { key: 'home', emoji: '🏠', label: 'מתח בבית',
+      intro: 'בית של שלום נבנה מרגעים קטנים. הנה רגע בשביל הבית.',
+      picks: [['nXIoY_woCX8', 0], ['DKJYDRY6GrQ', 0], ['6wob4LvN9R0', 0], ['jWKDd1NIjYU', 0], ['deD6zF1YCcY', 0]],
+      words: ['בית', 'אשתי', 'בעלי', 'זוגיות', 'בן זוג', 'בת זוג', 'ילד', 'חינוך', 'ריב', 'מריבה', 'הורים', 'אמא', 'אבא', 'משפחה', 'שלום בית'] },
+    { key: 'resolve', emoji: '💪', label: 'רצון להתחזק',
+      intro: 'כל שינוי גדול מתחיל בבחירה אחת. רגע על כוח ההחלטה.',
+      picks: [['8DmLWXbg70A', 3], ['8DmLWXbg70A', 1], ['8DmLWXbg70A', 4], ['LallXR25zPs', 0], ['IklcSVdNxLY', 0]],
+      words: ['להתחזק', 'חיזוק', 'החלטה', 'להחליט', 'הרגל', 'התמדה', 'עצלות', 'עצלן', 'דחיינות', 'בחירה', 'כוח רצון', 'שינוי', 'להשתנות', 'ללמוד', 'לימוד', 'תורה'] },
+    { key: 'parnasa', emoji: '💼', label: 'דאגת פרנסה',
+      intro: 'הפרנסה בידי שמיים, והלב יכול להירגע. רגע על ביטחון ונתינה.',
+      picks: [['8qoZFNs1pIE', 0], ['XASnmCt9dIw', 0], ['uhJJSGht4cc', 0], ['9MsbQUtWL4o', 0]],
+      strong: ['פרנסה', 'כסף', 'חובות', 'משכורת', 'מינוס'],
+      words: ['חוב', 'כלכלי', 'עסק', 'פיטורים', 'מובטל', 'הכנסה', 'צדקה', 'אין לי עבודה', 'מחפש עבודה', 'מחפשת עבודה', 'איבדתי את העבודה'] },
+    { key: 'hurt', emoji: '💔', label: 'פגיעה ממישהו',
+      intro: 'כשמישהו פוגע, העין הטובה היא הכוח הגדול. רגע בין אדם לחברו.',
+      picks: [['jcBwgu52SFU', 0], ['A_ghOxdy1bs', 0], ['ukHpd2eGgoo', 0], ['9Zs_hoAwMF8', 0]],
+      words: ['נפגע', 'פגעו', 'פגיעה', 'פגע', 'עלבון', 'נעלב', 'העליב', 'שנאה', 'שונא', 'קנאה', 'מקנא', 'לשון הרע', 'רכילות', 'חבר', 'שכן', 'סכסוך', 'מחלוקת', 'סליחה'] },
+    { key: 'grateful', emoji: '🙏', label: 'הודיה ושמחה',
+      intro: 'לב מודה הוא לב מלא. רגע על הכרת הטוב.',
+      picks: [['zqi_vatm1dE', 0], ['t7h9W2bm3ZQ', 0], ['XCFpL3_3gv8', 0], ['4rNrtOdKHzw', 0]],
+      words: ['תודה', 'מודה', 'הודיה', 'שמח', 'ברוך השם', 'הצלחה', 'הצלחתי', 'מאושר', 'אושר', 'ברכה', 'ברכות', 'ניסים'] },
+    { key: 'lost', emoji: '🧭', label: 'חיפוש כיוון',
+      intro: 'כשאין כיוון, חוזרים לשאלת התכלית. רגע של בהירות.',
+      picks: [['cbMWaD9mCps', 0], ['finjUJAaOcE', 0], ['VYGHUwf9I4k', 0], ['bKrEzx2k2dQ', 0]],
+      words: ['מבולבל', 'בלבול', 'כיוון', 'משמעות', 'תכלית', 'לא יודע', 'מה לעשות', 'אבוד', 'מטרה', 'דרך', 'מה הטעם'] }
+  ];
+  const STATE_BY_KEY = Object.fromEntries(STATES.map((s) => [s.key, s]));
+  window.__COMPASS_STATES = STATES; // לבדיקות
+
+  // ---------- התאמת טקסט חופשי ----------
+  const norm = (s) => String(s).normalize('NFC')
+    .replace(/[֑-ׇ]/g, '')
+    .replace(/["'`״׳]/g, '')
+    .replace(/\s+/g, ' ')
+    .toLowerCase().trim();
+
+  function matchState(text) {
+    const n = norm(text);
+    let best = null, bestScore = 0;
+    for (const st of STATES) {
+      let score = 0;
+      // מילות נושא מובהקות (strong) גוברות על מילות רגש כלליות
+      for (const [list, weight] of [[st.words, 1], [st.strong || [], 2]]) {
+        for (const w of list) {
+          const nw = norm(w);
+          if (n.includes(nw)) score += nw.length * weight;
+        }
+      }
+      if (score > bestScore) { best = st; bestScore = score; }
+    }
+    return best;
+  }
+
+  const PREFIXES = /^(ו|ה|ב|ל|מ|ש|כ)/;
+  function searchLessons(text) {
+    const terms = [];
+    for (const w of norm(text).split(/[\s,.!?;:()\-–]+/)) {
+      if (w.length < 3) continue;
+      terms.push(w);
+      if (w.length >= 4 && PREFIXES.test(w)) terms.push(w.slice(1));
+    }
+    if (!terms.length) return [];
+    const scored = [];
+    for (const s of DATA) {
+      const hay = norm([s.title, s.category, s.summary].join(' '));
+      let score = 0;
+      for (const t of terms) if (hay.includes(t)) score += 2;
+      let bestCh = 0, bestChScore = -1;
+      s.chapters.forEach((c, i) => {
+        const ch = norm(c.title + ' ' + c.text);
+        let cs = 0;
+        for (const t of terms) if (ch.includes(t)) cs += 1;
+        if (cs > bestChScore) { bestChScore = cs; bestCh = i; }
+        score += cs;
+      });
+      if (score > 0) scored.push({ id: s.id, ch: bestCh, score });
+    }
+    scored.sort((a, b) => b.score - a.score);
+    return scored.slice(0, 5).map((x) => [x.id, x.ch]);
+  }
+
+  // ---------- DOM ----------
+  const $ = (id) => document.getElementById(id);
+  const statesEl = $('states');
+  const needle = $('needle');
+  const result = $('result');
+
+  STATES.forEach((st, idx) => {
+    const li = document.createElement('li');
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'state';
+    b.dataset.key = st.key;
+    b.setAttribute('aria-pressed', 'false');
+    const e = document.createElement('span');
+    e.className = 'emo'; e.setAttribute('aria-hidden', 'true'); e.textContent = st.emoji;
+    const l = document.createElement('span');
+    l.textContent = st.label;
+    b.append(e, l);
+    b.addEventListener('click', () => go({ s: st.key }));
+    li.append(b);
+    statesEl.append(li);
+    st.angle = (idx * 360) / STATES.length;
+  });
+
+  $('freeForm').addEventListener('submit', (ev) => {
+    ev.preventDefault();
+    const q = $('freeText').value.trim();
+    if (q) go({ q });
+  });
+
+  let pendingScroll = false;
+  function go(params) {
+    const p = new URLSearchParams();
+    for (const [k, v] of Object.entries(params)) if (v !== undefined && v !== null && v !== '') p.set(k, v);
+    pendingScroll = true;
+    const next = '#' + p.toString();
+    if (location.hash === next) render(true); else location.hash = next;
+  }
+
+  function resetAll() {
+    $('freeText').value = '';
+    history.pushState(null, '', location.pathname + location.search);
+    render(true);
+    window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+  }
+  $('resetBtn').addEventListener('click', resetAll);
+  $('emptyReset').addEventListener('click', resetAll);
+
+  function setNeedle(angle) {
+    if (angle === null) {
+      needle.style.transform = '';
+      needle.classList.add('idle');
+    } else {
+      needle.classList.remove('idle');
+      needle.style.transform = `rotate(${angle}deg)`;
+    }
+  }
+
+  const ytUrl = (id, sec) => `https://www.youtube.com/watch?v=${id}${sec ? `&t=${sec}s` : ''}`;
+  let current = null; // { lesson, ch, sec }
+  let lastRendered = null;
+
+  function render(force) {
+    if (!force && location.hash === lastRendered) return;
+    lastRendered = location.hash;
+    const p = new URLSearchParams(location.hash.slice(1));
+    const s = p.get('s');
+    const q = p.get('q');
+    let ctx = null;
+
+    if (s && STATE_BY_KEY[s]) {
+      const st = STATE_BY_KEY[s];
+      ctx = { state: st, picks: st.picks, intro: st.intro };
+    } else if (q) {
+      if ($('freeText').value.trim() !== q) $('freeText').value = q;
+      const st = matchState(q);
+      if (st) ctx = { state: st, picks: st.picks, intro: st.intro };
+      else {
+        const picks = searchLessons(q);
+        ctx = picks.length
+          ? { state: null, picks, intro: `שיעורים שמדברים על „${q}”` }
+          : { empty: true, q };
+      }
+    }
+
+    for (const b of statesEl.querySelectorAll('.state')) {
+      b.setAttribute('aria-pressed', String(!!(ctx && ctx.state && ctx.state.key === b.dataset.key)));
+    }
+    setNeedle(ctx && ctx.state ? ctx.state.angle : (ctx && !ctx.empty ? 200 : null));
+
+    if (!ctx) { result.hidden = true; current = null; return; }
+    result.hidden = false;
+
+    if (ctx.empty) {
+      $('card').hidden = true;
+      $('empty').hidden = false;
+      $('emptyText').textContent = `לא מצאתי שיעור שמתאים ל„${ctx.q}”. אפשר לנסות מילים אחרות, או לבחור מצב מהרשימה למעלה.`;
+      current = null;
+      afterRender($('emptyText'));
+      return;
+    }
+    $('empty').hidden = true;
+    $('card').hidden = false;
+
+    const n = ctx.picks.length;
+    const i = ((parseInt(p.get('i'), 10) || 0) % n + n) % n;
+    const [id, chIdx] = ctx.picks[i];
+    const lesson = BY_ID[id];
+    const ch = lesson.chapters[chIdx] || lesson.chapters[0];
+    const sec = toSec(ch.t);
+    current = { lesson, ch, sec };
+
+    $('intro').textContent = ctx.intro;
+    $('category').textContent = lesson.category;
+    $('hebDate').textContent = lesson.hebDate;
+    $('lessonTitle').textContent = lesson.title;
+    $('time').textContent = ch.t;
+    $('chTitle').textContent = ch.title;
+    $('chText').textContent = ch.text;
+    $('summary').textContent = lesson.summary;
+    $('playBtn').textContent = sec ? `▶ נגנו מהדקה ${ch.t}` : '▶ נגנו את השיעור';
+    $('ytBtn').href = ytUrl(id, sec);
+    $('waBtn').href = 'https://wa.me/?text=' + encodeURIComponent(
+      `${ch.title}: ${ch.text}\n\nמתוך השיעור „${lesson.title}” | רבי חיים דרעי שליט״א\n▶ ${ytUrl(id, sec)}`
+    );
+
+    const nextBtn = $('nextBtn');
+    nextBtn.hidden = n < 2;
+    nextBtn.replaceChildren(
+      document.createTextNode('↻ הצעה נוספת '),
+      Object.assign(document.createElement('span'), { className: 'counter', textContent: `(${i + 1}/${n})` })
+    );
+    nextBtn.onclick = () => {
+      const np = Object.fromEntries(p.entries());
+      np.i = (i + 1) % n;
+      go(np);
+    };
+
+    showThumb(lesson, ch, sec);
+    const card = $('card');
+    card.classList.remove('enter'); void card.offsetWidth; card.classList.add('enter');
+    afterRender($('lessonTitle'));
+  }
+
+  function afterRender(focusEl) {
+    if (!pendingScroll) return;
+    pendingScroll = false;
+    result.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+    focusEl.focus({ preventScroll: true });
+  }
+
+  function showThumb(lesson, ch, sec) {
+    const media = $('media');
+    const img = document.createElement('img');
+    img.src = `https://img.youtube.com/vi/${lesson.id}/hqdefault.jpg`;
+    img.alt = '';
+    img.loading = 'lazy';
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'play';
+    btn.setAttribute('aria-label', `נגנו את „${lesson.title}” מהדקה ${ch.t}`);
+    btn.innerHTML = '<span class="disc" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></span>';
+    const at = document.createElement('span');
+    at.className = 'at'; at.textContent = `⏱ ${ch.t}`;
+    btn.append(at);
+    btn.addEventListener('click', play);
+    media.replaceChildren(img, btn);
+  }
+
+  function play() {
+    if (!current) return;
+    const { lesson, sec } = current;
+    const f = document.createElement('iframe');
+    f.src = `https://www.youtube-nocookie.com/embed/${lesson.id}?start=${sec}&autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+    f.title = lesson.title;
+    f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+    f.allowFullscreen = true;
+    f.referrerPolicy = 'strict-origin-when-cross-origin';
+    $('media').replaceChildren(f);
+    $('media').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'nearest' });
+  }
+  $('playBtn').addEventListener('click', play);
+
+  // ---------- כרטיס חיזוק ----------
+  function hashStr(s) { let h = 2166136261; for (const c of s) { h ^= c.codePointAt(0); h = Math.imul(h, 16777619); } return h >>> 0; }
+  function rng(seed) { return () => { seed = (seed + 0x6D2B79F5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+
+  function wrap(ctx, text, maxWidth) {
+    const words = text.split(/\s+/).filter(Boolean);
+    const lines = [];
+    let line = '';
+    for (const w of words) {
+      const test = line ? line + ' ' + w : w;
+      if (ctx.measureText(test).width > maxWidth && line) { lines.push(line); line = w; }
+      else line = test;
+    }
+    if (line) lines.push(line);
+    return lines;
+  }
+
+  async function makeCard() {
+    const { lesson, ch } = current;
+    try {
+      await Promise.all([
+        document.fonts.load('900 64px "Frank Ruhl Libre"'),
+        document.fonts.load('700 64px "Frank Ruhl Libre"'),
+        document.fonts.load('700 36px "Assistant"'),
+        document.fonts.load('400 30px "Assistant"')
+      ]);
+    } catch (e) { /* ממשיכים עם גופן ברירת מחדל */ }
+
+    const W = 1080, H = 1080;
+    const c = document.createElement('canvas');
+    c.width = W; c.height = H;
+    const x = c.getContext('2d');
+    x.direction = 'rtl';
+    x.textAlign = 'center';
+    x.textBaseline = 'alphabetic';
+
+    // רקע
+    const bg = x.createRadialGradient(W / 2, H * 0.32, 60, W / 2, H / 2, W * 0.8);
+    bg.addColorStop(0, '#1E2B52');
+    bg.addColorStop(1, '#0A1020');
+    x.fillStyle = bg; x.fillRect(0, 0, W, H);
+
+    // כוכבים
+    const r = rng(hashStr(lesson.id + ch.t));
+    for (let k = 0; k < 90; k++) {
+      x.globalAlpha = 0.15 + r() * 0.5;
+      x.fillStyle = r() > 0.8 ? '#E9CF7A' : '#FFFFFF';
+      x.beginPath(); x.arc(r() * W, r() * H, r() * 1.8 + 0.4, 0, Math.PI * 2); x.fill();
+    }
+    x.globalAlpha = 1;
+
+    // מסגרת זהב כפולה
+    x.strokeStyle = 'rgba(212,175,55,0.85)'; x.lineWidth = 3;
+    x.strokeRect(44, 44, W - 88, H - 88);
+    x.strokeStyle = 'rgba(212,175,55,0.35)'; x.lineWidth = 1.5;
+    x.strokeRect(60, 60, W - 120, H - 120);
+
+    // סמל מצפן קטן
+    const cx = W / 2, cy = 170;
+    x.strokeStyle = 'rgba(212,175,55,0.8)'; x.lineWidth = 2;
+    x.beginPath(); x.arc(cx, cy, 44, 0, Math.PI * 2); x.stroke();
+    x.fillStyle = '#E9CF7A';
+    x.beginPath(); x.moveTo(cx, cy - 36); x.lineTo(cx + 9, cy); x.lineTo(cx, cy + 36); x.lineTo(cx - 9, cy); x.closePath(); x.fill();
+    x.fillStyle = 'rgba(212,175,55,0.45)';
+    x.beginPath(); x.moveTo(cx - 36, cy); x.lineTo(cx, cy + 7); x.lineTo(cx + 36, cy); x.lineTo(cx, cy - 7); x.closePath(); x.fill();
+
+    // תוכן: כותרת פרק, טקסט הפרק, קו, שם השיעור, רב ותאריך
+    const maxW = W - 220;
+    x.font = '700 40px "Assistant", sans-serif';
+    const headLines = wrap(x, ch.title, maxW).slice(0, 2);
+
+    let qSize = 66, quoteLines;
+    for (; qSize >= 40; qSize -= 4) {
+      x.font = `700 ${qSize}px "Frank Ruhl Libre", serif`;
+      quoteLines = wrap(x, ch.text, maxW);
+      if (quoteLines.length <= 5) break;
+    }
+    const qLH = Math.round(qSize * 1.45);
+
+    x.font = '700 34px "Assistant", sans-serif';
+    const titleLines = wrap(x, `מתוך השיעור „${lesson.title}”`, maxW).slice(0, 2);
+
+    const blockH = headLines.length * 54 + 30 + quoteLines.length * qLH + 40 + 2 + 44 + titleLines.length * 46 + 50;
+    const top = 250, bottom = 960;
+    let y = top + Math.max(0, (bottom - top - blockH) / 2) + 40;
+
+    x.fillStyle = '#E9CF7A';
+    x.font = '700 40px "Assistant", sans-serif';
+    for (const l of headLines) { x.fillText(l, W / 2, y); y += 54; }
+    y += 30;
+
+    x.fillStyle = '#FFFFFF';
+    x.font = `700 ${qSize}px "Frank Ruhl Libre", serif`;
+    for (const l of quoteLines) { y += qLH - Math.round(qSize * 0.45); x.fillText(l, W / 2, y); y += Math.round(qSize * 0.45); }
+    y += 40;
+
+    x.strokeStyle = 'rgba(212,175,55,0.8)'; x.lineWidth = 2;
+    x.beginPath(); x.moveTo(W / 2 - 70, y); x.lineTo(W / 2 + 70, y); x.stroke();
+    y += 44 + 12;
+
+    x.fillStyle = 'rgba(241,245,249,0.85)';
+    x.font = '700 34px "Assistant", sans-serif';
+    for (const l of titleLines) { x.fillText(l, W / 2, y); y += 46; }
+    x.fillStyle = '#E9CF7A';
+    x.font = '400 30px "Assistant", sans-serif';
+    x.fillText(`רבי חיים דרעי שליט״א · ${lesson.hebDate}`, W / 2, y + 4);
+
+    // תחתית
+    x.fillStyle = 'rgba(163,177,198,0.8)';
+    x.font = '400 24px "Assistant", sans-serif';
+    x.fillText(`מצפן הלב · ▶ ${ch.t}`, W / 2, H - 92);
+
+    return new Promise((res) => c.toBlob(res, 'image/png'));
+  }
+
+  const dlg = $('cardDlg');
+  let cardUrl = null, cardFile = null;
+  $('cardBtn').addEventListener('click', async () => {
+    if (!current) return;
+    const btn = $('cardBtn');
+    btn.disabled = true;
+    try {
+      const blob = await makeCard();
+      if (cardUrl) URL.revokeObjectURL(cardUrl);
+      cardUrl = URL.createObjectURL(blob);
+      cardFile = new File([blob], 'chizuk.png', { type: 'image/png' });
+      const img = $('cardImg');
+      img.src = cardUrl;
+      img.alt = `כרטיס חיזוק: ${current.ch.title}. ${current.ch.text}`;
+      $('cardDownload').href = cardUrl;
+      const canShare = !!(navigator.canShare && navigator.canShare({ files: [cardFile] }));
+      $('cardShare').hidden = !canShare;
+      if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open', '');
+    } finally {
+      btn.disabled = false;
+    }
+  });
+  $('cardShare').addEventListener('click', async () => {
+    if (!cardFile || !current) return;
+    try {
+      await navigator.share({ files: [cardFile], title: 'כרטיס חיזוק', text: `${current.lesson.title}\n${ytUrl(current.lesson.id, current.sec)}` });
+    } catch (e) { /* המשתמש ביטל */ }
+  });
+  $('cardClose').addEventListener('click', () => dlg.close());
+  dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
+
+  window.addEventListener('hashchange', () => render());
+  window.addEventListener('popstate', () => render());
+  if (location.hash.length > 1) pendingScroll = true;
+  render(true);
+})();
+</script>
+</body>
+</html>

@@ -2,6 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Torahvemahshava</title>
     <style>
         body, html {
@@ -15,9 +16,29 @@
             height: 100%;
             border: none;
         }
+        .compass-fab {
+            position: fixed;
+            left: max(16px, env(safe-area-inset-left));
+            bottom: max(16px, env(safe-area-inset-bottom));
+            z-index: 10;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 16px;
+            border-radius: 999px;
+            background: #0F172A;
+            color: #E9CF7A;
+            border: 1px solid rgba(212, 175, 55, 0.6);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+            font: 700 15px/1 "Rubik", system-ui, -apple-system, "Segoe UI", sans-serif;
+            text-decoration: none;
+        }
+        .compass-fab:hover { background: #16213D; }
+        .compass-fab:focus-visible { outline: 2px solid #E9CF7A; outline-offset: 3px; }
     </style>
 </head>
 <body>
     <iframe src="https://service-3473.ai.studio" allowfullscreen></iframe>
+    <a class="compass-fab" href="compass.html" aria-label="מצפן הלב: מציאת שיעור לפי מה שהלב מרגיש"><span aria-hidden="true">🧭</span> מצפן הלב</a>
 </body>
 </html>
