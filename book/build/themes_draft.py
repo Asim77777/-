@@ -1,0 +1,20 @@
+# Draft thematic grouping (שערים). Keys are YouTube video IDs.
+THEMES = [
+    ("ספר עקדת יצחק ויסוד הבחירה", ["x_yA2rELMMc", "HEtIYo1VmLE", "2iu9xiYafCQ", "Pm608rwWtg0", "8DmLWXbg70A"]),
+    ("אלול, תשובה והימים הנוראים", ["_7R4G2NaRjA", "J439tmvZnBU", "6zdC5-i_VR0", "K3uAQbnA9VA", "bKrEzx2k2dQ",
+        "LallXR25zPs", "dH6K3QRKPxA", "9MsbQUtWL4o", "rHfmvIcBMrc", "zw-VUtZhnzI", "Qo5JugDBrpw", "MbiPiqCIcYg",
+        "4UZcOlzG2t4", "rWWomO7unQ0", "4e3h3DgMvpI", "e_omlrb8vFg", "tRG1QbmBPLA"]),
+    ("חורבן וגאולה – בנבואות ירמיה ודניאל", ["jcBwgu52SFU", "bT_PIN_rcW4", "v2L8gZhBjPk", "BbbUY1kw-9A", "uZAB0wZxw0c",
+        "XCFpL3_3gv8", "9Zs_hoAwMF8", "VFrsJf7JqX8", "ma-wUAmpDy8", "2Ny1YrKIYyc", "gwOcimqMvJA"]),
+    ("יציאת מצרים ופסח", ["2nUlEvs_qb8", "BEr8YN7xhdY", "ixhegtkSOF4", "gWL41wwD-4A", "t8R5ivR8n0Y", "lOBzWoOkQVs",
+        "J8xJOWZUcvc", "_4aLg4GiA1M", "XZoHu2dA86Q"]),
+    ("התורה וקבלתה", ["8qoZFNs1pIE", "xSe_aWSSSwY", "3MR0NYqQ7sE", "IklcSVdNxLY", "jWKDd1NIjYU", "ljoLnMAm11s",
+        "A_ghOxdy1bs", "0Tahi4-tFxQ", "VYGHUwf9I4k", "1KT4ZrYuG28"]),
+    ("אמונה, ביטחון וידיעת ה'", ["NvUxSvKnXmM", "zqi_vatm1dE", "ukHpd2eGgoo", "9QBG-3qbd9A", "8TE4aAWa8tw", "kDf64KNmK48",
+        "5FeQ0InXYfo", "ZHnnOmQLZug", "DKJYDRY6GrQ", "6wob4LvN9R0", "K2PkPC2Irls", "sIxDZQPsDFQ", "uhJJSGht4cc",
+        "GlBMjCz_TIs", "qWg-HXYi0DQ"]),
+    ("בפרשיות התורה", ["UTC3zNDf4GE", "t7h9W2bm3ZQ", "3pN3C8CEzUU", "nXIoY_woCX8", "66qbnQfS7RQ", "XASnmCt9dIw",
+        "mXMc6EwdwX4", "eJjd8KyiYxc", "cbMWaD9mCps", "finjUJAaOcE"]),
+    ("ימי חנוכה ופורים", ["b41Y7FeOHMw", "4rNrtOdKHzw", "hhAOcj33C-k"]),
+    ("עבודת המידות ואחריות לכלל ישראל", ["deD6zF1YCcY", "WOiysEHVJr0", "Q5NU3NF6NPU"]),
+]
