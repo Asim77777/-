@@ -1,199 +1,243 @@
-"""Build the digital book: sefer/index.html (static, self-contained apart from Google Fonts)."""
+"""Build the digital edition: sefer/index.html (title, contents, introduction), one page per drasha,
+search.json (paragraph text without niqqud), shared sefer.css / sefer.js and the Culmus web fonts.
+
+usage: python3 -I book/build/build_web.py [--only id,id]
+"""
+import argparse
+import html
+import json
 import pathlib
+import re
+import shutil
 import sys
 
-sys.path.insert(0, str(pathlib.Path(__file__).parent))
-from parse import load_book, heb_number  # noqa: E402
-from render_html import (BOOK_TITLE, BOOK_SUBTITLE, BOOK_SPAN, INTRO_HTML,  # noqa: E402
-                         esc, render_drasha)
+HERE = pathlib.Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+import book as B  # noqa: E402
 
-REPO = pathlib.Path(__file__).resolve().parents[2]
-
-CSS = r"""
-:root{
-  --bg:#f7f3ea; --paper:#fffdf8; --ink:#2a2420; --muted:#7a6e62; --line:#e4dccd;
-  --accent:#8a5a2b; --accent-soft:#f1e6d6; --add:#9a7b5a; --unc:#b3541e; --ref:#5b6f86; --note:#6f7f5c;
-  --hl:#ffe58a; --shadow:0 1px 3px rgba(60,40,20,.08),0 6px 24px rgba(60,40,20,.06);
-  --fs:19px;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --bg:#16130f; --paper:#1e1a15; --ink:#ece4d8; --muted:#a89c8c; --line:#3a332a;
-    --accent:#d6a46a; --accent-soft:#2c241b; --add:#c4a582; --unc:#ef8a52; --ref:#93abc6; --note:#a9bb93;
-    --hl:#6b5a1a; --shadow:none;
-  }
-}
-:root[data-theme="dark"]{
-  --bg:#16130f; --paper:#1e1a15; --ink:#ece4d8; --muted:#a89c8c; --line:#3a332a;
-  --accent:#d6a46a; --accent-soft:#2c241b; --add:#c4a582; --unc:#ef8a52; --ref:#93abc6; --note:#a9bb93;
-  --hl:#6b5a1a; --shadow:none;
-}
-*{box-sizing:border-box}
-html{scroll-padding-top:72px}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:"Frank Ruhl Libre",FreeSerif,serif;
-  font-size:var(--fs);line-height:1.85;-webkit-text-size-adjust:100%}
-a{color:var(--accent)}
-.ui{font-family:"Assistant","Heebo",system-ui,sans-serif}
-.bar{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 92%,transparent);
-  backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
-.bar-in{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:10px;padding:10px 16px}
-.brand{font-weight:700;font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0}
-.brand a{color:var(--ink);text-decoration:none}
-.search{position:relative;flex:0 1 300px;min-width:120px}
-.search input{width:100%;font:inherit;font-size:15px;padding:8px 12px;border-radius:10px;border:1px solid var(--line);
-  background:var(--paper);color:var(--ink)}
-.btn{font:inherit;font-size:15px;border:1px solid var(--line);background:var(--paper);color:var(--ink);
-  border-radius:10px;padding:7px 10px;cursor:pointer;line-height:1}
-.btn:hover{border-color:var(--accent)}
-#results{position:absolute;top:44px;left:0;right:0;max-height:60vh;overflow:auto;background:var(--paper);
-  border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);display:none;font-size:15px;line-height:1.5}
-#results.open{display:block}
-#results .r{display:block;padding:10px 12px;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none}
-#results .r:hover{background:var(--accent-soft)}
-#results .rt{color:var(--accent);font-weight:700;font-size:13px}
-#results .empty{padding:12px;color:var(--muted)}
-mark{background:var(--hl);color:inherit;border-radius:3px}
-.layout{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:290px minmax(0,1fr);gap:32px;padding:0 16px}
-nav.toc{position:sticky;top:64px;align-self:start;max-height:calc(100vh - 80px);overflow:auto;padding:24px 0 40px;
-  font-size:15px;line-height:1.45}
-.toc h4{margin:18px 0 6px;font-size:13px;color:var(--muted);font-weight:700;letter-spacing:.02em}
-.toc a{display:block;padding:5px 10px;border-radius:8px;color:var(--ink);text-decoration:none}
-.toc a:hover,.toc a.on{background:var(--accent-soft);color:var(--accent)}
-.toc .tn{color:var(--muted);margin-inline-end:6px}
-main{min-width:0;padding:8px 0 80px}
-.cover{text-align:center;padding:56px 12px 36px;border-bottom:1px solid var(--line);margin-bottom:24px}
-.cover h1{font-size:clamp(30px,6vw,46px);margin:0 0 8px;line-height:1.25}
-.cover .sub{font-size:20px;color:var(--muted)}
-.cover .span{font-size:15px;color:var(--muted);margin-top:10px}
-.intro{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px 22px;font-size:16px;
-  line-height:1.7;box-shadow:var(--shadow)}
-.intro summary{cursor:pointer;font-weight:700;font-size:17px}
-.theme-title{text-align:center;margin:64px 0 8px;font-size:15px;color:var(--muted);letter-spacing:.04em}
-.theme-title b{display:block;font-size:30px;color:var(--accent);letter-spacing:0;margin-top:4px}
-.drasha{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:28px clamp(16px,4vw,44px);
-  margin:24px 0;box-shadow:var(--shadow)}
-.dh{text-align:center;border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:18px}
-.dnum{font-size:14px;color:var(--muted)}
-.dtitle{font-size:clamp(23px,3.6vw,30px);line-height:1.35;margin:4px 0 10px}
-.dmeta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;font-size:15px;color:var(--muted);font-family:"Assistant",sans-serif}
-.dvideo{text-decoration:none;font-weight:700}
-.sh{font-size:20px;color:var(--accent);margin:28px 0 6px;font-family:"Assistant",sans-serif;font-weight:700}
-.drasha p{margin:0 0 14px;text-align:justify}
-.ts{font-family:"Assistant",sans-serif;font-size:12px;color:var(--muted);text-decoration:none;border:1px solid var(--line);
-  border-radius:6px;padding:0 5px;margin-inline-end:8px;vertical-align:2px;direction:ltr;display:inline-block;line-height:1.6}
-.ts:hover{color:var(--accent);border-color:var(--accent)}
-.add{color:var(--add)}
-.unc{color:var(--unc);text-decoration:none;font-size:.78em;vertical-align:.25em;font-family:"Assistant",sans-serif;font-weight:700}
-.ref{color:var(--ref);font-size:.86em}
-.note{color:var(--note);font-style:italic;font-size:.9em}
-.flash{animation:flash 2.2s ease-out}
-@keyframes flash{0%{background:var(--hl)}100%{background:transparent}}
-.mk{display:none}
-#tocbtn{display:none}
-footer{color:var(--muted);text-align:center;font-size:14px;padding:30px 0}
-@media (max-width:900px){
-  .layout{grid-template-columns:minmax(0,1fr);gap:0}
-  nav.toc{position:fixed;inset:0 auto 0 0;width:min(86vw,340px);max-height:none;height:100vh;top:0;z-index:40;
-    background:var(--paper);padding:20px 16px;transform:translateX(-105%);transition:transform .25s;box-shadow:var(--shadow)}
-  nav.toc.open{transform:none}
-  #tocbtn{display:inline-block}
-  .bar-in{flex-wrap:wrap;row-gap:8px}
-  .brand{font-size:16px}
-  .search{order:5;flex:1 1 100%}
-  #results{position:fixed;top:auto;left:12px;right:12px;max-height:65vh}
-  :root{--fs:18px}
-}
-"""
-
-JS = r"""
-(function(){
-  const root=document.documentElement;
-  const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
-  let fs=parseFloat(store.get('fs'))||null; if(fs) root.style.setProperty('--fs',fs+'px');
-  const t=store.get('theme'); if(t) root.dataset.theme=t;
-  document.getElementById('bigger').onclick=()=>{fs=(fs||parseFloat(getComputedStyle(root).getPropertyValue('--fs')))+1;fs=Math.min(fs,28);root.style.setProperty('--fs',fs+'px');store.set('fs',fs)};
-  document.getElementById('smaller').onclick=()=>{fs=(fs||parseFloat(getComputedStyle(root).getPropertyValue('--fs')))-1;fs=Math.max(fs,14);root.style.setProperty('--fs',fs+'px');store.set('fs',fs)};
-  document.getElementById('theme').onclick=()=>{const dark=root.dataset.theme?root.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;root.dataset.theme=dark?'light':'dark';store.set('theme',root.dataset.theme)};
-  const toc=document.querySelector('nav.toc');
-  document.getElementById('tocbtn').onclick=e=>{e.stopPropagation();toc.classList.toggle('open')};
-  document.addEventListener('click',e=>{if(toc.classList.contains('open')&&!toc.contains(e.target))toc.classList.remove('open')});
-  toc.addEventListener('click',e=>{if(e.target.closest('a'))toc.classList.remove('open')});
-  // highlight current drasha in TOC
-  const links=[...toc.querySelectorAll('a[href^="#d-"]')];
-  const obs=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting){links.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+en.target.id))}})},{rootMargin:'-30% 0px -60% 0px'});
-  document.querySelectorAll('section.drasha').forEach(s=>obs.observe(s));
-  // search
-  const strip=s=>s.replace(/[֑-ׇ]/g,'').replace(/[״"׳'’`]/g,'"').toLowerCase();
-  const paras=[...document.querySelectorAll('section.drasha p')].map((p,i)=>{p.id=p.id||('p'+i);const sec=p.closest('section');
-    return {p,sec,title:sec.querySelector('.dtitle').textContent,txt:p.textContent,norm:strip(p.textContent)}});
-  const inp=document.getElementById('q'), res=document.getElementById('results');
-  let timer;
-  inp.addEventListener('input',()=>{clearTimeout(timer);timer=setTimeout(run,180)});
-  inp.addEventListener('focus',()=>{if(inp.value.trim().length>1)res.classList.add('open')});
-  document.addEventListener('click',e=>{if(!e.target.closest('.search'))res.classList.remove('open')});
-  inp.addEventListener('keydown',e=>{if(e.key==='Escape'){res.classList.remove('open');inp.blur()}});
-  function snippet(txt,q){const n=strip(txt);const i=n.indexOf(q);const s=Math.max(0,i-50),e=Math.min(txt.length,i+q.length+70);
-    const esc=x=>x.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
-    return (s>0?'…':'')+esc(txt.slice(s,i))+'<mark>'+esc(txt.slice(i,i+q.length))+'</mark>'+esc(txt.slice(i+q.length,e))+(e<txt.length?'…':'')}
-  function run(){const q=strip(inp.value.trim());res.innerHTML='';if(q.length<2){res.classList.remove('open');return}
-    const hits=paras.filter(x=>x.norm.includes(q));
-    if(!hits.length){res.innerHTML='<div class="empty">לא נמצאו תוצאות</div>'}
-    else{res.innerHTML='<div class="empty">'+hits.length+' תוצאות</div>'+hits.slice(0,80).map(h=>'<a class="r" href="#'+h.p.id+'"><div class="rt">'+h.title.replace(/[&<>]/g,'')+'</div>'+snippet(h.txt,q)+'</a>').join('')}
-    res.classList.add('open')}
-  res.addEventListener('click',e=>{const a=e.target.closest('a.r');if(!a)return;e.preventDefault();const el=document.getElementById(a.getAttribute('href').slice(1));
-    res.classList.remove('open');el.scrollIntoView({behavior:'smooth',block:'center'});el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash')});
-})();
-"""
+SITE = HERE.parents[1] / "sefer"
+ICON_SEARCH = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg>'
+ICON_MOON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>'
 
 
-def build(out_path, only_ids=None):
-    book = load_book(only_ids)
-    toc, body = [], []
-    for ti, (theme, ds) in enumerate(book, 1):
-        toc.append(f"<h4>שער {heb_number(ti)} · {esc(theme)}</h4>")
-        body.append(f'<div class="theme-title" id="t-{ti}">שער {heb_number(ti)}<b>{esc(theme)}</b></div>')
-        for d in ds:
-            toc.append(f'<a href="#d-{esc(d["id"])}"><span class="tn">{heb_number(d["num"])}.</span>{esc(d["title"])}</a>')
-            body.append(render_drasha(d))
-    count = sum(len(ds) for _, ds in book)
-    page = f"""<!doctype html>
+def esc(s):
+    return html.escape(s, quote=True)
+
+
+def ts(sec):
+    return B.fmt_ts(sec)
+
+
+class Notes:
+    """Footnote numbering per drasha, in Hebrew letters."""
+    def __init__(self):
+        self.items = []
+
+    def add(self, label):
+        self.items.append(label)
+        return len(self.items)
+
+
+def seg_html(sg, notes, did):
+    t = sg["t"]
+    if t == "text":
+        return esc(sg["s"])
+    if t == "quote":
+        return f'"{esc(sg["s"])}"' if sg["marks"] else esc(sg["s"])
+    if t == "fn":
+        if sg.get("skip"):
+            return ""
+        n = notes.add(sg["show"])
+        letter = B.heb_numeral(n, geresh=False)
+        return (f'<span class="fn"><button type="button" aria-expanded="false" aria-label="מקור {letter}">{letter}</button>'
+                f'<span class="pop" role="note">{esc(sg["show"])}</span></span>')
+    if t == "unclear":
+        return (f'<a class="unc" href="https://www.youtube.com/watch?v={did}&amp;t={sg["sec"]}s" data-seek="{sg["sec"]}" '
+                f'title="מקום שלא נשמע היטב – האזנה מן הרגע {ts(sg["sec"])}">[?]</a>')
+    if t == "note":
+        return f'<span class="qahal">[{esc(sg["s"])}:]</span> '
+    if t == "add":
+        return f"[{esc(sg['s'])}]"
+    return ""
+
+
+def opening(html_text):
+    """The first two words of a drasha in the red opening face."""
+    m = re.match(r"^(\s*[^\s<]+\s+[^\s<]+)(\s|$)", html_text)
+    if not m:
+        return html_text
+    return f'<span class="open">{m.group(1).strip()}</span>' + html_text[m.end(1):]
+
+
+def paragraph_html(b, k, notes, did, first):
+    """-> (html, plain text). A long quotation becomes a blockquote."""
+    parts, cur, after_quote = [], [], False
+    segs = b["segs"]
+    i = 0
+    while i < len(segs):
+        sg = segs[i]
+        if sg["t"] == "quote" and sg["long"]:
+            if "".join(cur).strip():
+                parts.append(("p", "".join(cur), after_quote))
+            cur = []
+            q = seg_html(sg, notes, did)
+            if i + 1 < len(segs) and segs[i + 1]["t"] == "fn":
+                q += seg_html(segs[i + 1], notes, did)
+                i += 1
+            if i + 1 < len(segs) and segs[i + 1]["t"] == "text":
+                m = re.match(r"^\s*([.,;:]+)", segs[i + 1]["s"])
+                if m:
+                    q += m.group(1)
+                    segs[i + 1] = dict(segs[i + 1], s=segs[i + 1]["s"][m.end():])
+            parts.append(("q", q, False))
+            after_quote = True
+            i += 1
+            continue
+        cur.append(seg_html(sg, notes, did))
+        i += 1
+    if "".join(cur).strip():
+        parts.append(("p", "".join(cur), after_quote))
+    sec = b["anchor"]
+    tbtn = f'<button type="button" class="t" data-seek="{sec}" aria-label="האזנה מן הרגע {ts(sec)}">{ts(sec)}</button>'
+    out = []
+    for j, (kind, h, aq) in enumerate(parts):
+        pid = f' id="p{k}"' if j == 0 else ""
+        if kind == "q":
+            out.append(f'<blockquote{pid} data-t="{sec}">{h.strip()}</blockquote>')
+            continue
+        cls = []
+        if first and j == 0:
+            h = opening(h)
+            cls.append("first")
+        if aq:
+            cls.append("after-quote")
+        c = f' class="{" ".join(cls)}"' if cls else ""
+        out.append(f'<p{pid}{c} data-t="{sec}">{tbtn if j == 0 else ""}{h.strip()}</p>')
+    plain = B.strip_niqqud(re.sub(r"<span class=\"pop\"[^>]*>.*?</span>|<[^>]+>|\[\?\]|\d+:\d\d", "", "".join(h for _, h, _ in parts)))
+    return "\n".join(out), html.unescape(re.sub(r"\s+", " ", plain)).strip()
+
+
+def page(title, body, root="", here="", desc=""):
+    return f"""<!doctype html>
 <html lang="he" dir="rtl">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{esc(BOOK_TITLE)} – ספר דיגיטלי</title>
-<meta name="description" content="{esc(BOOK_SUBTITLE)}. {count} דרשות מסודרות לפי נושאים.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;700&family=Frank+Ruhl+Libre:wght@400;700&display=swap" rel="stylesheet">
-<style>{CSS}</style>
+<title>{esc(title)}</title>
+<meta name="description" content="{esc(desc)}">
+<link rel="preload" href="{root}fonts/taamey-frank.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="{root}sefer.css">
 </head>
-<body>
-<div class="bar ui"><div class="bar-in">
-  <button class="btn" id="tocbtn" aria-label="תוכן העניינים">☰</button>
-  <div class="brand"><a href="#top">{esc(BOOK_TITLE)}</a></div>
-  <div class="search"><input id="q" type="search" placeholder="חיפוש בספר…" aria-label="חיפוש בספר" autocomplete="off"><div id="results" role="listbox"></div></div>
-  <button class="btn" id="smaller" aria-label="הקטנת גופן">א-</button>
-  <button class="btn" id="bigger" aria-label="הגדלת גופן">א+</button>
-  <button class="btn" id="theme" aria-label="מצב כהה/בהיר">◐</button>
-</div></div>
-<div class="layout">
-<nav class="toc ui" aria-label="תוכן העניינים"><a href="#top"><b>פתח דבר ודרך העריכה</b></a>{''.join(toc)}</nav>
-<main id="top">
-<div class="cover"><h1>{esc(BOOK_TITLE)}</h1><div class="sub">{esc(BOOK_SUBTITLE)}</div><div class="span ui">{esc(BOOK_SPAN)} · {count} דרשות</div></div>
-<details class="intro ui" open><summary>פתח דבר ודרך העריכה</summary>{INTRO_HTML}</details>
-{''.join(body)}
-<footer class="ui">{esc(BOOK_TITLE)} · נערך מתוך הדרשות המצולמות</footer>
+<body data-root="{root}">
+<header class="head">
+  <div class="head-in">
+    <a class="book" href="{root}index.html">{esc(B.BOOK_TITLE)}{(' <span class="here">/ ' + esc(here) + '</span>') if here else ''}</a>
+    <button class="tool" type="button" data-act="search" aria-label="חיפוש בספר">{ICON_SEARCH}<span class="lbl">חיפוש</span></button>
+    <button class="tool" type="button" data-act="smaller" aria-label="הקטנת האותיות">א־</button>
+    <button class="tool" type="button" data-act="bigger" aria-label="הגדלת האותיות">א+</button>
+    <button class="tool" type="button" data-act="theme" aria-label="מצב לילה">{ICON_MOON}</button>
+  </div>
+  <div class="search" id="search" role="search">
+    <div class="search-in">
+      <input id="q" type="search" placeholder="חיפוש מילה או ביטוי בכל הדרשות" aria-label="חיפוש בספר" autocomplete="off">
+      <ul class="results" id="results" aria-live="polite"></ul>
+    </div>
+  </div>
+</header>
+<main>
+{body}
 </main>
-</div>
-<script>{JS}</script>
+<script src="{root}sefer.js"></script>
 </body>
-</html>"""
-    out_path = pathlib.Path(out_path)
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text(page, encoding="utf-8")
-    print("wrote", out_path, len(page), "bytes,", count, "drashot")
+</html>
+"""
+
+
+def build(only=None):
+    bk = B.load_book(only)
+    L = bk["labels"]
+    SITE.mkdir(exist_ok=True)
+    for f in ("sefer.css", "sefer.js"):
+        shutil.copy(HERE / "web" / f, SITE / f)
+    flat = [d for s in bk["shaarim"] for d in s["drashot"]]
+    search = []
+
+    # ---- index: title page, contents, introduction ----
+    toc = [f'<section class="toc" aria-labelledby="toc-h"><h2 id="toc-h">{esc(L["label-toc"])}</h2><span class="rule"></span>']
+    for s in bk["shaarim"]:
+        toc.append(f'<h3 class="shaar"><small>{esc(L["label-shaar"])} {esc(s["ordinal"])}</small>{esc(s["name"])}</h3><ol>')
+        for d in s["drashot"]:
+            toc.append(f'<li><a href="{d["id"]}.html"><span class="n">{d["num_heb"]}</span><span class="ttl">{esc(d["title"])}</span>'
+                       f'<span class="d">{esc(L["label-said"])} {esc(d["date"])}</span></a></li>')
+        toc.append("</ol>")
+    toc.append("</section>")
+    intro = ['<section class="intro">']
+    first = True
+    for b in bk["intro"]:
+        h = "".join(seg_html(sg, Notes(), "") for sg in b["segs"])
+        if b["type"] == "h":
+            intro.append(f'<h2 class="first">{h}</h2><span class="rule"></span>' if first else f"<h2>{h}</h2>")
+            first = False
+        elif "הקוד שבסוף" not in B.strip_niqqud(h):   # the QR remark belongs to the printed edition
+            intro.append(f"<p>{h}</p>")
+    intro.append("</section>")
+    title = (f'<section class="titlepage"><h1>{esc(bk["title_main"])}</h1><p class="by">{esc(bk["title_by"])}</p>'
+             f'<span class="rule"></span><p class="sub">{esc(bk["subtitle"])}</p></section>')
+    (SITE / "index.html").write_text(page(bk["title"], title + "\n".join(toc) + "\n".join(intro),
+                                          desc=bk["subtitle"]), encoding="utf-8")
+
+    # ---- one page per drasha ----
+    for n, d in enumerate(flat):
+        notes = Notes()
+        body = []
+        first = True
+        k = 0
+        for b in d["blocks"]:
+            if b["type"] == "h":
+                body.append(f'<h2>{"".join(seg_html(sg, notes, d["id"]) for sg in b["segs"])}</h2>')
+                continue
+            k += 1
+            h, plain = paragraph_html(b, k, notes, d["id"], first)
+            body.append(h)
+            search.append({"d": d["id"], "i": k, "h": f'{d["num_heb"]} {d["title_plain"]}', "x": plain})
+            first = False
+        src = "".join(f'<li id="n{i}">{esc(x)}</li>' for i, x in enumerate(notes.items, 1))
+        prev_d = flat[n - 1] if n else None
+        next_d = flat[n + 1] if n + 1 < len(flat) else None
+        nav = ['<nav class="next" aria-label="דרשות סמוכות">']
+        nav.append(f'<a class="prev" href="{prev_d["id"]}.html"><small>הדרשה הקודמת</small>{esc(prev_d["title"])}</a>' if prev_d else "<span></span>")
+        nav.append(f'<a class="fwd" href="{next_d["id"]}.html"><small>הדרשה הבאה</small>{esc(next_d["title"])}</a>' if next_d else "<span></span>")
+        nav.append("</nav>")
+        html_body = f"""<article>
+<header class="opening">
+  <div class="num">{esc(L["label-drasha"])} {d["num_heb"]}</div>
+  <h1>{esc(d["title"])}</h1>
+  <div class="said">{esc(L["label-said"])} {esc(d["date"])}</div>
+  <span class="rule"></span>
+</header>
+<div class="video" data-id="{d["id"]}">
+  <button type="button" class="poster" style="background-image:url(https://i.ytimg.com/vi/{d["id"]}/hqdefault.jpg)" aria-label="צפייה בדרשה"></button>
+</div>
+<div class="video-slot" aria-hidden="true"></div>
+<div class="video-anchor"></div>
+<div class="listen">
+  <span>לחיצה על הזמן שליד פסקה משמיעה אותה מפי הרב; הפסקה הנשמעת מסומנת.</span>
+  <label><input type="checkbox" id="follow" checked> גלילה עם ההקלטה</label>
+</div>
+<div class="text">
+{chr(10).join(body)}
+</div>
+<section class="sources" aria-labelledby="src-h"><h3 id="src-h">מראי מקומות</h3><ol>{src}</ol></section>
+{"".join(nav)}
+</article>"""
+        (SITE / f'{d["id"]}.html').write_text(page(f'{d["title_plain"]} – {bk["title"]}', html_body, here=d["num_heb"] + " " + d["title_plain"],
+                                                   desc=f'{bk["title"]}: {d["title_plain"]}'), encoding="utf-8")
+    (SITE / "search.json").write_text(json.dumps(search, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    print(f"{SITE}: index + {len(flat)} drashot, {len(search)} searchable paragraphs")
 
 
 if __name__ == "__main__":
-    build(sys.argv[1] if len(sys.argv) > 1 else REPO / "sefer/index.html")
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--only")
+    a = ap.parse_args()
+    build(a.only.split(",") if a.only else None)

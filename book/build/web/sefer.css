@@ -1,0 +1,146 @@
+/* The digital edition: the same page as the printed sefer – black ink on white, one deep red for
+   opening words and section marks, the Culmus faces of the print edition. */
+@font-face{font-family:"Sefer";src:url(fonts/taamey-frank.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Sefer";src:url(fonts/taamey-frank-bold.woff2) format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:"Sefer";src:url(fonts/frank-punct.woff2) format("woff2");unicode-range:U+2013,U+2026,U+201C-201E}
+@font-face{font-family:"Keter";src:url(fonts/keter-aram-tsova.woff2) format("woff2");font-display:swap}
+@font-face{font-family:"KeterYG";src:url(fonts/keter-yg.woff2) format("woff2");font-display:swap}
+@font-face{font-family:"KeterYG";src:url(fonts/frank-punct.woff2) format("woff2");unicode-range:U+2013,U+2026,U+201C-201E}
+
+:root{
+  --paper:#ffffff; --ink:#1b1a19; --ink-2:#5f5a54; --rule:#dcd8d2; --adom:#8e1b1b;
+  --now:rgba(142,27,27,.06); --mark:#fff1a8;
+  --fs:21px; --measure:35em;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#131313; --ink:#ebe6df; --ink-2:#a19b93; --rule:#34312e; --adom:#e0705f;
+    --now:rgba(224,112,95,.10); --mark:#5c4b0c;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#131313; --ink:#ebe6df; --ink-2:#a19b93; --rule:#34312e; --adom:#e0705f;
+  --now:rgba(224,112,95,.10); --mark:#5c4b0c;
+}
+
+*{box-sizing:border-box}
+html{scroll-padding-top:64px;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 var(--fs)/1.9 "Sefer","Frank Ruehl CLM","Taamey Frank CLM",serif;
+  font-feature-settings:"kern";text-rendering:optimizeLegibility}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--adom);outline-offset:2px}
+
+/* ---- top bar: a running head, not an app bar ---- */
+.head{position:sticky;top:0;z-index:30;background:var(--paper);border-bottom:1px solid var(--rule)}
+.head-in{max-width:calc(var(--measure) + 10em);margin:0 auto;display:flex;align-items:center;gap:4px;padding:6px 16px;
+  font:400 16px/1.4 "KeterYG",serif}
+.head .book{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-decoration:none;font-size:17px}
+.head .here{color:var(--ink-2)}
+.tool{background:none;border:0;padding:8px 9px;cursor:pointer;border-radius:4px;line-height:1;display:inline-flex;align-items:center;gap:6px;font-size:16px}
+.tool:hover{background:var(--now)}
+.tool svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.6}
+.tool .lbl{font-size:15px}
+
+/* ---- search ---- */
+.search{display:none;border-top:1px solid var(--rule);background:var(--paper)}
+.search.open{display:block}
+.search-in{max-width:var(--measure);margin:0 auto;padding:10px 16px 14px}
+.search input{width:100%;font:400 19px/1.4 "Sefer",serif;padding:8px 2px;border:0;border-bottom:1.5px solid var(--ink);background:transparent;color:var(--ink)}
+.search input:focus{outline:none;border-bottom-color:var(--adom)}
+.results{list-style:none;margin:6px 0 0;padding:0;max-height:min(60vh,520px);overflow:auto}
+.results li a{display:block;padding:9px 0;border-bottom:1px solid var(--rule);text-decoration:none;font-size:17px;line-height:1.6}
+.results .where{display:block;font:400 14px/1.4 "KeterYG",serif;color:var(--adom)}
+.results mark{background:var(--mark);color:inherit}
+.results .none{padding:10px 0;color:var(--ink-2);font-size:16px}
+
+/* ---- page ---- */
+main{max-width:var(--measure);margin:0 auto;padding:0 16px 96px}
+
+/* title page */
+.titlepage{text-align:center;padding:12vh 0 7vh}
+.titlepage h1{font:400 clamp(64px,13vw,104px)/1 "Keter",serif;margin:0}
+.titlepage .by{font:400 clamp(26px,5vw,34px)/1.3 "Keter",serif;margin:.35em 0 0}
+.titlepage .sub{margin:1.1em 0 0;font-size:20px}
+.rule{display:block;width:72px;height:1px;background:var(--adom);margin:26px auto;border:0}
+
+/* contents */
+.toc h2,.intro h2.first{font:400 30px/1.3 "Keter",serif;text-align:center;margin:1.6em 0 .2em}
+.toc .shaar{margin:1.6em 0 .4em;font:400 22px/1.4 "Keter",serif}
+.toc .shaar small{display:block;font:400 15px/1.4 "KeterYG",serif;color:var(--adom)}
+.toc ol{list-style:none;margin:0;padding:0}
+.toc li a{display:grid;grid-template-columns:2.2em 1fr;gap:0 .3em;padding:.5em 0;border-bottom:1px solid var(--rule);text-decoration:none;line-height:1.55}
+.toc li .n{color:var(--adom);font-family:"KeterYG",serif}
+.toc li .d{grid-column:2;font:400 14px/1.5 "KeterYG",serif;color:var(--ink-2)}
+.toc li a:hover .ttl{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px}
+
+/* drasha opening */
+.opening{text-align:center;padding:9vh 0 0}
+.opening .num{font:400 18px/1.4 "KeterYG",serif;color:var(--adom)}
+.opening h1{font:400 clamp(30px,6.4vw,44px)/1.35 "Keter",serif;margin:.3em 0 .25em}
+.opening .said{font:400 16px/1.4 "KeterYG",serif;color:var(--ink-2)}
+
+/* the recording */
+.video{position:relative;margin:30px 0 8px;aspect-ratio:16/9;background:#000}
+.video .poster{position:absolute;inset:0;width:100%;height:100%;border:0;padding:0;cursor:pointer;background:#000 center/cover no-repeat}
+.video .poster::after{content:"";position:absolute;inset:auto auto 18px 18px;width:62px;height:62px;border-radius:50%;
+  background:rgba(0,0,0,.66) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M8 5v14l11-7z' fill='white'/%3E%3C/svg%3E") 55% 50%/30px no-repeat}
+.video iframe,.video .yt{position:absolute;inset:0;width:100%;height:100%;border:0}
+.video.mini{position:fixed;inset:auto auto 14px 14px;width:min(320px,58vw);margin:0;z-index:40;box-shadow:0 2px 14px rgba(0,0,0,.35)}
+.video-slot{display:none;aspect-ratio:16/9;margin:30px 0 8px}
+.video-slot.on{display:block}
+.listen{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin:0 0 2em;font:400 16px/1.5 "KeterYG",serif;color:var(--ink-2)}
+.listen label{display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+.listen input{accent-color:var(--adom);width:16px;height:16px}
+
+/* text */
+.text p{margin:0;text-align:justify;text-indent:1.4em;hyphens:none;position:relative}
+.text p.first,.text h2+p,.text blockquote+p{text-indent:0}
+.text p.after-quote{text-indent:0}
+.text h2{font:700 1.05em/1.5 "Sefer",serif;text-align:center;margin:1.7em 0 .5em}
+.text .open{font:400 1.4em/1 "Keter",serif;color:var(--adom)}
+.text blockquote{margin:.8em 1.4em;font-size:.92em;line-height:1.8;text-align:justify}
+.text p.now,.text blockquote.now{background:var(--now);box-shadow:inset -3px 0 0 var(--adom)}
+.text p.flash{animation:flash 2.2s ease-out}
+@keyframes flash{from{background:var(--mark)}to{background:transparent}}
+
+/* time of a paragraph in the recording: in the outer margin, quiet until wanted */
+.t{position:absolute;inset-inline-start:calc(-1 * 4.4em);top:.45em;width:4em;text-align:end;padding:0;border:0;background:none;cursor:pointer;
+  font:400 13px/1.2 "KeterYG",serif;color:var(--ink-2);opacity:0;direction:ltr}
+.text p:hover>.t,.t:focus-visible,.playing .t{opacity:1}
+.t:hover{color:var(--adom)}
+@media (max-width:860px){.t{position:static;display:inline;width:auto;opacity:1;margin-inline-end:.4em;font-size:12px;vertical-align:.25em;text-indent:0}}
+
+.unc{font-size:.62em;color:var(--ink-2);text-decoration:none;vertical-align:.2em;cursor:pointer;background:none;border:0;padding:0 .1em}
+.unc:hover{color:var(--adom)}
+.qahal{font-size:.85em;color:var(--ink-2)}
+
+/* footnotes: a letter that opens the source */
+.fn{position:relative;display:inline}
+.fn>button{background:none;border:0;padding:0 .1em;cursor:pointer;color:var(--adom);font:400 .62em/1 "KeterYG",serif;vertical-align:.55em}
+.fn .pop{display:none;position:absolute;z-index:20;inset-block-start:1.7em;inset-inline-start:-1em;width:max-content;max-width:min(19em,80vw);
+  background:var(--paper);border:1px solid var(--ink);padding:.35em .7em;font:400 17px/1.5 "Sefer",serif;color:var(--ink);text-indent:0;text-align:start}
+.fn.open .pop{display:block}
+.sources{margin-top:3em;border-top:1px solid var(--rule);padding-top:1em;font-size:16px;line-height:1.7;color:var(--ink-2)}
+.sources h3{font:400 18px/1.4 "KeterYG",serif;color:var(--ink);margin:0 0 .4em}
+.sources ol{margin:0;padding-inline-start:1.8em;list-style:hebrew}
+.sources li:target{color:var(--ink);background:var(--mark)}
+
+/* end of a drasha */
+.next{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:3.5em;border-top:1px solid var(--rule);padding-top:1em;font-size:17px;line-height:1.5}
+.next a{text-decoration:none}
+.next small{display:block;font:400 14px/1.4 "KeterYG",serif;color:var(--adom)}
+.next .prev{text-align:start}.next .fwd{text-align:end}
+
+.intro p{text-align:justify;margin:0 0 .6em}
+.intro h2{font:700 1.05em/1.5 "Sefer",serif;text-align:center;margin:1.6em 0 .4em}
+footer.colophon{max-width:var(--measure);margin:0 auto;padding:24px 16px 48px;text-align:center;font:400 14px/1.6 "KeterYG",serif;color:var(--ink-2);border-top:1px solid var(--rule)}
+
+@media (max-width:600px){
+  :root{--fs:19px}
+  .text p{text-align:start}
+  .text blockquote{margin:.8em .6em}
+  .opening{padding-top:6vh}
+  .head .tool .lbl{display:none}
+}
+@media print{.head,.search,.video,.video-slot,.listen,.next,.t{display:none!important}}

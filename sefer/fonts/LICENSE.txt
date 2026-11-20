@@ -1,0 +1,2 @@
+GPL-2 with font exception. Subsets of Culmus fonts by Yoram Gnat (Taamey Frank CLM, Keter Aram Tsova, Keter YG) and Culmus Frank Ruehl CLM.
+Source: https://culmus.sourceforge.io/
