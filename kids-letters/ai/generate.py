@@ -30,6 +30,7 @@ class Generator:
         self.pipe.scheduler = DPMSolverMultistepScheduler.from_config(
             self.pipe.scheduler.config, algorithm_type='sde-dpmsolver++', use_karras_sigmas=True)
         self.pipe.vae.to(torch.float32)  # decode in full precision: cleaner skin gradients
+        self.pipe.vae.enable_tiling()     # large decodes (4K detail pass) in 512px tiles to stay in RAM
         self.face_adapter = False
         if face_adapter:
             self.enable_face_adapter()

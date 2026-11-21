@@ -9,11 +9,19 @@ SETTING = 'Jerusalem stone courtyard, blue door, bougainvillea, golden hour'
 
 # Age cues come right after the style: the model otherwise drifts to 8-10 year olds.
 # Each garment names one color only; extra colors (shoes, jeans) bleed into the main garment.
-NOAM = ('small 5 year old boy, chubby cheeks, round baby face, big brown eyes, fair skin, curly brown hair, '
-        'gap-toothed grin, plain bright orange hoodie, jeans, red sneakers')
+# Round-1 prompts (used to find the look; the user's picks were seed 77 of each):
+NOAM_ROUND1 = ('small 5 year old boy, chubby cheeks, round baby face, big brown eyes, fair skin, curly brown hair, '
+               'gap-toothed grin, plain bright orange hoodie, jeans, red sneakers')
+TAMAR_ROUND1 = ('small 5 year old girl, chubby cheeks, round baby face, big brown eyes, brown skin, dark hair in two afro puffs, '
+                'plain bright yellow overalls, pink striped shirt, white sneakers')
 
-TAMAR = ('small 5 year old girl, chubby cheeks, round baby face, big brown eyes, brown skin, dark hair in two afro puffs, '
-         'plain bright yellow overalls, pink striped shirt, white sneakers')
+# The chosen look (out/round1/noam_77.png, out/round1/tamar_77.png). The user preferred these over the
+# 2D design, so these describe what is in those images.
+NOAM = ('small 4 year old boy, chubby cheeks, round baby face, fair skin, curly brown hair, brown eyes, '
+        'orange hoodie with red cuffs and navy hood lining, jeans, orange sneakers')
+
+TAMAR = ('small 5 year old girl, brown skin, round face, big brown eyes, dark curly hair in two puffy pigtails '
+         'with pink ties, pink and yellow overalls, yellow striped t-shirt, blue sneakers')
 
 NEGATIVE = ('photo, photograph, teenager, teen, older child, tall, long legs, mature face, adult, text, letters, words, '
             'watermark, signature, logo, print on clothes, deformed, disfigured, extra fingers, missing fingers, extra limbs, bad hands, '

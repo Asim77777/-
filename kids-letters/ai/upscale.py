@@ -1,4 +1,4 @@
-"""4x upscale with Real-ESRGAN (loaded through spandrel), then crop and resize to exact 4K.
+"""4x upscale with 4x-UltraSharp (ESRGAN, loaded through spandrel), then crop and resize to exact 4K.
 Portrait -> 2160x3840, landscape -> 3840x2160, square -> 2160x2160.
 Usage: python3 upscale.py <in.png> <out.jpg|png>"""
 import os
@@ -14,10 +14,14 @@ from spandrel import ModelLoader
 _model = None
 
 
+# 4x-UltraSharp keeps skin and hair texture crisp; Real-ESRGAN x4 smooths them into a waxy look.
+UPSCALER = ('Kim2091/UltraSharp', '4x-UltraSharp.pth')
+
+
 def model():
     global _model
     if _model is None:
-        path = hf_hub_download('ai-forever/Real-ESRGAN', 'RealESRGAN_x4.pth')
+        path = hf_hub_download(*UPSCALER)
         _model = ModelLoader().load_from_file(path).eval()
     return _model
 
@@ -40,6 +44,14 @@ def upscale4(img, tile=256, pad=16):
             out[:, :, y0 * 4:y0 * 4 + th, x0 * 4:x0 * 4 + tw] = y[:, :, ty:ty + th, tx:tx + tw]
     arr = (out[0].clamp(0, 1).permute(1, 2, 0).numpy() * 255.0 + 0.5).astype(np.uint8)
     return Image.fromarray(arr)
+
+
+def release():
+    """Free the upscaler before the image model needs the memory."""
+    global _model
+    _model = None
+    import gc
+    gc.collect()
 
 
 def to_4k(img):
