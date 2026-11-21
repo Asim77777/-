@@ -5,7 +5,9 @@ Jobs (each one: generate at ~768x1344 with the picked face as IP-Adapter referen
   hero_<who>        the picked image itself, taken to 4K
   <who>_<expr>      close-ups: happy, surprised, laugh
   pair              both kids together; each face reference is limited to its half of the frame
-Usage: python3 run_round2.py [job ...]   (default: all jobs; finished files are skipped)"""
+Two phases, each in its own process so memory stays under the limit:
+  python3 run_round2.py bases [job ...]   generate *_base.png (face adapter loaded)
+  python3 run_round2.py 4k                take every *_base.png without a *_4k.png to 4K (no adapter)"""
 import os
 import sys
 import time
@@ -31,21 +33,36 @@ EXPR = {
     'laugh': 'laughing out loud, eyes squeezed shut, wide open mouth',
 }
 
-jobs = sys.argv[1:] or (['hero_noam', 'hero_tamar'] + [f'{w}_{e}' for w in IDENTITY for e in EXPR] + ['pair'])
+MODE = sys.argv[1] if len(sys.argv) > 1 else 'bases'
+jobs = sys.argv[2:] or (['hero_noam', 'hero_tamar'] + [f'{w}_{e}' for w in IDENTITY for e in EXPR] + ['pair'])
 os.makedirs(OUT, exist_ok=True)
 torch.set_num_threads(os.cpu_count() or 4)
+
+if MODE == '4k':
+    gen = Generator(face_adapter=False)
+    for f in sorted(os.listdir(OUT)):
+        if not f.endswith('_base.png'):
+            continue
+        name = f[:-len('_base.png')]
+        path = os.path.join(OUT, f'{name}_4k.png')
+        if os.path.exists(path):
+            continue
+        t = time.time()
+        big = make_4k(gen, Image.open(os.path.join(OUT, f)).convert('RGB'), strength=0.3)
+        big.save(path)
+        log_entry(LOG, file=os.path.relpath(path, HERE), source=f'out/final/{f}', detail_seconds=round(time.time() - t))
+        print(f'{path} {big.size[0]}x{big.size[1]} (4K pass {time.time() - t:.0f}s)', flush=True)
+    sys.exit(0)
+
 gen = Generator(face_adapter=True)
 
 
 def finish(name, base, info):
-    """Save the base image, take it to 4K, log it."""
-    base.save(os.path.join(OUT, f'{name}_base.png'))
-    t = time.time()
-    big = make_4k(gen, base, strength=0.3)
-    path = os.path.join(OUT, f'{name}_4k.png')
-    big.save(path)
-    log_entry(LOG, file=os.path.relpath(path, HERE), detail_seconds=round(time.time() - t), **info)
-    print(f'{path} {big.size[0]}x{big.size[1]} (4K pass {time.time() - t:.0f}s)', flush=True)
+    """Save the base image and log it; the 4K pass runs later in its own process."""
+    path = os.path.join(OUT, f'{name}_base.png')
+    base.save(path)
+    log_entry(LOG, file=os.path.relpath(path, HERE), **info)
+    print(f'{path}', flush=True)
 
 
 def pair_image(seed):
@@ -72,7 +89,7 @@ def pair_image(seed):
 
 
 for job in jobs:
-    if os.path.exists(os.path.join(OUT, f'{job}_4k.png')):
+    if os.path.exists(os.path.join(OUT, f'{job}_base.png')):
         continue
     t = time.time()
     if job.startswith('hero_'):
