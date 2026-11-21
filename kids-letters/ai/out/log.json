@@ -370,5 +370,92 @@
   "file": "out/final/hero_tamar_4k.png",
   "source": "out/final/hero_tamar_base.png",
   "detail_seconds": 701
+ },
+ {
+  "file": "out/final/noam_happy_base.png",
+  "job": "noam_happy",
+  "seed": 77,
+  "prompt": "cinematic 3d animated film still, hyperrealistic, detailed skin, volumetric light, head and shoulders close-up, beaming with a huge happy open-mouth smile, sparkling eyes, small 4 year old boy, curly brown hair, chubby cheeks, orange hoodie with red cuffs, Jerusalem stone courtyard, blue door, bougainvillea, golden hour",
+  "negative": "photo, photograph, teenager, teen, older child, tall, long legs, mature face, adult, text, letters, words, watermark, signature, logo, print on clothes, deformed, disfigured, extra fingers, missing fingers, extra limbs, bad hands, bad anatomy, cross-eyed, blurry face, lowres, cropped head, creepy, full body, legs, shoes, denim jacket, blue sleeves",
+  "ref": "out/final/noam_face_ref.png",
+  "ref_scale": 0.45,
+  "gen_seconds": 125
+ },
+ {
+  "file": "out/final/noam_surprised_base.png",
+  "job": "noam_surprised",
+  "seed": 77,
+  "prompt": "cinematic 3d animated film still, hyperrealistic, detailed skin, volumetric light, head and shoulders close-up, shocked surprised face, mouth wide open in an o shape, eyebrows raised high, eyes wide open, small 4 year old boy, curly brown hair, chubby cheeks, orange hoodie with red cuffs, Jerusalem stone courtyard, blue door, bougainvillea, golden hour",
+  "negative": "photo, photograph, teenager, teen, older child, tall, long legs, mature face, adult, text, letters, words, watermark, signature, logo, print on clothes, deformed, disfigured, extra fingers, missing fingers, extra limbs, bad hands, bad anatomy, cross-eyed, blurry face, lowres, cropped head, creepy, full body, legs, shoes, denim jacket, blue sleeves",
+  "ref": "out/final/noam_face_ref.png",
+  "ref_scale": 0.45,
+  "gen_seconds": 117
+ },
+ {
+  "file": "out/final/noam_laugh_base.png",
+  "job": "noam_laugh",
+  "seed": 77,
+  "prompt": "cinematic 3d animated film still, hyperrealistic, detailed skin, volumetric light, head and shoulders close-up, laughing hysterically, eyes squeezed shut, head tilted back, mouth wide open, small 4 year old boy, curly brown hair, chubby cheeks, orange hoodie with red cuffs, Jerusalem stone courtyard, blue door, bougainvillea, golden hour",
+  "negative": "photo, photograph, teenager, teen, older child, tall, long legs, mature face, adult, text, letters, words, watermark, signature, logo, print on clothes, deformed, disfigured, extra fingers, missing fingers, extra limbs, bad hands, bad anatomy, cross-eyed, blurry face, lowres, cropped head, creepy, full body, legs, shoes, denim jacket, blue sleeves",
+  "ref": "out/final/noam_face_ref.png",
+  "ref_scale": 0.45,
+  "gen_seconds": 106
+ },
+ {
+  "file": "out/final/tamar_happy_base.png",
+  "job": "tamar_happy",
+  "seed": 77,
+  "prompt": "cinematic 3d animated film still, hyperrealistic, detailed skin, volumetric light, head and shoulders close-up, beaming with a huge happy open-mouth smile, sparkling eyes, small 5 year old girl, brown skin, dark curly hair in two puffy pigtails with pink ties, pink and yellow overalls, Jerusalem stone courtyard, blue door, bougainvillea, golden hour",
+  "negative": "photo, photograph, teenager, teen, older child, tall, long legs, mature face, adult, text, letters, words, watermark, signature, logo, print on clothes, deformed, disfigured, extra fingers, missing fingers, extra limbs, bad hands, bad anatomy, cross-eyed, blurry face, lowres, cropped head, creepy, full body, legs, shoes, denim jacket, blue sleeves",
+  "ref": "out/final/tamar_face_ref.png",
+  "ref_scale": 0.45,
+  "gen_seconds": 127
+ },
+ {
+  "file": "out/final/tamar_surprised_base.png",
+  "job": "tamar_surprised",
+  "seed": 77,
+  "prompt": "cinematic 3d animated film still, hyperrealistic, detailed skin, volumetric light, head and shoulders close-up, shocked surprised face, mouth wide open in an o shape, eyebrows raised high, eyes wide open, small 5 year old girl, brown skin, dark curly hair in two puffy pigtails with pink ties, pink and yellow overalls, Jerusalem stone courtyard, blue door, bougainvillea, golden hour",
+  "negative": "photo, photograph, teenager, teen, older child, tall, long legs, mature face, adult, text, letters, words, watermark, signature, logo, print on clothes, deformed, disfigured, extra fingers, missing fingers, extra limbs, bad hands, bad anatomy, cross-eyed, blurry face, lowres, cropped head, creepy, full body, legs, shoes, denim jacket, blue sleeves",
+  "ref": "out/final/tamar_face_ref.png",
+  "ref_scale": 0.45,
+  "gen_seconds": 140
+ },
+ {
+  "file": "out/final/tamar_laugh_base.png",
+  "job": "tamar_laugh",
+  "seed": 77,
+  "prompt": "cinematic 3d animated film still, hyperrealistic, detailed skin, volumetric light, head and shoulders close-up, laughing hysterically, eyes squeezed shut, head tilted back, mouth wide open, small 5 year old girl, brown skin, dark curly hair in two puffy pigtails with pink ties, pink and yellow overalls, Jerusalem stone courtyard, blue door, bougainvillea, golden hour",
+  "negative": "photo, photograph, teenager, teen, older child, tall, long legs, mature face, adult, text, letters, words, watermark, signature, logo, print on clothes, deformed, disfigured, extra fingers, missing fingers, extra limbs, bad hands, bad anatomy, cross-eyed, blurry face, lowres, cropped head, creepy, full body, legs, shoes, denim jacket, blue sleeves",
+  "ref": "out/final/tamar_face_ref.png",
+  "ref_scale": 0.45,
+  "gen_seconds": 138
+ },
+ {
+  "file": "out/final/pair_77_base.png",
+  "job": "pair_77",
+  "seed": 77,
+  "prompt": "cinematic 3d animated film still, hyperrealistic, detailed skin, volumetric light, full body, only two kids holding hands, a curly haired little boy in an orange hoodie and a little girl with two puffy pigtails in pink and yellow overalls, Jerusalem stone courtyard, blue door, bougainvillea, golden hour",
+  "ref": "both faces, masked halves",
+  "ref_scale": 0.4,
+  "gen_seconds": 130
+ },
+ {
+  "file": "out/final/pair_101_base.png",
+  "job": "pair_101",
+  "seed": 101,
+  "prompt": "cinematic 3d animated film still, hyperrealistic, detailed skin, volumetric light, full body, only two kids holding hands, a curly haired little boy in an orange hoodie and a little girl with two puffy pigtails in pink and yellow overalls, Jerusalem stone courtyard, blue door, bougainvillea, golden hour",
+  "ref": "both faces, masked halves",
+  "ref_scale": 0.4,
+  "gen_seconds": 135
+ },
+ {
+  "file": "out/final/pair_133_base.png",
+  "job": "pair_133",
+  "seed": 133,
+  "prompt": "cinematic 3d animated film still, hyperrealistic, detailed skin, volumetric light, full body, only two kids holding hands, a curly haired little boy in an orange hoodie and a little girl with two puffy pigtails in pink and yellow overalls, Jerusalem stone courtyard, blue door, bougainvillea, golden hour",
+  "ref": "both faces, masked halves",
+  "ref_scale": 0.4,
+  "gen_seconds": 141
  }
 ]
