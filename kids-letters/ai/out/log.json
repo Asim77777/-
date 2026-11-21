@@ -302,5 +302,73 @@
   "model": "Lykon/dreamshaper-xl-lightning",
   "seconds": 113,
   "time": "2026-11-21 10:59"
+ },
+ {
+  "file": "out/final/pair_base.png",
+  "job": "pair",
+  "seed": 77,
+  "prompt": "cinematic 3d animated film still, hyperrealistic, detailed skin, volumetric light, full body, two small kids side by side, on the left a 4 year old boy with curly brown hair in an orange hoodie and jeans, on the right a 5 year old girl with brown skin and two puffy pigtails in pink and yellow overalls, Jerusalem stone courtyard, blue door, bougainvillea, golden hour",
+  "ref": "both faces, masked halves",
+  "ref_scale": 0.6,
+  "gen_seconds": 131
+ },
+ {
+  "file": "out/final/noam_happy_base.png",
+  "job": "noam_happy",
+  "seed": 77,
+  "prompt": "cinematic 3d animated film still, hyperrealistic, detailed skin, volumetric light, close-up portrait, small 4 year old boy, chubby cheeks, round baby face, fair skin, curly brown hair, brown eyes, orange hoodie with red cuffs and navy hood lining, jeans, orange sneakers, big happy smile, Jerusalem stone courtyard, blue door, bougainvillea, golden hour",
+  "ref": "out/final/noam_face_ref.png",
+  "ref_scale": 0.65,
+  "gen_seconds": 133
+ },
+ {
+  "file": "out/final/tamar_happy_base.png",
+  "job": "tamar_happy",
+  "seed": 77,
+  "prompt": "cinematic 3d animated film still, hyperrealistic, detailed skin, volumetric light, close-up portrait, small 5 year old girl, brown skin, round face, big brown eyes, dark curly hair in two puffy pigtails with pink ties, pink and yellow overalls, yellow striped t-shirt, blue sneakers, big happy smile, Jerusalem stone courtyard, blue door, bougainvillea, golden hour",
+  "ref": "out/final/tamar_face_ref.png",
+  "ref_scale": 0.65,
+  "gen_seconds": 137
+ },
+ {
+  "file": "out/final/noam_surprised_base.png",
+  "job": "noam_surprised",
+  "seed": 77,
+  "prompt": "cinematic 3d animated film still, hyperrealistic, detailed skin, volumetric light, close-up portrait, small 4 year old boy, chubby cheeks, round baby face, fair skin, curly brown hair, brown eyes, orange hoodie with red cuffs and navy hood lining, jeans, orange sneakers, surprised face, mouth open in an o, raised eyebrows, wide eyes, Jerusalem stone courtyard, blue door, bougainvillea, golden hour",
+  "ref": "out/final/noam_face_ref.png",
+  "ref_scale": 0.65,
+  "gen_seconds": 136
+ },
+ {
+  "file": "out/final/tamar_surprised_base.png",
+  "job": "tamar_surprised",
+  "seed": 77,
+  "prompt": "cinematic 3d animated film still, hyperrealistic, detailed skin, volumetric light, close-up portrait, small 5 year old girl, brown skin, round face, big brown eyes, dark curly hair in two puffy pigtails with pink ties, pink and yellow overalls, yellow striped t-shirt, blue sneakers, surprised face, mouth open in an o, raised eyebrows, wide eyes, Jerusalem stone courtyard, blue door, bougainvillea, golden hour",
+  "ref": "out/final/tamar_face_ref.png",
+  "ref_scale": 0.65,
+  "gen_seconds": 124
+ },
+ {
+  "file": "out/final/noam_laugh_base.png",
+  "job": "noam_laugh",
+  "seed": 77,
+  "prompt": "cinematic 3d animated film still, hyperrealistic, detailed skin, volumetric light, close-up portrait, small 4 year old boy, chubby cheeks, round baby face, fair skin, curly brown hair, brown eyes, orange hoodie with red cuffs and navy hood lining, jeans, orange sneakers, laughing out loud, eyes squeezed shut, wide open mouth, Jerusalem stone courtyard, blue door, bougainvillea, golden hour",
+  "ref": "out/final/noam_face_ref.png",
+  "ref_scale": 0.65,
+  "gen_seconds": 127
+ },
+ {
+  "file": "out/final/tamar_laugh_base.png",
+  "job": "tamar_laugh",
+  "seed": 77,
+  "prompt": "cinematic 3d animated film still, hyperrealistic, detailed skin, volumetric light, close-up portrait, small 5 year old girl, brown skin, round face, big brown eyes, dark curly hair in two puffy pigtails with pink ties, pink and yellow overalls, yellow striped t-shirt, blue sneakers, laughing out loud, eyes squeezed shut, wide open mouth, Jerusalem stone courtyard, blue door, bougainvillea, golden hour",
+  "ref": "out/final/tamar_face_ref.png",
+  "ref_scale": 0.65,
+  "gen_seconds": 148
+ },
+ {
+  "file": "out/final/hero_tamar_4k.png",
+  "source": "out/final/hero_tamar_base.png",
+  "detail_seconds": 701
  }
 ]

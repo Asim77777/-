@@ -27,11 +27,18 @@ LOG = os.path.join(HERE, 'out', 'log.json')
 CHOSEN = json.load(open(os.path.join(HERE, 'out', 'chosen.json')))
 IDENTITY = {'noam': NOAM, 'tamar': TAMAR}
 FACE = {w: Image.open(os.path.join(OUT, f'{w}_face_ref.png')).convert('RGB') for w in IDENTITY}
+# The expression goes before the outfit, and the face reference is weaker (0.45) than for a plain
+# likeness: at 0.65 it copied the picked image's expression into every close-up.
 EXPR = {
-    'happy': 'big happy smile',
-    'surprised': 'surprised face, mouth open in an o, raised eyebrows, wide eyes',
-    'laugh': 'laughing out loud, eyes squeezed shut, wide open mouth',
+    'happy': 'beaming with a huge happy open-mouth smile, sparkling eyes',
+    'surprised': 'shocked surprised face, mouth wide open in an o shape, eyebrows raised high, eyes wide open',
+    'laugh': 'laughing hysterically, eyes squeezed shut, head tilted back, mouth wide open',
 }
+OUTFIT = {
+    'noam': 'small 4 year old boy, curly brown hair, chubby cheeks, orange hoodie with red cuffs',
+    'tamar': 'small 5 year old girl, brown skin, dark curly hair in two puffy pigtails with pink ties, pink and yellow overalls',
+}
+CLOSEUP_NEG = NEGATIVE + ', full body, legs, shoes, denim jacket, blue sleeves'
 
 MODE = sys.argv[1] if len(sys.argv) > 1 else 'bases'
 jobs = sys.argv[2:] or (['hero_noam', 'hero_tamar'] + [f'{w}_{e}' for w in IDENTITY for e in EXPR] + ['pair'])
@@ -66,9 +73,8 @@ def finish(name, base, info):
 
 
 def pair_image(seed):
-    p = (f'{STYLE}, full body, two small kids side by side, on the left a 4 year old boy with curly brown hair in an '
-         f'orange hoodie and jeans, on the right a 5 year old girl with brown skin and two puffy pigtails in pink and '
-         f'yellow overalls, {SETTING}')
+    p = (f'{STYLE}, full body, only two kids holding hands, a curly haired little boy in an orange hoodie '
+         f'and a little girl with two puffy pigtails in pink and yellow overalls, {SETTING}')
     w, h = PORTRAIT
     left = Image.new('L', (w, h), 0)
     left.paste(255, (0, 0, w // 2, h))
@@ -76,10 +82,10 @@ def pair_image(seed):
     right.paste(255, (w // 2, 0, w, h))
     masks = IPAdapterMaskProcessor().preprocess([left, right], height=h, width=w)
     masks = [masks.reshape(1, masks.shape[0], masks.shape[2], masks.shape[3])]
-    gen.pipe.set_ip_adapter_scale([[0.6, 0.6]])
+    gen.pipe.set_ip_adapter_scale([[0.4, 0.4]])
     g = torch.Generator('cpu').manual_seed(seed)
     with torch.inference_mode():
-        lat = gen.pipe(prompt=p, negative_prompt=NEGATIVE + ', third child, crowd', width=w, height=h,
+        lat = gen.pipe(prompt=p, negative_prompt=NEGATIVE + ', third child, three kids, crowd, adult, pink hoodie', width=w, height=h,
                        num_inference_steps=8, guidance_scale=2.0, generator=g, output_type='latent',
                        ip_adapter_image=[[FACE['noam'], FACE['tamar']]],
                        cross_attention_kwargs={'ip_adapter_masks': masks}).images
@@ -96,15 +102,15 @@ for job in jobs:
         who = job[5:]
         base = Image.open(os.path.join(HERE, CHOSEN[who]['file'])).convert('RGB')
         finish(job, base, dict(job=job, source=CHOSEN[who]['file']))
-    elif job == 'pair':
-        seed = 77
+    elif job.startswith('pair'):
+        seed = int(job[5:]) if job[5:] else 77
         base, p = pair_image(seed)
-        finish(job, base, dict(job=job, seed=seed, prompt=p, ref='both faces, masked halves', ref_scale=0.6,
+        finish(job, base, dict(job=job, seed=seed, prompt=p, ref='both faces, masked halves', ref_scale=0.4,
                                gen_seconds=round(time.time() - t)))
     else:
         who, expr = job.split('_', 1)
-        p = f'{STYLE}, close-up portrait, {IDENTITY[who]}, {EXPR[expr]}, {SETTING}'
+        p = f'{STYLE}, head and shoulders close-up, {EXPR[expr]}, {OUTFIT[who]}, {SETTING}'
         seed = CHOSEN[who]['seed']
-        base, secs = gen(p, NEGATIVE, seed, size=PORTRAIT, ref=FACE[who], ref_scale=0.65)
-        finish(job, base, dict(job=job, seed=seed, prompt=p, ref=f'out/final/{who}_face_ref.png', ref_scale=0.65,
-                               gen_seconds=round(secs)))
+        base, secs = gen(p, CLOSEUP_NEG, seed, size=PORTRAIT, ref=FACE[who], ref_scale=0.45)
+        finish(job, base, dict(job=job, seed=seed, prompt=p, negative=CLOSEUP_NEG, ref=f'out/final/{who}_face_ref.png',
+                               ref_scale=0.45, gen_seconds=round(secs)))
