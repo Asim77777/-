@@ -1,0 +1,161 @@
+<title>נועם ותמר בתלת מימד</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Rubik:wght@400;500;600&display=swap">
+<style>
+/* Layout: a character model sheet. Big pair shot first, then one panel per character, expressions, and the motion test. */
+:root {
+  --bg: #F2F4F8; --surface: #FFFFFF; --fg: #1D2330; --muted: #596277; --line: #DCE1EA;
+  --door: #2F6DB5; --flower: #C2378F; --orange: #F06A12;
+  --display: "Fredoka", "Rubik", "Arial Hebrew", system-ui, sans-serif;
+  --body: "Rubik", "Arial Hebrew", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #11151D; --surface: #1A202C; --fg: #ECEFF5; --muted: #A1AABD; --line: #2A3243;
+  --door: #6FA2E6; --flower: #E36AB4; --orange: #FF8A45; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #11151D; --surface: #1A202C; --fg: #ECEFF5; --muted: #A1AABD; --line: #2A3243;
+  --door: #6FA2E6; --flower: #E36AB4; --orange: #FF8A45; color-scheme: dark; }
+
+body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 16px; line-height: 1.6; }
+.wrap { max-width: 1120px; margin: 0 auto; padding-block: 36px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 56px; }
+h1, h2, h3 { font-family: var(--display); line-height: 1.12; margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(2.1rem, 5.5vw, 3.4rem); font-weight: 700; }
+h2 { font-size: clamp(1.5rem, 3.4vw, 2.1rem); font-weight: 600; }
+h3 { font-size: 1.35rem; font-weight: 600; }
+p { margin: 0; }
+.muted { color: var(--muted); }
+img, video { display: block; max-width: 100%; height: auto; border-radius: 18px; background: var(--line); }
+
+.hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 36px; align-items: center; }
+.hero .copy { display: grid; gap: 14px; min-width: 0; }
+.eyebrow { font-family: var(--display); font-weight: 600; color: var(--door); letter-spacing: .02em; }
+.lead { font-size: 1.1rem; color: var(--muted); max-width: 52ch; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+.chip { font-size: .88rem; padding: 5px 12px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); }
+.hero figure { margin: 0; }
+.hero img { width: 100%; max-height: 82vh; object-fit: cover; aspect-ratio: 9 / 16; }
+
+.section { display: grid; gap: 20px; }
+.section > header { display: grid; gap: 6px; max-width: 64ch; }
+
+.chars { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.char { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 18px; display: grid; gap: 14px; min-width: 0; }
+.char-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.swatch { display: flex; gap: 6px; }
+.swatch span { width: 18px; height: 18px; border-radius: 50%; border: 1px solid var(--line); }
+.views { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.views figure { margin: 0; display: grid; gap: 6px; }
+.views img, .views video { width: 100%; aspect-ratio: 9 / 16; object-fit: cover; }
+figcaption { font-size: .85rem; color: var(--muted); }
+.char p { color: var(--muted); }
+
+.faces { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
+.faces figure { margin: 0; display: grid; gap: 6px; justify-items: center; }
+.faces img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 50%; }
+
+.motion { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: 28px; align-items: start; }
+.motion video { width: 100%; aspect-ratio: 9 / 16; }
+.motion ul { margin: 0; padding-inline-start: 1.2em; display: grid; gap: 6px; }
+
+.next { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 22px; display: grid; gap: 14px; }
+.next ol { margin: 0; padding-inline-start: 1.3em; display: grid; gap: 8px; }
+.next strong { font-weight: 600; }
+.note { border-inline-start: 4px solid var(--orange); padding-inline-start: 12px; color: var(--muted); }
+
+@media (max-width: 860px) {
+  .hero, .motion { grid-template-columns: 1fr; }
+  .chars { grid-template-columns: 1fr; }
+  .faces { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .hero img { max-height: none; }
+}
+@media (prefers-reduced-motion: reduce) { video { animation: none; } }
+</style>
+
+<main class="wrap" dir="rtl" lang="he">
+  <section class="hero">
+    <div class="copy">
+      <p class="eyebrow">סדרת האותיות · שלב 2</p>
+      <h1>נועם ותמר בתלת מימד</h1>
+      <p class="lead">שתי הדמויות שבחרת, בנויות כמודלים תלת־ממדיים אמיתיים, עם שלד להנפשה, פנים שמחליפות הבעות ופה שזז לפי הדיבור. מצולמות בחצר עם קיר אבן ירושלמית, דלת כחולה ובוגנוויליה, באור חם של אחר הצהריים.</p>
+      <div class="facts">
+        <span class="chip">נבנה בחינם ב־Blender</span>
+        <span class="chip">פורמט שורטס 9:16</span>
+        <span class="chip">8 צורות פה לדיבור</span>
+        <span class="chip">אותן דמויות בכל פרק</span>
+      </div>
+    </div>
+    <figure><img src="pair.jpg" alt="נועם מנפנף וצוחק ותמר מצביעה למעלה, בחצר עם קיר אבן ודלת כחולה" width="1080" height="1920"></figure>
+  </section>
+
+  <section class="section">
+    <header>
+      <h2>הדמויות</h2>
+      <p class="muted">כל דמות מצולמת בזווית, מלפנים ובסיבוב מלא, כדי לראות אותה מכל הכיוונים.</p>
+    </header>
+    <div class="chars">
+      <article class="char">
+        <div class="char-head"><h3>נועם</h3><div class="swatch" aria-hidden="true"><span style="background:#FF7A1F"></span><span style="background:#3F6FD6"></span><span style="background:#E84B4B"></span><span style="background:#4A2412"></span></div></div>
+        <p>תלתלים חומים, קפוצ׳ון כתום עם שרוכים וכיס, מכנסיים כחולים ונעליים אדומות. וכמו בציור המקורי, חסרה לו שן קדמית.</p>
+        <div class="views">
+          <figure><img src="noam_hero.jpg" alt="נועם מנפנף, בזווית" loading="lazy"><figcaption>מנפנף</figcaption></figure>
+          <figure><img src="noam_front.jpg" alt="נועם מלפנים" loading="lazy"><figcaption>מלפנים</figcaption></figure>
+          <figure><video src="noam_turntable.mp4" autoplay muted loop playsinline aria-label="נועם מסתובב 360 מעלות"></video><figcaption>סיבוב 360°</figcaption></figure>
+        </div>
+      </article>
+      <article class="char">
+        <div class="char-head"><h3>תמר</h3><div class="swatch" aria-hidden="true"><span style="background:#FF6F91"></span><span style="background:#FFC22E"></span><span style="background:#8E5BD9"></span><span style="background:#2B1B14"></span></div></div>
+        <p>שתי קוקיות נפוחות עם גומיות צהובות, פוני צדדי, חולצה ורודה מפוספסת, אוברול צהוב עם לב ונעליים סגולות.</p>
+        <div class="views">
+          <figure><img src="tamar_hero.jpg" alt="תמר מצביעה למעלה, בזווית" loading="lazy"><figcaption>מצביעה למעלה</figcaption></figure>
+          <figure><img src="tamar_front.jpg" alt="תמר מלפנים" loading="lazy"><figcaption>מלפנים</figcaption></figure>
+          <figure><video src="tamar_turntable.mp4" autoplay muted loop playsinline aria-label="תמר מסתובבת 360 מעלות"></video><figcaption>סיבוב 360°</figcaption></figure>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section">
+    <header>
+      <h2>הבעות פנים</h2>
+      <p class="muted">כל הבעה היא שילוב של עפעפיים, גבות וצורת פה, ואפשר לעבור ביניהן בהדרגה בזמן ההנפשה.</p>
+    </header>
+    <div class="faces">
+      <figure><img src="noam_happy.jpg" alt="נועם שמח" loading="lazy"><figcaption>נועם · שמח</figcaption></figure>
+      <figure><img src="noam_surprised.jpg" alt="נועם מופתע" loading="lazy"><figcaption>נועם · מופתע</figcaption></figure>
+      <figure><img src="noam_laugh.jpg" alt="נועם צוחק" loading="lazy"><figcaption>נועם · צוחק</figcaption></figure>
+      <figure><img src="tamar_happy.jpg" alt="תמר שמחה" loading="lazy"><figcaption>תמר · שמחה</figcaption></figure>
+      <figure><img src="tamar_surprised.jpg" alt="תמר מופתעת" loading="lazy"><figcaption>תמר · מופתעת</figcaption></figure>
+      <figure><img src="tamar_laugh.jpg" alt="תמר צוחקת" loading="lazy"><figcaption>תמר · צוחקת</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="section">
+    <header>
+      <h2>בדיקת הנפשה</h2>
+      <p class="muted">חמש שניות שבודקות שהשלד והפנים עובדים יחד. עדיין בלי קול.</p>
+    </header>
+    <div class="motion">
+      <video src="anim_test.mp4" controls muted loop playsinline aria-label="בדיקת הנפשה: נועם מנפנף ותמר אומרת שלום"></video>
+      <ul class="muted">
+        <li>נועם מנפנף לשלום, צוחק וממצמץ.</li>
+        <li>תמר ממצמצת, מטה את הראש ו״אומרת״ שלום. הפה עובר בין הצורות ש־א־ל־ו־ם.</li>
+        <li>אחר כך היא מצביעה למעלה ומופתעת. בפרקים, שם תופיע האות.</li>
+        <li>המצלמה מתקרבת לאט, עם רקע מטושטש כמו בסרטון ששלחת.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="next">
+    <h2>מה הלאה</h2>
+    <ol>
+      <li><strong>תבנית לפרק של 60 עד 90 שניות:</strong> פתיחה שתופסת, הצגת האות והצליל שלה, שלוש מילים עם בדיחה, שיר חזרה קצר וסיום.</li>
+      <li><strong>אותיות בתלת מימד:</strong> א׳ ו־A כאובייקטים אמיתיים שקופצים לבמה, בצורה מדויקת.</li>
+      <li><strong>קולות בחינם:</strong> קול עברי וקול אנגלי, עם תנועות פה שמסונכרנות לדיבור.</li>
+      <li><strong>פרק ראשון:</strong> א׳ עם נועם ותמר.</li>
+    </ol>
+    <p class="note" id="render-note">זמן רינדור: יעודכן אחרי הרינדור.</p>
+  </section>
+</main>

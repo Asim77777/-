@@ -35,6 +35,30 @@ node kids-letters/characters/src/gallery.js
 node kids-letters/tools/render_svg.js kids-letters/characters/options/option-1/sheet.svg out.png --width 1200
 ```
 
+## שלב 2: נועם ותמר בתלת מימד (`3d/`)
+הזוג שנבחר (זוג 1) בנוי כמודלים תלת־ממדיים ב-Blender, בחינם וכולו מקוד, כדי שהדמויות יהיו זהות בכל פרק.
+
+```
+3d/lib/            חלקי גוף, חומרים, פנים (עיניים, עפעפיים, גבות, פה עם shape keys), שיער, שלד ותנוחות, במה ותאורה
+3d/characters/     noam.py, tamar.py: הגדרת כל דמות (צבעים, פרופורציות, בגדים, שיער)
+3d/render/         stills.py, turntable.py, anim_test.py, web_assets.py
+3d/models/         noam.blend, tamar.blend (+ .glb)
+3d/renders/        תוצאות הרינדור
+3d/showcase/       עמוד התצוגה עם התמונות והסרטונים
+```
+
+התקנה: `pip install bpy==5.3.0` (Blender כספריית Python, דורש Python 3.13). הרינדור ב-Cycles על המעבד.
+```bash
+cd kids-letters/3d
+python3 render/stills.py all 128        # תמונות ראשיות, זוג, הבעות
+python3 render/turntable.py noam        # סיבוב 360°
+python3 render/anim_test.py             # בדיקת הנפשה של 5 שניות
+python3 save_models.py                  # שמירת קבצי .blend
+python3 render/web_assets.py            # העתקה לעמוד התצוגה
+```
+
+הבעות (`lib/face.py`): `happy`, `surprised`, `laugh`, `neutral`, `blink`. צורות פה לדיבור: `rest`, `A`, `E`, `O`, `M`. תנוחות (`lib/poses.py`): `idle`, `wave_a`/`wave_b`, `point_up`, `cheer`.
+
 ## השלבים הבאים
 1. הכנת הזוג שנבחר להנפשה: צורות פה לדיבור, מצמוץ, תנוחות ידיים, מבט מהצד.
 2. תבנית פרק של 60 עד 90 שניות ותסריטים ל־א׳ ול־A.

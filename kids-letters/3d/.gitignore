@@ -1,0 +1,4 @@
+__pycache__/
+renders/frames_*/
+renders/*.log
+*.blend1
