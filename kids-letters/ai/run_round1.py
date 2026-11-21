@@ -13,7 +13,7 @@ SEEDS = [int(s) for s in sys.argv[1:]] or [58, 77, 91, 105, 133, 150, 177, 202]
 
 os.makedirs(OUT, exist_ok=True)
 gen = Generator()
-for who in ('noam', 'tamar'):
+for who in os.environ.get('WHO', 'noam,tamar').split(','):
     for seed in SEEDS:
         path = os.path.join(OUT, f'{who}_{seed}.png')
         if os.path.exists(path):

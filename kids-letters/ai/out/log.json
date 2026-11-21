@@ -1,0 +1,306 @@
+[
+ {
+  "file": "out/round1/noam_58.png",
+  "who": "noam",
+  "seed": 58,
+  "prompt": "cinematic 3d animated film still, hyperrealistic, detailed skin, volumetric light, full body, small 5 year old boy, chubby cheeks, round baby face, big brown eyes, fair skin, curly brown hair, gap-toothed grin, plain bright orange hoodie, jeans, red sneakers, Jerusalem stone courtyard, blue door, bougainvillea, golden hour",
+  "negative": "photo, photograph, teenager, teen, older child, tall, long legs, mature face, adult, text, letters, words, watermark, signature, logo, print on clothes, deformed, disfigured, extra fingers, missing fingers, extra limbs, bad hands, bad anatomy, cross-eyed, blurry face, lowres, cropped head, creepy",
+  "size": [
+   768,
+   1344
+  ],
+  "steps": 8,
+  "cfg": 2.0,
+  "model": "Lykon/dreamshaper-xl-lightning",
+  "seconds": 99,
+  "time": "2026-11-21 10:23"
+ },
+ {
+  "file": "out/round1/noam_77.png",
+  "who": "noam",
+  "seed": 77,
+  "prompt": "cinematic 3d animated film still, hyperrealistic, detailed skin, volumetric light, full body, small 5 year old boy, chubby cheeks, round baby face, big brown eyes, fair skin, curly brown hair, gap-toothed grin, plain bright orange hoodie, jeans, red sneakers, Jerusalem stone courtyard, blue door, bougainvillea, golden hour",
+  "negative": "photo, photograph, teenager, teen, older child, tall, long legs, mature face, adult, text, letters, words, watermark, signature, logo, print on clothes, deformed, disfigured, extra fingers, missing fingers, extra limbs, bad hands, bad anatomy, cross-eyed, blurry face, lowres, cropped head, creepy",
+  "size": [
+   768,
+   1344
+  ],
+  "steps": 8,
+  "cfg": 2.0,
+  "model": "Lykon/dreamshaper-xl-lightning",
+  "seconds": 87,
+  "time": "2026-11-21 10:24"
+ },
+ {
+  "file": "out/round1/noam_91.png",
+  "who": "noam",
+  "seed": 91,
+  "prompt": "cinematic 3d animated film still, hyperrealistic, detailed skin, volumetric light, full body, small 5 year old boy, chubby cheeks, round baby face, big brown eyes, fair skin, curly brown hair, gap-toothed grin, plain bright orange hoodie, jeans, red sneakers, Jerusalem stone courtyard, blue door, bougainvillea, golden hour",
+  "negative": "photo, photograph, teenager, teen, older child, tall, long legs, mature face, adult, text, letters, words, watermark, signature, logo, print on clothes, deformed, disfigured, extra fingers, missing fingers, extra limbs, bad hands, bad anatomy, cross-eyed, blurry face, lowres, cropped head, creepy",
+  "size": [
+   768,
+   1344
+  ],
+  "steps": 8,
+  "cfg": 2.0,
+  "model": "Lykon/dreamshaper-xl-lightning",
+  "seconds": 97,
+  "time": "2026-11-21 10:26"
+ },
+ {
+  "file": "out/round1/noam_105.png",
+  "who": "noam",
+  "seed": 105,
+  "prompt": "cinematic 3d animated film still, hyperrealistic, detailed skin, volumetric light, full body, small 5 year old boy, chubby cheeks, round baby face, big brown eyes, fair skin, curly brown hair, gap-toothed grin, plain bright orange hoodie, jeans, red sneakers, Jerusalem stone courtyard, blue door, bougainvillea, golden hour",
+  "negative": "photo, photograph, teenager, teen, older child, tall, long legs, mature face, adult, text, letters, words, watermark, signature, logo, print on clothes, deformed, disfigured, extra fingers, missing fingers, extra limbs, bad hands, bad anatomy, cross-eyed, blurry face, lowres, cropped head, creepy",
+  "size": [
+   768,
+   1344
+  ],
+  "steps": 8,
+  "cfg": 2.0,
+  "model": "Lykon/dreamshaper-xl-lightning",
+  "seconds": 102,
+  "time": "2026-11-21 10:27"
+ },
+ {
+  "file": "out/round1/noam_133.png",
+  "who": "noam",
+  "seed": 133,
+  "prompt": "cinematic 3d animated film still, hyperrealistic, detailed skin, volumetric light, full body, small 5 year old boy, chubby cheeks, round baby face, big brown eyes, fair skin, curly brown hair, gap-toothed grin, plain bright orange hoodie, jeans, red sneakers, Jerusalem stone courtyard, blue door, bougainvillea, golden hour",
+  "negative": "photo, photograph, teenager, teen, older child, tall, long legs, mature face, adult, text, letters, words, watermark, signature, logo, print on clothes, deformed, disfigured, extra fingers, missing fingers, extra limbs, bad hands, bad anatomy, cross-eyed, blurry face, lowres, cropped head, creepy",
+  "size": [
+   768,
+   1344
+  ],
+  "steps": 8,
+  "cfg": 2.0,
+  "model": "Lykon/dreamshaper-xl-lightning",
+  "seconds": 101,
+  "time": "2026-11-21 10:29"
+ },
+ {
+  "file": "out/round1/noam_150.png",
+  "who": "noam",
+  "seed": 150,
+  "prompt": "cinematic 3d animated film still, hyperrealistic, detailed skin, volumetric light, full body, small 5 year old boy, chubby cheeks, round baby face, big brown eyes, fair skin, curly brown hair, gap-toothed grin, plain bright orange hoodie, jeans, red sneakers, Jerusalem stone courtyard, blue door, bougainvillea, golden hour",
+  "negative": "photo, photograph, teenager, teen, older child, tall, long legs, mature face, adult, text, letters, words, watermark, signature, logo, print on clothes, deformed, disfigured, extra fingers, missing fingers, extra limbs, bad hands, bad anatomy, cross-eyed, blurry face, lowres, cropped head, creepy",
+  "size": [
+   768,
+   1344
+  ],
+  "steps": 8,
+  "cfg": 2.0,
+  "model": "Lykon/dreamshaper-xl-lightning",
+  "seconds": 106,
+  "time": "2026-11-21 10:31"
+ },
+ {
+  "file": "out/round1/noam_177.png",
+  "who": "noam",
+  "seed": 177,
+  "prompt": "cinematic 3d animated film still, hyperrealistic, detailed skin, volumetric light, full body, small 5 year old boy, chubby cheeks, round baby face, big brown eyes, fair skin, curly brown hair, gap-toothed grin, plain bright orange hoodie, jeans, red sneakers, Jerusalem stone courtyard, blue door, bougainvillea, golden hour",
+  "negative": "photo, photograph, teenager, teen, older child, tall, long legs, mature face, adult, text, letters, words, watermark, signature, logo, print on clothes, deformed, disfigured, extra fingers, missing fingers, extra limbs, bad hands, bad anatomy, cross-eyed, blurry face, lowres, cropped head, creepy",
+  "size": [
+   768,
+   1344
+  ],
+  "steps": 8,
+  "cfg": 2.0,
+  "model": "Lykon/dreamshaper-xl-lightning",
+  "seconds": 110,
+  "time": "2026-11-21 10:33"
+ },
+ {
+  "file": "out/round1/noam_202.png",
+  "who": "noam",
+  "seed": 202,
+  "prompt": "cinematic 3d animated film still, hyperrealistic, detailed skin, volumetric light, full body, small 5 year old boy, chubby cheeks, round baby face, big brown eyes, fair skin, curly brown hair, gap-toothed grin, plain bright orange hoodie, jeans, red sneakers, Jerusalem stone courtyard, blue door, bougainvillea, golden hour",
+  "negative": "photo, photograph, teenager, teen, older child, tall, long legs, mature face, adult, text, letters, words, watermark, signature, logo, print on clothes, deformed, disfigured, extra fingers, missing fingers, extra limbs, bad hands, bad anatomy, cross-eyed, blurry face, lowres, cropped head, creepy",
+  "size": [
+   768,
+   1344
+  ],
+  "steps": 8,
+  "cfg": 2.0,
+  "model": "Lykon/dreamshaper-xl-lightning",
+  "seconds": 150,
+  "time": "2026-11-21 10:35"
+ },
+ {
+  "file": "out/round1/tamar_58.png",
+  "who": "tamar",
+  "seed": 58,
+  "prompt": "cinematic 3d animated film still, hyperrealistic, detailed skin, volumetric light, full body, small 5 year old girl, chubby cheeks, round baby face, big brown eyes, brown skin, dark hair in two afro puffs, plain bright yellow overalls, pink striped shirt, white sneakers, Jerusalem stone courtyard, blue door, bougainvillea, golden hour",
+  "negative": "photo, photograph, teenager, teen, older child, tall, long legs, mature face, adult, text, letters, words, watermark, signature, logo, print on clothes, deformed, disfigured, extra fingers, missing fingers, extra limbs, bad hands, bad anatomy, cross-eyed, blurry face, lowres, cropped head, creepy",
+  "size": [
+   768,
+   1344
+  ],
+  "steps": 8,
+  "cfg": 2.0,
+  "model": "Lykon/dreamshaper-xl-lightning",
+  "seconds": 128,
+  "time": "2026-11-21 10:37"
+ },
+ {
+  "file": "out/round1/tamar_77.png",
+  "who": "tamar",
+  "seed": 77,
+  "prompt": "cinematic 3d animated film still, hyperrealistic, detailed skin, volumetric light, full body, small 5 year old girl, chubby cheeks, round baby face, big brown eyes, brown skin, dark hair in two afro puffs, plain bright yellow overalls, pink striped shirt, white sneakers, Jerusalem stone courtyard, blue door, bougainvillea, golden hour",
+  "negative": "photo, photograph, teenager, teen, older child, tall, long legs, mature face, adult, text, letters, words, watermark, signature, logo, print on clothes, deformed, disfigured, extra fingers, missing fingers, extra limbs, bad hands, bad anatomy, cross-eyed, blurry face, lowres, cropped head, creepy",
+  "size": [
+   768,
+   1344
+  ],
+  "steps": 8,
+  "cfg": 2.0,
+  "model": "Lykon/dreamshaper-xl-lightning",
+  "seconds": 128,
+  "time": "2026-11-21 10:39"
+ },
+ {
+  "file": "out/round1/tamar_91.png",
+  "who": "tamar",
+  "seed": 91,
+  "prompt": "cinematic 3d animated film still, hyperrealistic, detailed skin, volumetric light, full body, small 5 year old girl, chubby cheeks, round baby face, big brown eyes, brown skin, dark hair in two afro puffs, plain bright yellow overalls, pink striped shirt, white sneakers, Jerusalem stone courtyard, blue door, bougainvillea, golden hour",
+  "negative": "photo, photograph, teenager, teen, older child, tall, long legs, mature face, adult, text, letters, words, watermark, signature, logo, print on clothes, deformed, disfigured, extra fingers, missing fingers, extra limbs, bad hands, bad anatomy, cross-eyed, blurry face, lowres, cropped head, creepy",
+  "size": [
+   768,
+   1344
+  ],
+  "steps": 8,
+  "cfg": 2.0,
+  "model": "Lykon/dreamshaper-xl-lightning",
+  "seconds": 135,
+  "time": "2026-11-21 10:42"
+ },
+ {
+  "file": "out/round1/tamar_105.png",
+  "who": "tamar",
+  "seed": 105,
+  "prompt": "cinematic 3d animated film still, hyperrealistic, detailed skin, volumetric light, full body, small 5 year old girl, chubby cheeks, round baby face, big brown eyes, brown skin, dark hair in two afro puffs, plain bright yellow overalls, pink striped shirt, white sneakers, Jerusalem stone courtyard, blue door, bougainvillea, golden hour",
+  "negative": "photo, photograph, teenager, teen, older child, tall, long legs, mature face, adult, text, letters, words, watermark, signature, logo, print on clothes, deformed, disfigured, extra fingers, missing fingers, extra limbs, bad hands, bad anatomy, cross-eyed, blurry face, lowres, cropped head, creepy",
+  "size": [
+   768,
+   1344
+  ],
+  "steps": 8,
+  "cfg": 2.0,
+  "model": "Lykon/dreamshaper-xl-lightning",
+  "seconds": 131,
+  "time": "2026-11-21 10:44"
+ },
+ {
+  "file": "out/round1/tamar_133.png",
+  "who": "tamar",
+  "seed": 133,
+  "prompt": "cinematic 3d animated film still, hyperrealistic, detailed skin, volumetric light, full body, small 5 year old girl, chubby cheeks, round baby face, big brown eyes, brown skin, dark hair in two afro puffs, plain bright yellow overalls, pink striped shirt, white sneakers, Jerusalem stone courtyard, blue door, bougainvillea, golden hour",
+  "negative": "photo, photograph, teenager, teen, older child, tall, long legs, mature face, adult, text, letters, words, watermark, signature, logo, print on clothes, deformed, disfigured, extra fingers, missing fingers, extra limbs, bad hands, bad anatomy, cross-eyed, blurry face, lowres, cropped head, creepy",
+  "size": [
+   768,
+   1344
+  ],
+  "steps": 8,
+  "cfg": 2.0,
+  "model": "Lykon/dreamshaper-xl-lightning",
+  "seconds": 134,
+  "time": "2026-11-21 10:46"
+ },
+ {
+  "file": "out/round1/tamar_150.png",
+  "who": "tamar",
+  "seed": 150,
+  "prompt": "cinematic 3d animated film still, hyperrealistic, detailed skin, volumetric light, full body, small 5 year old girl, chubby cheeks, round baby face, big brown eyes, brown skin, dark hair in two afro puffs, plain bright yellow overalls, pink striped shirt, white sneakers, Jerusalem stone courtyard, blue door, bougainvillea, golden hour",
+  "negative": "photo, photograph, teenager, teen, older child, tall, long legs, mature face, adult, text, letters, words, watermark, signature, logo, print on clothes, deformed, disfigured, extra fingers, missing fingers, extra limbs, bad hands, bad anatomy, cross-eyed, blurry face, lowres, cropped head, creepy",
+  "size": [
+   768,
+   1344
+  ],
+  "steps": 8,
+  "cfg": 2.0,
+  "model": "Lykon/dreamshaper-xl-lightning",
+  "seconds": 143,
+  "time": "2026-11-21 10:49"
+ },
+ {
+  "file": "out/round1/tamar_177.png",
+  "who": "tamar",
+  "seed": 177,
+  "prompt": "cinematic 3d animated film still, hyperrealistic, detailed skin, volumetric light, full body, small 5 year old girl, chubby cheeks, round baby face, big brown eyes, brown skin, dark hair in two afro puffs, plain bright yellow overalls, pink striped shirt, white sneakers, Jerusalem stone courtyard, blue door, bougainvillea, golden hour",
+  "negative": "photo, photograph, teenager, teen, older child, tall, long legs, mature face, adult, text, letters, words, watermark, signature, logo, print on clothes, deformed, disfigured, extra fingers, missing fingers, extra limbs, bad hands, bad anatomy, cross-eyed, blurry face, lowres, cropped head, creepy",
+  "size": [
+   768,
+   1344
+  ],
+  "steps": 8,
+  "cfg": 2.0,
+  "model": "Lykon/dreamshaper-xl-lightning",
+  "seconds": 123,
+  "time": "2026-11-21 10:51"
+ },
+ {
+  "file": "out/round1/tamar_202.png",
+  "who": "tamar",
+  "seed": 202,
+  "prompt": "cinematic 3d animated film still, hyperrealistic, detailed skin, volumetric light, full body, small 5 year old girl, chubby cheeks, round baby face, big brown eyes, brown skin, dark hair in two afro puffs, plain bright yellow overalls, pink striped shirt, white sneakers, Jerusalem stone courtyard, blue door, bougainvillea, golden hour",
+  "negative": "photo, photograph, teenager, teen, older child, tall, long legs, mature face, adult, text, letters, words, watermark, signature, logo, print on clothes, deformed, disfigured, extra fingers, missing fingers, extra limbs, bad hands, bad anatomy, cross-eyed, blurry face, lowres, cropped head, creepy",
+  "size": [
+   768,
+   1344
+  ],
+  "steps": 8,
+  "cfg": 2.0,
+  "model": "Lykon/dreamshaper-xl-lightning",
+  "seconds": 123,
+  "time": "2026-11-21 10:53"
+ },
+ {
+  "file": "out/round1/tamar_230.png",
+  "who": "tamar",
+  "seed": 230,
+  "prompt": "cinematic 3d animated film still, hyperrealistic, detailed skin, volumetric light, full body, small 5 year old girl, chubby cheeks, round baby face, big brown eyes, brown skin, dark hair in two afro puffs, plain bright yellow overalls, pink striped shirt, white sneakers, Jerusalem stone courtyard, blue door, bougainvillea, golden hour",
+  "negative": "photo, photograph, teenager, teen, older child, tall, long legs, mature face, adult, text, letters, words, watermark, signature, logo, print on clothes, deformed, disfigured, extra fingers, missing fingers, extra limbs, bad hands, bad anatomy, cross-eyed, blurry face, lowres, cropped head, creepy",
+  "size": [
+   768,
+   1344
+  ],
+  "steps": 8,
+  "cfg": 2.0,
+  "model": "Lykon/dreamshaper-xl-lightning",
+  "seconds": 111,
+  "time": "2026-11-21 10:55"
+ },
+ {
+  "file": "out/round1/tamar_251.png",
+  "who": "tamar",
+  "seed": 251,
+  "prompt": "cinematic 3d animated film still, hyperrealistic, detailed skin, volumetric light, full body, small 5 year old girl, chubby cheeks, round baby face, big brown eyes, brown skin, dark hair in two afro puffs, plain bright yellow overalls, pink striped shirt, white sneakers, Jerusalem stone courtyard, blue door, bougainvillea, golden hour",
+  "negative": "photo, photograph, teenager, teen, older child, tall, long legs, mature face, adult, text, letters, words, watermark, signature, logo, print on clothes, deformed, disfigured, extra fingers, missing fingers, extra limbs, bad hands, bad anatomy, cross-eyed, blurry face, lowres, cropped head, creepy",
+  "size": [
+   768,
+   1344
+  ],
+  "steps": 8,
+  "cfg": 2.0,
+  "model": "Lykon/dreamshaper-xl-lightning",
+  "seconds": 113,
+  "time": "2026-11-21 10:57"
+ },
+ {
+  "file": "out/round1/tamar_277.png",
+  "who": "tamar",
+  "seed": 277,
+  "prompt": "cinematic 3d animated film still, hyperrealistic, detailed skin, volumetric light, full body, small 5 year old girl, chubby cheeks, round baby face, big brown eyes, brown skin, dark hair in two afro puffs, plain bright yellow overalls, pink striped shirt, white sneakers, Jerusalem stone courtyard, blue door, bougainvillea, golden hour",
+  "negative": "photo, photograph, teenager, teen, older child, tall, long legs, mature face, adult, text, letters, words, watermark, signature, logo, print on clothes, deformed, disfigured, extra fingers, missing fingers, extra limbs, bad hands, bad anatomy, cross-eyed, blurry face, lowres, cropped head, creepy",
+  "size": [
+   768,
+   1344
+  ],
+  "steps": 8,
+  "cfg": 2.0,
+  "model": "Lykon/dreamshaper-xl-lightning",
+  "seconds": 113,
+  "time": "2026-11-21 10:59"
+ }
+]

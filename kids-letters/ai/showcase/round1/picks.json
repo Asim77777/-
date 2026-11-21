@@ -1,0 +1,5 @@
+{
+  "note": "Option numbers shown to the user -> seed in out/round1 (prompt and settings in out/log.json)",
+  "noam": {"1": 58, "2": 105, "3": 150, "4": 202},
+  "tamar": {"1": 133, "2": 177, "3": 202}
+}
