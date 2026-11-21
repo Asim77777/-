@@ -472,5 +472,10 @@
   "file": "out/final/noam_surprised_4k.png",
   "source": "out/final/noam_surprised_base.png",
   "detail_seconds": 542
+ },
+ {
+  "file": "out/final/pair_4k.png",
+  "source": "out/final/pair_base.png",
+  "detail_seconds": 531
  }
 ]
