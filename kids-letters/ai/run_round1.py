@@ -9,7 +9,7 @@ from generate import Generator, log_entry, PORTRAIT
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, 'out', 'round1')
-SEEDS = [int(s) for s in sys.argv[1:]] or [23, 41, 58, 77, 91, 105]
+SEEDS = [int(s) for s in sys.argv[1:]] or [58, 77, 91, 105, 133, 150, 177, 202]
 
 os.makedirs(OUT, exist_ok=True)
 gen = Generator()
@@ -22,6 +22,6 @@ for who in ('noam', 'tamar'):
         img, secs = gen(p, NEGATIVE, seed, size=PORTRAIT)
         img.save(path)
         log_entry(os.path.join(HERE, 'out', 'log.json'), file=os.path.relpath(path, HERE), who=who, seed=seed,
-                  prompt=p, negative=NEGATIVE, size=list(PORTRAIT), steps=7, cfg=2.0, model='Lykon/dreamshaper-xl-lightning',
+                  prompt=p, negative=NEGATIVE, size=list(PORTRAIT), steps=8, cfg=2.0, model='Lykon/dreamshaper-xl-lightning',
                   seconds=round(secs), time=time.strftime('%Y-%m-%d %H:%M'))
         print(f'{path} {secs:.0f}s', flush=True)

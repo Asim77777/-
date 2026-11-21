@@ -43,7 +43,7 @@ class Generator:
             self.face_adapter = True
 
     @torch.inference_mode()
-    def __call__(self, prompt, negative, seed, size=PORTRAIT, steps=7, cfg=2.0, ref=None, ref_scale=0.6):
+    def __call__(self, prompt, negative, seed, size=PORTRAIT, steps=8, cfg=2.0, ref=None, ref_scale=0.6):
         w, h = size
         kw = {}
         if ref is not None:
