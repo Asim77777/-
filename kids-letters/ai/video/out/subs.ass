@@ -1,0 +1,15 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+WrapStyle: 0
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Kid,Rubik,92,&H00FFFFFF,&H00FFFFFF,&H00301A10,&H64000000,-1,0,0,0,100,100,0,0,1,7,3,2,80,80,330,177
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.35,0:00:02.86,Kid,,0,0,0,,{\fad(120,120)\c&H3C9BFF&}שלום! אני נועם!
+Dialogue: 0,0:00:01.24,0:00:02.75,Kid,,0,0,0,,{\fad(120,120)\c&HB98CFF&}ואני תמר!
+Dialogue: 0,0:00:02.08,0:00:04.56,Kid,,0,0,0,,{\fad(120,120)\c&HFFFFFF&}בואו נלמד את כל האותיות!

@@ -1,0 +1,15 @@
+[
+ {
+  "shot": "noam",
+  "seed": 7,
+  "frames": 25,
+  "size": [
+   320,
+   576
+  ],
+  "seconds": 47,
+  "prompt": "A cheerful little boy with curly brown hair and an orange hoodie stands in a sunny stone courtyard, smiles, waves his hand at the camera and talks happily while the camera slowly pushes in. Cinematic 3D animated film, warm golden hour sunlight, shallow depth of field, smooth natural motion, highly detailed.",
+  "image": "hero_noam_base.png",
+  "model": "Lightricks/LTX-Video/ltxv-2b-0.9.8-distilled.safetensors"
+ }
+]

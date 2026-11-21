@@ -1,0 +1,4 @@
+out/*
+!out/voices.json
+!out/clips_log.json
+!out/subs.ass
