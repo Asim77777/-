@@ -477,5 +477,20 @@
   "file": "out/final/pair_4k.png",
   "source": "out/final/pair_base.png",
   "detail_seconds": 531
+ },
+ {
+  "file": "out/final/tamar_happy_4k.png",
+  "source": "out/final/tamar_happy_base.png",
+  "detail_seconds": 555
+ },
+ {
+  "file": "out/final/tamar_laugh_4k.png",
+  "source": "out/final/tamar_laugh_base.png",
+  "detail_seconds": 602
+ },
+ {
+  "file": "out/final/tamar_surprised_4k.png",
+  "source": "out/final/tamar_surprised_base.png",
+  "detail_seconds": 554
  }
 ]
