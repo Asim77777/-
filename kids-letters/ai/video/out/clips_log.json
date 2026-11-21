@@ -11,5 +11,44 @@
   "prompt": "A cheerful little boy with curly brown hair and an orange hoodie stands in a sunny stone courtyard, smiles, waves his hand at the camera and talks happily while the camera slowly pushes in. Cinematic 3D animated film, warm golden hour sunlight, shallow depth of field, smooth natural motion, highly detailed.",
   "image": "hero_noam_base.png",
   "model": "Lightricks/LTX-Video/ltxv-2b-0.9.8-distilled.safetensors"
+ },
+ {
+  "shot": "noam",
+  "seed": 7,
+  "frames": 81,
+  "size": [
+   512,
+   896
+  ],
+  "seconds": 340,
+  "prompt": "A cheerful little boy with curly brown hair and an orange hoodie stands in a sunny stone courtyard, smiles, waves his hand at the camera and talks happily while the camera slowly pushes in. Cinematic 3D animated film, warm golden hour sunlight, shallow depth of field, smooth natural motion, highly detailed.",
+  "image": "hero_noam_base.png",
+  "model": "Lightricks/LTX-Video/ltxv-2b-0.9.8-distilled.safetensors"
+ },
+ {
+  "shot": "tamar",
+  "seed": 7,
+  "frames": 73,
+  "size": [
+   512,
+   896
+  ],
+  "seconds": 257,
+  "prompt": "A cheerful little girl with two puffy curly pigtails and pink and yellow overalls stands by pink flowers in a sunny stone courtyard, smiles, tilts her head and talks to the camera. Cinematic 3D animated film, warm golden hour sunlight, shallow depth of field, smooth natural motion, highly detailed.",
+  "image": "hero_tamar_base.png",
+  "model": "Lightricks/LTX-Video/ltxv-2b-0.9.8-distilled.safetensors"
+ },
+ {
+  "shot": "pair",
+  "seed": 7,
+  "frames": 97,
+  "size": [
+   512,
+   896
+  ],
+  "seconds": 408,
+  "prompt": "A little boy in an orange hoodie and a little girl in pink walk hand in hand toward the camera down a sunny stone alley with pink bougainvillea, smiling and swinging their arms. Cinematic 3D animated film, warm golden hour sunlight, shallow depth of field, smooth natural motion, highly detailed.",
+  "image": "pair_base.png",
+  "model": "Lightricks/LTX-Video/ltxv-2b-0.9.8-distilled.safetensors"
  }
 ]

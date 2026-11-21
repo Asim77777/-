@@ -92,7 +92,7 @@ def main():
     mix = '[a0][a1][a2]'
     n = 3
     if has_music:
-        af.append(f'[6:a]aresample=48000,volume=0.16,afade=t=in:d=0.6,afade=t=out:st={total - 1.2:.2f}:d=1.2[m]')
+        af.append(f'[6:a]aresample=48000,volume=0.5,afade=t=in:d=0.4,afade=t=out:st={total - 1.2:.2f}:d=1.2[m]')
         mix += '[m]'
         n = 4
     af.append(f'{mix}amix=inputs={n}:normalize=0:duration=longest,atrim=0:{total:.3f},alimiter=limit=0.95[aout]')
