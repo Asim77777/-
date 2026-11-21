@@ -457,5 +457,20 @@
   "ref": "both faces, masked halves",
   "ref_scale": 0.4,
   "gen_seconds": 141
+ },
+ {
+  "file": "out/final/noam_happy_4k.png",
+  "source": "out/final/noam_happy_base.png",
+  "detail_seconds": 569
+ },
+ {
+  "file": "out/final/noam_laugh_4k.png",
+  "source": "out/final/noam_laugh_base.png",
+  "detail_seconds": 587
+ },
+ {
+  "file": "out/final/noam_surprised_4k.png",
+  "source": "out/final/noam_surprised_base.png",
+  "detail_seconds": 542
  }
 ]
